@@ -16,7 +16,6 @@
 
 <resources>
     <string name="app_name">Action Bar Demo</string>
-    <string name="alternate_title">An alternate title that is long</string>
     <string name="toggle_title">Toggle title</string>
 
     <string name="menu_refresh">Refresh</string>

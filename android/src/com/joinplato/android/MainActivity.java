@@ -20,28 +20,18 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
+import com.googlecode.androidannotations.annotations.EActivity;
+
+@EActivity(R.layout.main)
 public class MainActivity extends ActionBarActivity {
-    private boolean mAlternateTitle = false;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
 
-        findViewById(R.id.toggle_title).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mAlternateTitle) {
-                    setTitle(R.string.app_name);
-                } else {
-                    setTitle(R.string.alternate_title);
-                }
-                mAlternateTitle = !mAlternateTitle;
-            }
-        });
     }
+    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
