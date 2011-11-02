@@ -33,9 +33,7 @@ public class ProgramCategoryAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		if (convertView == null) {
-			ImageView imageView = new ImageView(context);
-			imageView.setImageResource(R.drawable.recycle);
-			convertView = imageView;
+			convertView = View.inflate(context, R.layout.program_category_item, null);
 		}
 		
 		return convertView;

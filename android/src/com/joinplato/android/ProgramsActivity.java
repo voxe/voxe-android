@@ -5,6 +5,9 @@ import java.util.List;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
@@ -27,6 +30,32 @@ public class ProgramsActivity extends ActionBarActivity {
 	void buildList() {
 		ProgramCategoryAdapter adapter = new ProgramCategoryAdapter(this);
 		list.setAdapter(adapter);
+		
+		float scale = getResources().getDisplayMetrics().density;
+		final int miniWidth = (int) (60 * scale);
+		final int maxiWidth = (int) (200 * scale);
+		
+		
+		list.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				if (scrollState == SCROLL_STATE_IDLE) {
+					LayoutParams params = list.getLayoutParams();
+					params.width = miniWidth;
+					list.setLayoutParams(params);
+				} else {
+					LayoutParams params = list.getLayoutParams();
+					params.width = maxiWidth;
+					list.setLayoutParams(params);
+				}
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+			}
+		});
 	}
 	
 	@AfterViews
