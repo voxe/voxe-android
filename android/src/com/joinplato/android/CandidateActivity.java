@@ -6,15 +6,18 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.ViewById;
 import com.joinplato.android.actionbar.ActionBarActivity;
 
-@EActivity(R.layout.wip)
+@EActivity(R.layout.view_pager)
 public class CandidateActivity extends ActionBarActivity {
 
 	private static final String CANDIDATE_LIST_EXTRA = "candidateList";
@@ -34,10 +37,26 @@ public class CandidateActivity extends ActionBarActivity {
 	@Extra(INITIAL_CANDIDATE_EXTRA)
 	int initialCandidate;
 	
+	@ViewById
+	ViewPager viewPager;
+	
+	@AfterViews
+	void mockCandidates() {
+		CandidatePagerAdapter adapter = new CandidatePagerAdapter(this, candidates);
+		viewPager.setAdapter(adapter);
+		viewPager.setCurrentItem(initialCandidate);
+		viewPager.setOnPageChangeListener(new AbstractOnPageChangeListener() {
+			@Override
+			public void onPageSelected(int position) {
+				CandidateActivity.this.onPageSelected(position);
+			}
+		});
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle(candidates.get(initialCandidate).getName());
+		updateTitle(initialCandidate);
 	}
 
 	@Override
@@ -59,5 +78,14 @@ public class CandidateActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+	public void onPageSelected(int position) {
+		updateTitle(position);
+	}
+	
+	public void updateTitle(int selectedCandidate) {
+		setTitle(candidates.get(selectedCandidate).getName());
+	}
 
 }
