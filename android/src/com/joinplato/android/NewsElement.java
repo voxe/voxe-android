@@ -1,9 +1,12 @@
 package com.joinplato.android;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-public class NewsElement {
+public class NewsElement implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	
 	private final CharSequence title;
 	

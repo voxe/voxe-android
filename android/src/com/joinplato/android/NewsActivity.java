@@ -11,7 +11,7 @@ import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.joinplato.android.actionbar.ActionBarActivity;
 
-@EActivity(R.layout.news)
+@EActivity(R.layout.list)
 public class NewsActivity extends ActionBarActivity {
 
 	@ViewById
@@ -44,6 +44,6 @@ public class NewsActivity extends ActionBarActivity {
 
 	@ItemClick
     void listItemClicked(NewsElement newsElement) {
-    	Toast.makeText(this, newsElement.getTitle(), Toast.LENGTH_SHORT).show();
+    	NewsDetailActivity.start(this, newsElement);
     }
 }

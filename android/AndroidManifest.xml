@@ -25,6 +25,8 @@
             android:label="News"
             android:name="com.joinplato.android.NewsActivity_" />
         <activity
+            android:name="com.joinplato.android.NewsDetailActivity_" />        
+        <activity
             android:label="Candidate list"
             android:name="com.joinplato.android.CandidateListActivity_" />
         <activity
