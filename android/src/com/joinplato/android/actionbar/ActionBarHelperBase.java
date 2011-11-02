@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package com.joinplato.android;
+package com.joinplato.android.actionbar;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+
+import com.joinplato.android.R;
+import com.joinplato.android.R.attr;
+import com.joinplato.android.R.dimen;
+import com.joinplato.android.R.drawable;
+import com.joinplato.android.R.id;
+import com.joinplato.android.R.layout;
+import com.joinplato.android.R.string;
 
 import android.app.Activity;
 import android.content.Context;
@@ -163,7 +171,7 @@ public class ActionBarHelperBase extends ActionBarHelper {
      * Adds an action button to the compatibility action bar, using menu information from a {@link
      * android.view.MenuItem}. If the menu item ID is <code>menu_refresh</code>, the menu item's
      * state can be changed to show a loading spinner using
-     * {@link com.example.android.actionbarcompat.ActionBarHelperBase#setRefreshActionItemState(boolean)}.
+     * {@link com.joinplato.android.actionbar.example.android.actionbarcompat.ActionBarHelperBase#setRefreshActionItemState(boolean)}.
      */
     private View addActionItemCompatFromMenuItem(final MenuItem item) {
         final int itemId = item.getItemId();

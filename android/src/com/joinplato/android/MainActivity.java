@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.joinplato.android.actionbar.ActionBarActivity;
 
 @EActivity(R.layout.main)
 public class MainActivity extends ActionBarActivity {

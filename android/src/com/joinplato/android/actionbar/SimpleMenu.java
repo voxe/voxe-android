@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.joinplato.android;
+package com.joinplato.android.actionbar;
 
 import android.content.ComponentName;
 import android.content.Context;
