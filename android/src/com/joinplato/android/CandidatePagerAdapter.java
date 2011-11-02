@@ -8,6 +8,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CandidatePagerAdapter extends PagerAdapter {
@@ -37,10 +38,15 @@ public class CandidatePagerAdapter extends PagerAdapter {
 	@Override
 	public Object instantiateItem(View collection, int position) {
 
-		ViewGroup viewGroup = (ViewGroup) View.inflate(context, R.layout.candidate_item, null);
+		Candidate candidate = candidates.get(position);
+		
+		ViewGroup viewGroup = (ViewGroup) View.inflate(context, R.layout.candidate_detail_item, null);
 		TextView nameView = (TextView) viewGroup.findViewById(R.id.candidateName);
+		ImageView imageView = (ImageView) viewGroup.findViewById(R.id.candidateImage);
+		imageView.setImageResource(candidate.getImageId());
+		
 
-		CharSequence name = candidates.get(position).getName();
+		CharSequence name = candidate.getName();
 		nameView.setText(name);
 
 		((ViewPager) collection).addView(viewGroup);

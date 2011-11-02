@@ -3,9 +3,11 @@ package com.joinplato.android;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CandidateAdapter extends BaseAdapter {
@@ -37,17 +39,25 @@ public class CandidateAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		TextView nameView;
+		ImageView imageView;
 		if (convertView != null) {
-			nameView = (TextView) convertView.getTag();
+			@SuppressWarnings("unchecked")
+			Pair<TextView, ImageView> views = (Pair<TextView, ImageView>) convertView.getTag();
+			nameView = views.first;
+			imageView = views.second;
 		} else {
 			ViewGroup viewGroup = (ViewGroup) View.inflate(context, R.layout.candidate_item, null);
 			convertView = viewGroup;
 			nameView = (TextView) viewGroup.findViewById(R.id.candidateName);
-			viewGroup.setTag(nameView);
+			imageView =  (ImageView) viewGroup.findViewById(R.id.candidateImage);
+			viewGroup.setTag(Pair.create(nameView, imageView));
 		}
 		
-		CharSequence name = getItem(position).getName();
+		Candidate candidate = getItem(position);
+		CharSequence name = candidate.getName();
 		nameView.setText(name);
+		
+		imageView.setImageResource(candidate.getImageId());
 		
 		return convertView;
 	}
