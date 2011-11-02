@@ -50,7 +50,7 @@
         android:layout_alignLeft="@id/newsTitle"
         android:layout_below="@id/newsTitle"
         android:paddingRight="10dp"
-        android:text="Height hours ago"
+        android:text="Il y a 8 heures"
         android:textColor="#888888"
         android:textSize="15sp" />
 

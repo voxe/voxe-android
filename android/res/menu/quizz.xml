@@ -14,18 +14,10 @@
   limitations under the License.
   -->
 
-<resources>
-    <string name="app_name">MyVoxe</string>
-    
-    <string name="toggle_title">Toggle title</string>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_refresh"
+        android:title="@string/menu_refresh"
+        android:icon="@drawable/ic_action_refresh"
+        android:showAsAction="always" />
 
-    <string name="menu_refresh">Rafraîchir</string>
-    <string name="menu_search">Chercher</string>
-    <string name="menu_share">Partager</string>
-    
-    <string-array name="quizz_choices">
-        <item>Oui</item>
-        <item>Non</item>
-        <item>Heu...</item>
-    </string-array>        
-</resources>
+</menu>

@@ -12,20 +12,22 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-  -->
+-->
 
-<resources>
-    <string name="app_name">MyVoxe</string>
-    
-    <string name="toggle_title">Toggle title</string>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <string name="menu_refresh">Rafraîchir</string>
-    <string name="menu_search">Chercher</string>
-    <string name="menu_share">Partager</string>
-    
-    <string-array name="quizz_choices">
-        <item>Oui</item>
-        <item>Non</item>
-        <item>Heu...</item>
-    </string-array>        
-</resources>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vous êtes proche de..."
+        android:layout_margin="10dp"
+        android:textSize="15sp"/>
+
+    <include layout="@layout/candidate_item" />
+
+    <include layout="@layout/list" />
+
+</LinearLayout>

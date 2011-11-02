@@ -36,7 +36,7 @@ public class NewsActivity extends ActionBarActivity {
 			HomeHelper.backToHome(this);
 			break;
 		case R.id.menu_refresh:
-			Toast.makeText(this, "Refreshing...", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Mise ˆ jour...", Toast.LENGTH_SHORT).show();
 			break;
 		}
 		return super.onOptionsItemSelected(item);

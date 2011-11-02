@@ -16,33 +16,31 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
-
-    <ImageView
-        android:id="@+id/candidateImage"
-        android:layout_width="50dp"
-        android:layout_height="62dp"
-        android:layout_alignParentLeft="true"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    >
+    
+    <Spinner 
+        android:id="@+id/quizzChoice"
+        android:layout_width="105dp"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="20dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/default_candidate" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        />
 
     <TextView
-        android:id="@+id/candidateName"
+        android:id="@+id/quizzQuestion"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/candidateImage"
-        android:ellipsize="end"
+        android:layout_toLeftOf="@id/quizzChoice"
         android:paddingRight="10dp"
-        android:singleLine="true"
-        android:text="François Hollande"
+        android:text="Il faut nationaliser les banques au plus vite"
         android:textColor="#000000"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+        android:textSize="15sp"
+        android:layout_marginLeft="10dp"
+      />
 
 </RelativeLayout>

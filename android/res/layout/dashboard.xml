@@ -21,15 +21,15 @@
 
     <Button android:id="@+id/dashboard_news"
         style="@style/DashboardButton"
-        android:text="News"
+        android:text="Actus"
         android:drawableTop="@drawable/dashboard_news" />
     <Button android:id="@+id/dashboard_candidates"
         style="@style/DashboardButton"
-        android:text="Candidates"
+        android:text="Candidats"
         android:drawableTop="@drawable/dashboard_candidates" />
     <Button android:id="@+id/dashboard_programs"
         style="@style/DashboardButton"
-        android:text="Programs"
+        android:text="Programmes"
         android:drawableTop="@drawable/dashboard_programs" />
     <Button android:id="@+id/dashboard_quizz"
         style="@style/DashboardButton"
