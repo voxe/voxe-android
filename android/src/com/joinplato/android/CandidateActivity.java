@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,21 +43,15 @@ public class CandidateActivity extends ActionBarActivity {
 	void mockCandidates() {
 		CandidatePagerAdapter adapter = new CandidatePagerAdapter(this, candidates);
 		viewPager.setAdapter(adapter);
-		viewPager.setCurrentItem(initialCandidate);
 		viewPager.setOnPageChangeListener(new AbstractOnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
 				CandidateActivity.this.onPageSelected(position);
 			}
 		});
+		viewPager.setCurrentItem(initialCandidate);
 	}
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		updateTitle(initialCandidate);
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.candidate, menu);
@@ -81,11 +74,7 @@ public class CandidateActivity extends ActionBarActivity {
 
 
 	public void onPageSelected(int position) {
-		updateTitle(position);
+		setTitle(candidates.get(position).getName());
 	}
 	
-	public void updateTitle(int selectedCandidate) {
-		setTitle(candidates.get(selectedCandidate).getName());
-	}
-
 }
