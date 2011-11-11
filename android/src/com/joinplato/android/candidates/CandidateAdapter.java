@@ -49,7 +49,7 @@ public class CandidateAdapter extends BaseAdapter {
 			nameView = views.first;
 			imageView = views.second;
 		} else {
-			ViewGroup viewGroup = (ViewGroup) View.inflate(context, R.layout.candidate_item, null);
+			ViewGroup viewGroup = (ViewGroup) View.inflate(context, R.layout.candidate_grid_item, null);
 			convertView = viewGroup;
 			nameView = (TextView) viewGroup.findViewById(R.id.candidateName);
 			imageView = (ImageView) viewGroup.findViewById(R.id.candidateImage);

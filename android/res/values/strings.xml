@@ -15,9 +15,7 @@
   -->
 
 <resources>
-    <string name="app_name">MyVoxe</string>
-    
-    <string name="toggle_title">Toggle title</string>
+    <string name="app_name">The Voxe</string>
     
     <string name="candidates">Candidats</string>
     <string name="candidate">Candidat</string>
@@ -26,6 +24,7 @@
     <string name="quizz">PoliQuizz</string>
 
     <string name="menu_refresh">Rafraîchir</string>
+    <string name="menu_debate">Débattre</string>
     <string name="menu_search">Chercher</string>
     <string name="menu_share">Partager</string>
     

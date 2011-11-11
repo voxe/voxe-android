@@ -4,7 +4,7 @@ import java.util.List;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
@@ -16,11 +16,11 @@ import com.joinplato.android.actionbar.ActionBarActivity;
 import com.joinplato.android.common.Candidate;
 import com.joinplato.android.common.HomeHelper;
 
-@EActivity(R.layout.list)
+@EActivity(R.layout.candidates)
 public class CandidateListActivity extends ActionBarActivity {
 
 	@ViewById
-	ListView list;
+	GridView gridview;
 
 	private List<Candidate> candidates;
 
@@ -28,11 +28,11 @@ public class CandidateListActivity extends ActionBarActivity {
 	void mockList() {
 		candidates = Candidate.mockCandidates();
 		CandidateAdapter adapter = new CandidateAdapter(this, candidates);
-		list.setAdapter(adapter);
+		gridview.setAdapter(adapter);
 	}
 
 	@ItemClick
-	void listItemClicked(Candidate candidate) {
+	void gridviewItemClicked(Candidate candidate) {
 		CandidateActivity.start(this, candidates, candidates.indexOf(candidate));
 	}
 
