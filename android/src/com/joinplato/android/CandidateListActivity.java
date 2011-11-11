@@ -15,10 +15,10 @@ import com.joinplato.android.actionbar.ActionBarActivity;
 
 @EActivity(R.layout.list)
 public class CandidateListActivity extends ActionBarActivity {
-	
+
 	@ViewById
 	ListView list;
-	
+
 	private List<Candidate> candidates;
 
 	@AfterViews
@@ -27,29 +27,29 @@ public class CandidateListActivity extends ActionBarActivity {
 		CandidateAdapter adapter = new CandidateAdapter(this, candidates);
 		list.setAdapter(adapter);
 	}
-	
+
 	@ItemClick
-    void listItemClicked(Candidate candidate) {
-    	CandidateActivity.start(this, candidates, candidates.indexOf(candidate));
-    }
-	
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.candidate_list, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-            	HomeHelper.backToHome(this);
-            break;
-    		case R.id.menu_refresh:
-    			Toast.makeText(this, "Refreshing...", Toast.LENGTH_SHORT).show();
-    			break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+	void listItemClicked(Candidate candidate) {
+		CandidateActivity.start(this, candidates, candidates.indexOf(candidate));
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.candidate_list, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			HomeHelper.backToHome(this);
+			break;
+		case R.id.menu_refresh:
+			Toast.makeText(this, "Refreshing...", Toast.LENGTH_SHORT).show();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 }

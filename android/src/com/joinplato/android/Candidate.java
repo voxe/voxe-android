@@ -40,7 +40,7 @@ public class Candidate implements Serializable, Comparable<Candidate> {
 	public String getName() {
 		return name;
 	}
-	
+
 	public int getImageId() {
 		return imageId;
 	}

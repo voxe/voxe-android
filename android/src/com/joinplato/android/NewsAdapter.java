@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class NewsAdapter extends BaseAdapter {
-	
+
 	private final List<NewsElement> news;
 	private final Context context;
 
@@ -35,7 +35,7 @@ public class NewsAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
+
 		TextView titleView;
 		if (convertView != null) {
 			titleView = (TextView) convertView.getTag();
@@ -45,10 +45,10 @@ public class NewsAdapter extends BaseAdapter {
 			titleView = (TextView) newsItemView.findViewById(R.id.newsTitle);
 			newsItemView.setTag(titleView);
 		}
-		
+
 		CharSequence title = getItem(position).getTitle();
 		titleView.setText(title);
-		
+
 		return convertView;
 	}
 

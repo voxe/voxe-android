@@ -17,27 +17,26 @@ import com.joinplato.android.actionbar.ActionBarActivity;
 
 @EActivity(R.layout.programs)
 public class ProgramsActivity extends ActionBarActivity {
-	
+
 	@ViewById
 	ListView list;
-	
+
 	@ViewById
 	ViewPager viewPager;
-	
+
 	private final List<Candidate> candidates = Candidate.mockCandidates();
-	
+
 	@AfterViews
 	void buildList() {
 		ProgramCategoryAdapter adapter = new ProgramCategoryAdapter(this);
 		list.setAdapter(adapter);
-		
+
 		float scale = getResources().getDisplayMetrics().density;
 		final int miniWidth = (int) (60 * scale);
 		final int maxiWidth = (int) (200 * scale);
-		
-		
+
 		list.setOnScrollListener(new OnScrollListener() {
-			
+
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				if (scrollState == SCROLL_STATE_IDLE) {
@@ -50,14 +49,14 @@ public class ProgramsActivity extends ActionBarActivity {
 					list.setLayoutParams(params);
 				}
 			}
-			
+
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
 			}
 		});
 	}
-	
+
 	@AfterViews
 	void buildPager() {
 		ProgramPagerAdapter adapter = new ProgramPagerAdapter(this, candidates);
@@ -71,26 +70,25 @@ public class ProgramsActivity extends ActionBarActivity {
 		viewPager.setCurrentItem(0);
 	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-	
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-            	HomeHelper.backToHome(this);
-            break;
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
 
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			HomeHelper.backToHome(this);
+			break;
+
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	public void onPageSelected(int position) {
 		setTitle(candidates.get(position).getName());
 	}
-	
-	
+
 }

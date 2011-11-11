@@ -27,7 +27,7 @@ public class QuizzAdapter extends BaseAdapter {
 		@Override
 		public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 			if (quizzQuestion != null) {
-				if (answerListener != null && position!=quizzQuestion.getAnswer()) {
+				if (answerListener != null && position != quizzQuestion.getAnswer()) {
 					answerListener.onNewAnswer();
 				}
 				quizzQuestion.setAnswer(position);
@@ -89,7 +89,7 @@ public class QuizzAdapter extends BaseAdapter {
 			viewGroup.setTag(Pair.create(quizzChoice, quizzQuestionView));
 			answerSelectedListener = new AnswerSelectedListener();
 			quizzChoice.setOnItemSelectedListener(answerSelectedListener);
-			
+
 			quizzQuestionView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -104,8 +104,7 @@ public class QuizzAdapter extends BaseAdapter {
 		answerSelectedListener.quizzQuestion = quizzQuestion;
 		quizzChoice.setAdapter(quizzChoiceAdapter);
 		quizzChoice.setSelection(quizzQuestion.getAnswer());
-		
-		
+
 		return convertView;
 	}
 

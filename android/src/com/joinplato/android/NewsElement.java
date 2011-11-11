@@ -7,13 +7,13 @@ import java.util.List;
 public class NewsElement implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private final CharSequence title;
-	
+
 	public NewsElement(String title) {
 		this.title = title;
 	}
-	
+
 	public static List<NewsElement> mockNews() {
 		return Arrays.asList(new NewsElement("Latest IPSOS poll"), //
 				new NewsElement("N. Sarkozy took a shower"), //

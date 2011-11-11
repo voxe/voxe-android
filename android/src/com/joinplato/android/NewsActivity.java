@@ -43,7 +43,7 @@ public class NewsActivity extends ActionBarActivity {
 	}
 
 	@ItemClick
-    void listItemClicked(NewsElement newsElement) {
-    	NewsDetailActivity.start(this, newsElement);
-    }
+	void listItemClicked(NewsElement newsElement) {
+		NewsDetailActivity.start(this, newsElement);
+	}
 }

@@ -4,10 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 
 public class ProgramCategoryAdapter extends BaseAdapter {
-	
+
 	private final Context context;
 
 	public ProgramCategoryAdapter(Context context) {
@@ -31,11 +30,11 @@ public class ProgramCategoryAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
+
 		if (convertView == null) {
 			convertView = View.inflate(context, R.layout.program_category_item, null);
 		}
-		
+
 		return convertView;
 	}
 

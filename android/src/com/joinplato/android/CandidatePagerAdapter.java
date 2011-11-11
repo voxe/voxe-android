@@ -39,12 +39,11 @@ public class CandidatePagerAdapter extends PagerAdapter {
 	public Object instantiateItem(View collection, int position) {
 
 		Candidate candidate = candidates.get(position);
-		
+
 		ViewGroup viewGroup = (ViewGroup) View.inflate(context, R.layout.candidate_detail_item, null);
 		TextView nameView = (TextView) viewGroup.findViewById(R.id.candidateName);
 		ImageView imageView = (ImageView) viewGroup.findViewById(R.id.candidateImage);
 		imageView.setImageResource(candidate.getImageId());
-		
 
 		CharSequence name = candidate.getName();
 		nameView.setText(name);

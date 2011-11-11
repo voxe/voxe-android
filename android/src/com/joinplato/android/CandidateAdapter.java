@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CandidateAdapter extends BaseAdapter {
-	
+
 	private final List<Candidate> candidates;
 	private final Context context;
 
@@ -37,7 +37,7 @@ public class CandidateAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
+
 		TextView nameView;
 		ImageView imageView;
 		if (convertView != null) {
@@ -49,16 +49,16 @@ public class CandidateAdapter extends BaseAdapter {
 			ViewGroup viewGroup = (ViewGroup) View.inflate(context, R.layout.candidate_item, null);
 			convertView = viewGroup;
 			nameView = (TextView) viewGroup.findViewById(R.id.candidateName);
-			imageView =  (ImageView) viewGroup.findViewById(R.id.candidateImage);
+			imageView = (ImageView) viewGroup.findViewById(R.id.candidateImage);
 			viewGroup.setTag(Pair.create(nameView, imageView));
 		}
-		
+
 		Candidate candidate = getItem(position);
 		CharSequence name = candidate.getName();
 		nameView.setText(name);
-		
+
 		imageView.setImageResource(candidate.getImageId());
-		
+
 		return convertView;
 	}
 
