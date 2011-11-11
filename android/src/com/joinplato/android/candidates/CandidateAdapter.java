@@ -1,4 +1,4 @@
-package com.joinplato.android;
+package com.joinplato.android.candidates;
 
 import java.util.List;
 
@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.joinplato.android.R;
+import com.joinplato.android.common.Candidate;
 
 public class CandidateAdapter extends BaseAdapter {
 

@@ -1,9 +1,11 @@
-package com.joinplato.android;
+package com.joinplato.android.common;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.joinplato.android.DashboardActivity_;
+import com.joinplato.android.R;
 import com.joinplato.android.dashboard.UIUtils;
 
 public class HomeHelper {

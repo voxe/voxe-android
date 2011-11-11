@@ -1,4 +1,4 @@
-package com.joinplato.android;
+package com.joinplato.android.programs;
 
 import java.util.List;
 
@@ -13,7 +13,11 @@ import android.widget.ListView;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
+import com.joinplato.android.common.AbstractOnPageChangeListener;
+import com.joinplato.android.common.Candidate;
+import com.joinplato.android.common.HomeHelper;
 
 @EActivity(R.layout.programs)
 public class ProgramsActivity extends ActionBarActivity {

@@ -19,21 +19,21 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <Button android:id="@+id/dashboard_news"
+    <Button android:id="@+id/candidates"
         style="@style/DashboardButton"
-        android:text="Actus"
-        android:drawableTop="@drawable/dashboard_news" />
-    <Button android:id="@+id/dashboard_candidates"
-        style="@style/DashboardButton"
-        android:text="Candidats"
+        android:text="@string/candidates"
         android:drawableTop="@drawable/dashboard_candidates" />
-    <Button android:id="@+id/dashboard_programs"
+    <Button android:id="@+id/programs"
         style="@style/DashboardButton"
-        android:text="Programmes"
+        android:text="@string/compare"
         android:drawableTop="@drawable/dashboard_programs" />
-    <Button android:id="@+id/dashboard_quizz"
+    <Button android:id="@+id/debates"
         style="@style/DashboardButton"
-        android:text="PoliQuizz"
+        android:text="@string/debates"
+        android:drawableTop="@drawable/dashboard_debates" />
+    <Button android:id="@+id/quizz"
+        style="@style/DashboardButton"
+        android:text="@string/quizz"
         android:drawableTop="@drawable/dashboard_quizz" />
 
 </com.joinplato.android.dashboard.DashboardLayout>

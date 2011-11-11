@@ -23,21 +23,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:label="Actus"
-            android:name="com.joinplato.android.NewsActivity_" />
-        <activity android:name="com.joinplato.android.NewsDetailActivity_" />
+            android:label="@string/candidates"
+            android:name="com.joinplato.android.candidates.CandidateListActivity_" />
         <activity
-            android:label="Candidats"
-            android:name="com.joinplato.android.CandidateListActivity_" />
+            android:label="@string/candidate"
+            android:name="com.joinplato.android.candidates.CandidateActivity_" />
         <activity
-            android:label="Candidat"
-            android:name="com.joinplato.android.CandidateActivity_" />
+            android:label="@string/compare"
+            android:name="com.joinplato.android.programs.ProgramsActivity_" />
         <activity
-            android:label="Programmes"
-            android:name="com.joinplato.android.ProgramsActivity_" />
-        <activity
-            android:label="PoliQuizz"
-            android:name="com.joinplato.android.QuizzActivity_" />
+            android:label="@string/quizz"
+            android:name="com.joinplato.android.quizz.QuizzActivity_" />
     </application>
 
 </manifest>

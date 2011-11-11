@@ -1,4 +1,4 @@
-package com.joinplato.android;
+package com.joinplato.android.common;
 
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 

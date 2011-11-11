@@ -1,4 +1,4 @@
-package com.joinplato.android;
+package com.joinplato.android.programs;
 
 import java.util.List;
 
@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.joinplato.android.R;
+import com.joinplato.android.common.Candidate;
 
 public class ProgramPagerAdapter extends PagerAdapter {
 

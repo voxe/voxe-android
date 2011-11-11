@@ -1,4 +1,4 @@
-package com.joinplato.android;
+package com.joinplato.android.candidates;
 
 import java.util.List;
 
@@ -11,7 +11,10 @@ import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
+import com.joinplato.android.common.Candidate;
+import com.joinplato.android.common.HomeHelper;
 
 @EActivity(R.layout.list)
 public class CandidateListActivity extends ActionBarActivity {

@@ -1,4 +1,4 @@
-package com.joinplato.android;
+package com.joinplato.android.news;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,7 +9,9 @@ import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
+import com.joinplato.android.common.HomeHelper;
 
 @EActivity(R.layout.list)
 public class NewsActivity extends ActionBarActivity {
@@ -36,7 +38,7 @@ public class NewsActivity extends ActionBarActivity {
 			HomeHelper.backToHome(this);
 			break;
 		case R.id.menu_refresh:
-			Toast.makeText(this, "Mise ˆ jour...", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Mise Ã  jour...", Toast.LENGTH_SHORT).show();
 			break;
 		}
 		return super.onOptionsItemSelected(item);

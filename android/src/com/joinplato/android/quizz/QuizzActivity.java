@@ -1,4 +1,4 @@
-package com.joinplato.android;
+package com.joinplato.android.quizz;
 
 import java.util.List;
 import java.util.Random;
@@ -18,8 +18,11 @@ import android.widget.Toast;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
-import com.joinplato.android.QuizzAdapter.OnAnswerListener;
+import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
+import com.joinplato.android.common.Candidate;
+import com.joinplato.android.common.HomeHelper;
+import com.joinplato.android.quizz.QuizzAdapter.OnAnswerListener;
 
 @EActivity(R.layout.quizz)
 public class QuizzActivity extends ActionBarActivity implements OnAnswerListener {
@@ -65,7 +68,7 @@ public class QuizzActivity extends ActionBarActivity implements OnAnswerListener
 			HomeHelper.backToHome(this);
 			break;
 		case R.id.menu_refresh:
-			Toast.makeText(this, "Mise ˆ jour...", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Mise ï¿½ jour...", Toast.LENGTH_SHORT).show();
 			break;
 
 		}

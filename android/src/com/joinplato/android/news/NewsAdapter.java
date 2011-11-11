@@ -1,4 +1,4 @@
-package com.joinplato.android;
+package com.joinplato.android.news;
 
 import java.util.List;
 
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.joinplato.android.R;
 
 public class NewsAdapter extends BaseAdapter {
 

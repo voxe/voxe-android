@@ -1,9 +1,12 @@
-package com.joinplato.android;
+package com.joinplato.android.programs;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
+import com.joinplato.android.R;
+import com.joinplato.android.news.NewsElement;
 
 public class ProgramCategoryAdapter extends BaseAdapter {
 

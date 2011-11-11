@@ -1,4 +1,4 @@
-package com.joinplato.android;
+package com.joinplato.android.quizz;
 
 import java.util.List;
 
@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.joinplato.android.R;
 
 public class QuizzAdapter extends BaseAdapter {
 

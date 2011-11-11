@@ -18,6 +18,12 @@
     <string name="app_name">MyVoxe</string>
     
     <string name="toggle_title">Toggle title</string>
+    
+    <string name="candidates">Candidats</string>
+    <string name="candidate">Candidat</string>
+    <string name="compare">Comparez !</string>
+    <string name="debates">Débats</string>
+    <string name="quizz">PoliQuizz</string>
 
     <string name="menu_refresh">Rafraîchir</string>
     <string name="menu_search">Chercher</string>

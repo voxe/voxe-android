@@ -1,4 +1,4 @@
-package com.joinplato.android;
+package com.joinplato.android.news;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,7 +7,9 @@ import android.view.MenuItem;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
+import com.joinplato.android.common.HomeHelper;
 
 @EActivity(R.layout.wip)
 public class NewsDetailActivity extends ActionBarActivity {

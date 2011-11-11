@@ -1,4 +1,4 @@
-package com.joinplato.android;
+package com.joinplato.android.news;
 
 import java.io.Serializable;
 import java.util.Arrays;
