@@ -18,8 +18,6 @@ package com.joinplato.android.actionbar;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.Menu;
-import android.view.MenuItem;
 
 /**
  * An extension of {@link com.joinplato.android.actionbar.example.android.actionbarcompat.ActionBarHelper} that provides Android

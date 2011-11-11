@@ -16,16 +16,12 @@
 
 package com.joinplato.android.actionbar;
 
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-
-import com.joinplato.android.R;
-import com.joinplato.android.R.attr;
-import com.joinplato.android.R.dimen;
-import com.joinplato.android.R.drawable;
-import com.joinplato.android.R.id;
-import com.joinplato.android.R.layout;
-import com.joinplato.android.R.string;
 
 import android.app.Activity;
 import android.content.Context;
@@ -44,9 +40,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import com.joinplato.android.R;
 
 /**
  * A class that implements the action bar pattern for pre-Honeycomb devices.
