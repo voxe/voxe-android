@@ -6,6 +6,8 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
@@ -14,13 +16,14 @@ import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
 import com.joinplato.android.common.AbstractOnPageChangeListener;
 import com.joinplato.android.common.Candidate;
 import com.joinplato.android.common.HomeHelper;
 
-@EActivity(R.layout.view_pager)
+@EActivity(R.layout.candidate_pager)
 @OptionsMenu(R.menu.candidate)
 public class CandidateActivity extends ActionBarActivity {
 
@@ -43,9 +46,22 @@ public class CandidateActivity extends ActionBarActivity {
 
 	@ViewById
 	ViewPager viewPager;
+	
+	@ViewById
+	TextView slideAdvice;
+	
+	@Pref
+	CandidatePref_ candidatePref;
+	
+	@AfterViews
+	void disableSlide() {
+		if (candidatePref.hideAdvice().get()) {
+			slideAdvice.setVisibility(View.GONE);
+		}
+	}
 
 	@AfterViews
-	void mockCandidates() {
+	void initCandidatePager() {
 		CandidatePagerAdapter adapter = new CandidatePagerAdapter(this, candidates);
 		viewPager.setAdapter(adapter);
 		viewPager.setOnPageChangeListener(new AbstractOnPageChangeListener() {
@@ -69,6 +85,10 @@ public class CandidateActivity extends ActionBarActivity {
 
 	public void onPageSelected(int position) {
 		setTitle(candidates.get(position).getName());
+		if (position!=initialCandidate && !candidatePref.hideAdvice().get()) {
+			slideAdvice.setVisibility(View.GONE);
+			candidatePref.hideAdvice().put(true);
+		}
 	}
 
 }

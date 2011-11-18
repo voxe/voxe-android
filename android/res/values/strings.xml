@@ -33,4 +33,7 @@
         <item>Non</item>
         <item>Heu...</item>
     </string-array>
+    
+        
+     <string name="slide_advice">Slidez horizontalement pour changer de candidat</string>    
 </resources>
