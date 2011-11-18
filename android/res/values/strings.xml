@@ -29,6 +29,8 @@
     <string name="menu_search">Chercher</string>
     <string name="menu_share">Partager</string>
     <string name="menu_ok">Ok</string>
+    <string name="menu_program">Thème</string>
+    <string name="menu_candidates">Candidats sélectionés</string>
     
         
     
@@ -39,5 +41,8 @@
     </string-array>
     
         
-     <string name="slide_advice">Slidez horizontalement pour changer de candidat</string>    
+     <string name="slide_advice">Slidez horizontalement pour changer de candidat</string>
+    
+        
+     <string name="select_one_candidate">Merci de sélectionner au moins un candidat</string>    
 </resources>

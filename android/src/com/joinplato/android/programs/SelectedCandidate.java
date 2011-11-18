@@ -10,6 +10,18 @@ public class SelectedCandidate implements Serializable, Comparable<SelectedCandi
 	
 	private static final long serialVersionUID = 1L;
 	
+	public static List<Candidate> filterSelected(List<SelectedCandidate> selectedCandidates) {
+		List<Candidate> candidates = new ArrayList<Candidate>();
+		
+		for(SelectedCandidate selectedCandidate : selectedCandidates) {
+			if (selectedCandidate.selected) {
+				candidates.add(selectedCandidate.candidate);
+			}
+		}
+		
+		return candidates;
+	}
+	
 	public static List<SelectedCandidate> mockSelectedCandidates() {
 		List<SelectedCandidate> selectedCandidates = new ArrayList<SelectedCandidate>();
 		

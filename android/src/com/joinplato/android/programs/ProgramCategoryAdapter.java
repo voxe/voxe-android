@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.joinplato.android.R;
-import com.joinplato.android.news.NewsElement;
 
 public class ProgramCategoryAdapter extends BaseAdapter {
 
@@ -22,7 +21,7 @@ public class ProgramCategoryAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public NewsElement getItem(int position) {
+	public Object getItem(int position) {
 		return null;
 	}
 

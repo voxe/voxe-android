@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -56,7 +57,13 @@ public class SelectCandidatesActivity extends ActionBarActivity {
 	
 	@OptionsItem
 	public void menuOkSelected() {
-		ProgramsActivity.start(this);
+		for (SelectedCandidate candidate : candidates) {
+			if (candidate.isSelected()) {
+				ProgramsActivity.start(this, candidates);
+				return;
+			}
+		}
+		Toast.makeText(this, R.string.select_one_candidate, Toast.LENGTH_SHORT).show();
 	}
 
 }
