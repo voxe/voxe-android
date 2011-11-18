@@ -6,7 +6,7 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.joinplato.android.actionbar.ActionBarActivity;
 import com.joinplato.android.candidates.CandidateListActivity_;
-import com.joinplato.android.programs.ProgramsActivity_;
+import com.joinplato.android.programs.SelectCandidatesActivity;
 import com.joinplato.android.quizz.QuizzActivity_;
 
 @EActivity(R.layout.dashboard)
@@ -24,7 +24,7 @@ public class DashboardActivity extends ActionBarActivity {
 
 	@Click
 	void programsClicked() {
-		startActivity(new Intent(this, ProgramsActivity_.class));
+		SelectCandidatesActivity.start(this);
 	}
 
 	@Click

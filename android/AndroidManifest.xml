@@ -34,6 +34,9 @@
         <activity
             android:label="@string/quizz"
             android:name="com.joinplato.android.quizz.QuizzActivity_" />
+        <activity
+            android:label="@string/select_compare"
+            android:name="com.joinplato.android.programs.SelectCandidatesActivity_" />
     </application>
 
 </manifest>

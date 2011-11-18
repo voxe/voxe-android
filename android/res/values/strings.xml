@@ -22,11 +22,15 @@
     <string name="compare">Comparez !</string>
     <string name="debates">Débats</string>
     <string name="quizz">PoliQuizz</string>
+    <string name="select_compare">Sélectionnez des candidats</string>
 
     <string name="menu_refresh">Rafraîchir</string>
     <string name="menu_debate">Débattre</string>
     <string name="menu_search">Chercher</string>
     <string name="menu_share">Partager</string>
+    <string name="menu_ok">Ok</string>
+    
+        
     
     <string-array name="quizz_choices">
         <item>Oui</item>
