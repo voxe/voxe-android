@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Random;
 
 import android.util.Pair;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -17,6 +15,8 @@ import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.OptionsItem;
+import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
@@ -25,6 +25,7 @@ import com.joinplato.android.common.HomeHelper;
 import com.joinplato.android.quizz.QuizzAdapter.OnAnswerListener;
 
 @EActivity(R.layout.quizz)
+@OptionsMenu(R.menu.quizz)
 public class QuizzActivity extends ActionBarActivity implements OnAnswerListener {
 
 	@ViewById
@@ -61,20 +62,16 @@ public class QuizzActivity extends ActionBarActivity implements OnAnswerListener
 		quizzAdapter.setAnswerListener(this);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			HomeHelper.backToHome(this);
-			break;
-		case R.id.menu_refresh:
-			Toast.makeText(this, "Mise � jour...", Toast.LENGTH_SHORT).show();
-			break;
-
-		}
-		return super.onOptionsItemSelected(item);
+	@OptionsItem
+	public void homeSelected() {
+		HomeHelper.backToHome(this);
 	}
-
+	
+	@OptionsItem
+	public void menuRefreshSelected() {
+		Toast.makeText(this, "Mise à jour...", Toast.LENGTH_SHORT).show();
+	}
+	
 	private void updateCandidateRandomly() {
 		Candidate candidate = candidates.get(random.nextInt(candidates.size()));
 		candidateName.setText(candidate.getName());
@@ -84,12 +81,6 @@ public class QuizzActivity extends ActionBarActivity implements OnAnswerListener
 	@Override
 	public void onNewAnswer() {
 		updateCandidateRandomly();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.quizz, menu);
-		return super.onCreateOptionsMenu(menu);
 	}
 
 }

@@ -2,9 +2,9 @@ package com.joinplato.android.programs;
 
 import java.util.List;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -12,6 +12,8 @@ import android.widget.ListView;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.OptionsItem;
+import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
@@ -20,7 +22,12 @@ import com.joinplato.android.common.Candidate;
 import com.joinplato.android.common.HomeHelper;
 
 @EActivity(R.layout.programs)
+@OptionsMenu(R.menu.main)
 public class ProgramsActivity extends ActionBarActivity {
+	
+	public static void start(Context context) {
+		context.startActivity(new Intent(context, ProgramsActivity_.class));
+	}
 
 	@ViewById
 	ListView list;
@@ -74,23 +81,12 @@ public class ProgramsActivity extends ActionBarActivity {
 		viewPager.setCurrentItem(0);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu);
+
+	@OptionsItem
+	public void homeSelected() {
+		HomeHelper.backToHome(this);
 	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			HomeHelper.backToHome(this);
-			break;
-
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
+	
 	public void onPageSelected(int position) {
 		setTitle(candidates.get(position).getName());
 	}

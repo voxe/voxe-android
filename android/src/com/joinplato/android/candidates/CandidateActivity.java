@@ -6,13 +6,13 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.OptionsItem;
+import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
@@ -21,6 +21,7 @@ import com.joinplato.android.common.Candidate;
 import com.joinplato.android.common.HomeHelper;
 
 @EActivity(R.layout.view_pager)
+@OptionsMenu(R.menu.candidate)
 public class CandidateActivity extends ActionBarActivity {
 
 	private static final String CANDIDATE_LIST_EXTRA = "candidateList";
@@ -55,25 +56,15 @@ public class CandidateActivity extends ActionBarActivity {
 		});
 		viewPager.setCurrentItem(initialCandidate);
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.candidate, menu);
-		return super.onCreateOptionsMenu(menu);
+	
+	@OptionsItem
+	public void homeSelected() {
+		HomeHelper.backToHome(this);
 	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			HomeHelper.backToHome(this);
-			break;
-		case R.id.menu_search:
-			Toast.makeText(this, "Work in progress", Toast.LENGTH_SHORT).show();
-			break;
-
-		}
-		return super.onOptionsItemSelected(item);
+	
+	@OptionsItem
+	public void menuSearchSelected() {
+		Toast.makeText(this, "Work in progress", Toast.LENGTH_SHORT).show();
 	}
 
 	public void onPageSelected(int position) {

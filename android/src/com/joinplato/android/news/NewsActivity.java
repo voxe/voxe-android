@@ -1,6 +1,7 @@
 package com.joinplato.android.news;
 
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -27,7 +28,8 @@ public class NewsActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.news, menu);
+		MenuInflater menuInflater = getMenuInflater();
+		menuInflater.inflate(R.menu.news, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
