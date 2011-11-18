@@ -44,5 +44,9 @@
      <string name="slide_advice">Slidez horizontalement pour changer de candidat</string>
     
         
-     <string name="select_one_candidate">Merci de sélectionner au moins un candidat</string>    
+     <string name="select_one_candidate">Merci de sélectionner au moins un candidat</string>
+    
+        
+     <string name="select_a_theme">Sélectionnez un thème</string>
+        
 </resources>

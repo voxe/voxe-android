@@ -1,6 +1,7 @@
 package com.joinplato.android.programs;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -12,6 +13,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
@@ -47,7 +51,7 @@ public class ProgramsActivity extends ActionBarActivity {
 
 	@Pref
 	ProgramPref_ programPref;
-	
+
 	@Extra(CANDIDATES_EXTRA)
 	List<SelectedCandidate> selectedCandidates;
 
@@ -55,13 +59,17 @@ public class ProgramsActivity extends ActionBarActivity {
 
 	private List<Candidate> candidates;
 
+	private SelectCandidateDialogAdapter selectCandidateDialogAdapter;
+
+	private ProgramPagerAdapter programPagerAdapter;
+
 	@AfterViews
 	void disableSlide() {
 		if (programPref.hideAdvice().get()) {
 			slideAdvice.setVisibility(View.GONE);
 		}
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,8 +78,8 @@ public class ProgramsActivity extends ActionBarActivity {
 
 	@AfterViews
 	void buildPager() {
-		ProgramPagerAdapter adapter = new ProgramPagerAdapter(this, candidates);
-		viewPager.setAdapter(adapter);
+		programPagerAdapter = new ProgramPagerAdapter(this, candidates);
+		viewPager.setAdapter(programPagerAdapter);
 		viewPager.setOnPageChangeListener(new AbstractOnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
@@ -99,10 +107,18 @@ public class ProgramsActivity extends ActionBarActivity {
 		showDialog(R.id.program_item_dialog);
 	}
 
+	@OptionsItem
+	void menuCandidatesSelected() {
+		showDialog(R.id.select_candidates_dialog);
+	}
+
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
-		if (id == R.id.program_item_dialog) {
+
+		switch (id) {
+		case R.id.program_item_dialog:
 			return new AlertDialog.Builder(this) //
+					.setTitle(R.string.select_a_theme) //
 					.setSingleChoiceItems(programCategoryAdapter, 0, new OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
@@ -110,10 +126,57 @@ public class ProgramsActivity extends ActionBarActivity {
 						}
 					}) //
 					.create();
+		case R.id.select_candidates_dialog: {
+			final GridView gridView = (GridView) View.inflate(this, R.layout.select_candidates, null);
+			selectCandidateDialogAdapter = new SelectCandidateDialogAdapter(this, new ArrayList<SelectedCandidate>());
+			gridView.setAdapter(selectCandidateDialogAdapter);
+			
+			gridView.setOnItemClickListener(new OnItemClickListener() {
 
-		} else {
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+					SelectedCandidate candidate = selectCandidateDialogAdapter.getItem(position);
+					
+					candidate.toggleSelected();
+					
+					View candidateView = gridView.getChildAt(position - gridView.getFirstVisiblePosition());
+					
+					selectCandidateDialogAdapter.updateCheckbox(candidateView, candidate);					
+				}
+			});
+			return new AlertDialog.Builder(this) //
+					.setTitle(R.string.select_compare) //
+					.setView(gridView) //
+					.setPositiveButton(android.R.string.ok, new OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							selectedCandidates = selectCandidateDialogAdapter.getSelectedCandidates();
+							candidates = SelectedCandidate.filterSelected(selectedCandidates);
+							programPagerAdapter.updateCandidates(candidates);
+						}
+					}) //
+					.setNegativeButton(android.R.string.cancel, null).create();
+		}
+
+		default:
 			return super.onCreateDialog(id, args);
 		}
+
+	}
+
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog, Bundle args) {
+
+		switch (id) {
+		case R.id.select_candidates_dialog: {
+			List<SelectedCandidate> candidates = SelectedCandidate.cloneSelected(selectedCandidates);
+			selectCandidateDialogAdapter.updateSelectedCandidates(candidates);
+		}
+		default:
+			super.onPrepareDialog(id, dialog, args);
+		}
+
 	}
 
 }

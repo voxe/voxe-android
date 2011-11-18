@@ -16,7 +16,7 @@ import com.joinplato.android.common.Candidate;
 
 public class ProgramPagerAdapter extends PagerAdapter {
 
-	private final List<Candidate> candidates;
+	private List<Candidate> candidates;
 	private final Context context;
 
 	public ProgramPagerAdapter(Context context, List<Candidate> candidates) {
@@ -36,6 +36,10 @@ public class ProgramPagerAdapter extends PagerAdapter {
 	@Override
 	public int getCount() {
 		return candidates.size();
+	}
+	
+	public int getItemPosition(Object object) {
+	    return POSITION_NONE;
 	}
 
 	@Override
@@ -72,6 +76,11 @@ public class ProgramPagerAdapter extends PagerAdapter {
 
 	@Override
 	public void startUpdate(View arg0) {
+	}
+
+	public void updateCandidates(List<Candidate> candidates) {
+		this.candidates = candidates;
+		notifyDataSetChanged();
 	}
 
 }

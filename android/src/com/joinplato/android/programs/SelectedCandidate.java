@@ -22,6 +22,16 @@ public class SelectedCandidate implements Serializable, Comparable<SelectedCandi
 		return candidates;
 	}
 	
+	public static List<SelectedCandidate> cloneSelected(List<SelectedCandidate> selectedCandidates) {
+		List<SelectedCandidate> clonedCandidates = new ArrayList<SelectedCandidate>();
+		
+		for(SelectedCandidate selectedCandidate : selectedCandidates) {
+				clonedCandidates.add(new SelectedCandidate(selectedCandidate.candidate, selectedCandidate.selected));
+		}
+		
+		return clonedCandidates;
+	}
+	
 	public static List<SelectedCandidate> mockSelectedCandidates() {
 		List<SelectedCandidate> selectedCandidates = new ArrayList<SelectedCandidate>();
 		
@@ -36,8 +46,12 @@ public class SelectedCandidate implements Serializable, Comparable<SelectedCandi
 	private boolean selected;
 	
 	public SelectedCandidate(Candidate candidate) {
+		this(candidate, false);
+	}
+	
+	public SelectedCandidate(Candidate candidate, boolean selected) {
 		this.candidate = candidate;
-		this.selected = false;
+		this.selected = selected;
 	}
 	
 	public Candidate getCandidate() {

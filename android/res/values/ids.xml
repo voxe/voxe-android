@@ -16,4 +16,5 @@
 
 <resources>
     <item type="id" name="program_item_dialog" />
+    <item type="id" name="select_candidates_dialog" />
 </resources>
