@@ -1,9 +1,10 @@
-package com.joinplato.android;
+package com.joinplato.android.dashboard;
 
 import android.content.Intent;
 
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
 import com.joinplato.android.candidates.CandidateListActivity_;
 import com.joinplato.android.programs.SelectCandidatesActivity;
