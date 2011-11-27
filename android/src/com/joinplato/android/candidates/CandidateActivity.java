@@ -22,6 +22,7 @@ import com.joinplato.android.actionbar.ActionBarActivity;
 import com.joinplato.android.common.AbstractOnPageChangeListener;
 import com.joinplato.android.common.Candidate;
 import com.joinplato.android.common.HomeHelper;
+import com.joinplato.android.debate.DebateActivity;
 
 @EActivity(R.layout.candidate_pager)
 @OptionsMenu(R.menu.candidate)
@@ -46,13 +47,13 @@ public class CandidateActivity extends ActionBarActivity {
 
 	@ViewById
 	ViewPager viewPager;
-	
+
 	@ViewById
 	TextView slideAdvice;
-	
+
 	@Pref
 	CandidatePref_ candidatePref;
-	
+
 	@AfterViews
 	void disableSlide() {
 		if (candidatePref.hideAdvice().get()) {
@@ -72,20 +73,30 @@ public class CandidateActivity extends ActionBarActivity {
 		});
 		viewPager.setCurrentItem(initialCandidate);
 	}
-	
+
 	@OptionsItem
 	public void homeSelected() {
 		HomeHelper.backToHome(this);
 	}
-	
 	@OptionsItem
 	public void menuSearchSelected() {
 		Toast.makeText(this, "Work in progress", Toast.LENGTH_SHORT).show();
 	}
 
+	@OptionsItem
+	public void menuDebateSelected() {
+		DebateActivity.start(this);
+	}
+
+	@Override
+	public boolean onSearchRequested() {
+		menuSearchSelected();
+		return false;
+	}
+
 	public void onPageSelected(int position) {
 		setTitle(candidates.get(position).getName());
-		if (position!=initialCandidate && !candidatePref.hideAdvice().get()) {
+		if (position != initialCandidate && !candidatePref.hideAdvice().get()) {
 			slideAdvice.setVisibility(View.GONE);
 			candidatePref.hideAdvice().put(true);
 		}

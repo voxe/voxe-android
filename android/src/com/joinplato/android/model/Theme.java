@@ -2,10 +2,9 @@ package com.joinplato.android.model;
 
 import java.util.List;
 
-public class Election {
-
+public class Theme {
+	
 	public String id;
 	public String name;
-	public List<Theme> themes;
-	public List<Candidate> candidates;
+	public List<Category> categories;
 }

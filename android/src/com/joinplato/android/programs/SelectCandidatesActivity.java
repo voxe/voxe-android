@@ -51,11 +51,6 @@ public class SelectCandidatesActivity extends ActionBarActivity {
 	}
 	
 	@OptionsItem
-	public void homeSelected() {
-		HomeHelper.backToHome(this);
-	}
-	
-	@OptionsItem
 	public void menuOkSelected() {
 		for (SelectedCandidate candidate : candidates) {
 			if (candidate.isSelected()) {
@@ -64,6 +59,11 @@ public class SelectCandidatesActivity extends ActionBarActivity {
 			}
 		}
 		Toast.makeText(this, R.string.select_one_candidate, Toast.LENGTH_SHORT).show();
+	}
+	
+	@OptionsItem
+	public void homeSelected() {
+		HomeHelper.backToHome(this);
 	}
 
 }

@@ -71,7 +71,7 @@ public class ProgramsActivity extends ActionBarActivity {
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		candidates = SelectedCandidate.filterSelected(selectedCandidates);
 	}
@@ -98,11 +98,6 @@ public class ProgramsActivity extends ActionBarActivity {
 	}
 
 	@OptionsItem
-	void homeSelected() {
-		HomeHelper.backToHome(this);
-	}
-
-	@OptionsItem
 	void menuProgramSelected() {
 		showDialog(R.id.program_item_dialog);
 	}
@@ -110,6 +105,11 @@ public class ProgramsActivity extends ActionBarActivity {
 	@OptionsItem
 	void menuCandidatesSelected() {
 		showDialog(R.id.select_candidates_dialog);
+	}
+
+	@OptionsItem
+	public void homeSelected() {
+		HomeHelper.backToHome(this);
 	}
 
 	@Override
@@ -130,18 +130,18 @@ public class ProgramsActivity extends ActionBarActivity {
 			final GridView gridView = (GridView) View.inflate(this, R.layout.select_candidates, null);
 			selectCandidateDialogAdapter = new SelectCandidateDialogAdapter(this, new ArrayList<SelectedCandidate>());
 			gridView.setAdapter(selectCandidateDialogAdapter);
-			
+
 			gridView.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 					SelectedCandidate candidate = selectCandidateDialogAdapter.getItem(position);
-					
+
 					candidate.toggleSelected();
-					
+
 					View candidateView = gridView.getChildAt(position - gridView.getFirstVisiblePosition());
-					
-					selectCandidateDialogAdapter.updateCheckbox(candidateView, candidate);					
+
+					selectCandidateDialogAdapter.updateCheckbox(candidateView, candidate);
 				}
 			});
 			return new AlertDialog.Builder(this) //

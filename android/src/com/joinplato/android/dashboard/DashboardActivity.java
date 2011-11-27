@@ -7,6 +7,7 @@ import com.googlecode.androidannotations.annotations.EActivity;
 import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
 import com.joinplato.android.candidates.CandidateListActivity_;
+import com.joinplato.android.debate.DebateActivity;
 import com.joinplato.android.programs.SelectCandidatesActivity;
 import com.joinplato.android.quizz.QuizzActivity_;
 
@@ -15,7 +16,7 @@ public class DashboardActivity extends ActionBarActivity {
 
 	@Click
 	void debatesClicked() {
-//		startActivity(new Intent(this, NewsActivity_.class));
+		DebateActivity.start(this);
 	}
 
 	@Click

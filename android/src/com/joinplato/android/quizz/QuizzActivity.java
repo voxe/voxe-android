@@ -11,12 +11,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.OptionsItem;
-import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
@@ -25,7 +23,6 @@ import com.joinplato.android.common.HomeHelper;
 import com.joinplato.android.quizz.QuizzAdapter.OnAnswerListener;
 
 @EActivity(R.layout.quizz)
-@OptionsMenu(R.menu.quizz)
 public class QuizzActivity extends ActionBarActivity implements OnAnswerListener {
 
 	@ViewById
@@ -62,16 +59,6 @@ public class QuizzActivity extends ActionBarActivity implements OnAnswerListener
 		quizzAdapter.setAnswerListener(this);
 	}
 
-	@OptionsItem
-	public void homeSelected() {
-		HomeHelper.backToHome(this);
-	}
-	
-	@OptionsItem
-	public void menuRefreshSelected() {
-		Toast.makeText(this, "Mise à jour...", Toast.LENGTH_SHORT).show();
-	}
-	
 	private void updateCandidateRandomly() {
 		Candidate candidate = candidates.get(random.nextInt(candidates.size()));
 		candidateName.setText(candidate.getName());
@@ -81,6 +68,11 @@ public class QuizzActivity extends ActionBarActivity implements OnAnswerListener
 	@Override
 	public void onNewAnswer() {
 		updateCandidateRandomly();
+	}
+	
+	@OptionsItem
+	public void homeSelected() {
+		HomeHelper.backToHome(this);
 	}
 
 }

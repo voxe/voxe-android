@@ -12,18 +12,17 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-  -->
+-->
 
 <resources>
+
     <string name="app_name">The Voxe</string>
-    
     <string name="candidates">Candidats</string>
     <string name="candidate">Candidat</string>
     <string name="compare">Comparez !</string>
     <string name="debates">Débats</string>
     <string name="quizz">PoliQuizz</string>
     <string name="select_compare">Sélectionnez des candidats</string>
-
     <string name="menu_refresh">Rafraîchir</string>
     <string name="menu_debate">Débattre</string>
     <string name="menu_search">Chercher</string>
@@ -31,22 +30,16 @@
     <string name="menu_ok">Ok</string>
     <string name="menu_program">Thème</string>
     <string name="menu_candidates">Candidats sélectionés</string>
-    
-        
-    
+
     <string-array name="quizz_choices">
         <item>Oui</item>
         <item>Non</item>
         <item>Heu...</item>
     </string-array>
-    
-        
-     <string name="slide_advice">Slidez horizontalement pour changer de candidat</string>
-    
-        
-     <string name="select_one_candidate">Merci de sélectionner au moins un candidat</string>
-    
-        
-     <string name="select_a_theme">Sélectionnez un thème</string>
-        
+
+    <string name="slide_advice">Slidez horizontalement pour changer de candidat</string>
+    <string name="select_one_candidate">Merci de sélectionner au moins un candidat</string>
+    <string name="select_a_theme">Sélectionnez un thème</string>
+    <string name="wip">On y travaille !</string>
+
 </resources>

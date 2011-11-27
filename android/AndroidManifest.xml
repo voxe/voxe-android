@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+
     <application
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
@@ -43,6 +45,9 @@
         <activity
             android:label="@string/select_compare"
             android:name="com.joinplato.android.programs.SelectCandidatesActivity_" />
+        <activity
+            android:label="@string/debates"
+            android:name="com.joinplato.android.debate.DebateActivity_" />
 
         <receiver android:name="com.joinplato.android.data.SetAlarmBootReceiver" >
             <intent-filter >
