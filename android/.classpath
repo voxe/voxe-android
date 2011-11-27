@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="lib/android-support-v4.jar"/>
 	<classpathentry kind="lib" path="lib/androidannotations-2.2-RC2-api.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-mapper-asl-1.9.2.jar" sourcepath="/Users/pyricau/.m2/repository/org/codehaus/jackson/jackson-mapper-asl/1.9.2/jackson-mapper-asl-1.9.2-sources.jar"/>
-	<classpathentry kind="lib" path="lib/guava-10.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/guava-10.0.1.jar" sourcepath="/Users/pyricau/.m2/repository/com/google/guava/guava/10.0.1/guava-10.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/spring-android-core-1.0.0.M4.jar"/>
 	<classpathentry kind="lib" path="lib/spring-android-rest-template-1.0.0.M4.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-core-asl-1.9.2.jar"/>

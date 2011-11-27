@@ -1,5 +1,6 @@
 package com.joinplato.android.candidates;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -11,16 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joinplato.android.R;
-import com.joinplato.android.common.Candidate;
+import com.joinplato.android.model.Candidate;
 
 public class CandidateAdapter extends BaseAdapter {
 
-	private final List<Candidate> candidates;
+	private List<Candidate> candidates = new ArrayList<Candidate>();
 	private final Context context;
 
-	public CandidateAdapter(Context context, List<Candidate> candidates) {
+	public CandidateAdapter(Context context) {
 		this.context = context;
-		this.candidates = candidates;
 	}
 
 	@Override
@@ -63,6 +63,11 @@ public class CandidateAdapter extends BaseAdapter {
 		imageView.setImageResource(candidate.getImageId());
 
 		return convertView;
+	}
+	
+	public void updateCandidates(List<Candidate> candidates) {
+		this.candidates = candidates;
+		notifyDataSetChanged();
 	}
 
 }

@@ -3,6 +3,8 @@ package com.joinplato.android.quizz;
 import java.util.List;
 import java.util.Random;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,6 +26,10 @@ import com.joinplato.android.quizz.QuizzAdapter.OnAnswerListener;
 
 @EActivity(R.layout.quizz)
 public class QuizzActivity extends ActionBarActivity implements OnAnswerListener {
+	
+	public static void start(Context context) {
+		context.startActivity(new Intent(context, QuizzActivity_.class));
+	}	
 
 	@ViewById
 	ListView list;

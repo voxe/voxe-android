@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.joinplato.android.dashboard;
+package com.joinplato.android.common;
 
 import android.os.Build;
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.joinplato.android.R;
 
+@Deprecated
 public class Candidate implements Serializable, Comparable<Candidate> {
 
 	private static final long serialVersionUID = 1L;

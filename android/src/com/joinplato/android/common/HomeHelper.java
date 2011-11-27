@@ -6,7 +6,6 @@ import android.content.Intent;
 
 import com.joinplato.android.R;
 import com.joinplato.android.dashboard.DashboardActivity_;
-import com.joinplato.android.dashboard.UIUtils;
 
 public class HomeHelper {
 

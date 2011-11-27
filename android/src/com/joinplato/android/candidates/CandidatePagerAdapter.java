@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joinplato.android.R;
-import com.joinplato.android.common.Candidate;
+import com.joinplato.android.model.Candidate;
 
 public class CandidatePagerAdapter extends PagerAdapter {
 

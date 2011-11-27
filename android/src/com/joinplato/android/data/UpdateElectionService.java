@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -38,19 +39,22 @@ public class UpdateElectionService extends WakefulIntentService {
 		context.startService(updateIntent);
 	}
 
-	private DataAdapter dataAdapter;
+	private ElectionAdapter dataAdapter;
 
 	private ElectionResource electionClient = new ElectionResource_();
 
 	public UpdateElectionService() {
 		super(UpdateElectionService.class.getSimpleName());
-		dataAdapter = new DataAdapter(this);
+		dataAdapter = new ElectionAdapter(this);
 		prepareElectionClient();
 	}
 
 	private void prepareElectionClient() {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		objectMapper.configure(DeserializationConfig.Feature.AUTO_DETECT_SETTERS, false);
+		objectMapper.configure(DeserializationConfig.Feature.USE_GETTERS_AS_SETTERS, false);
+		objectMapper.configure(SerializationConfig.Feature.AUTO_DETECT_GETTERS, false);
 
 		RestTemplate restTemplate = electionClient.getRestTemplate();
 		List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();

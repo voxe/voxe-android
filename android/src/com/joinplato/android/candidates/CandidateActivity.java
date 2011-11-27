@@ -20,9 +20,9 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 import com.joinplato.android.R;
 import com.joinplato.android.actionbar.ActionBarActivity;
 import com.joinplato.android.common.AbstractOnPageChangeListener;
-import com.joinplato.android.common.Candidate;
 import com.joinplato.android.common.HomeHelper;
 import com.joinplato.android.debate.DebateActivity;
+import com.joinplato.android.model.Candidate;
 
 @EActivity(R.layout.candidate_pager)
 @OptionsMenu(R.menu.candidate)
