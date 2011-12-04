@@ -1,13 +1,21 @@
 package com.joinplato.android.candidates;
 
+import static android.content.Intent.ACTION_SEND;
+import static android.content.Intent.EXTRA_SUBJECT;
+import static android.content.Intent.EXTRA_TEXT;
+
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,11 +53,33 @@ public class CandidatePagerAdapter extends PagerAdapter {
 
 		ViewGroup viewGroup = (ViewGroup) View.inflate(context, R.layout.candidate_detail_item, null);
 		TextView nameView = (TextView) viewGroup.findViewById(R.id.candidateName);
+		Button wikiButton = (Button) viewGroup.findViewById(R.id.wiki);
+		Button shareButton = (Button) viewGroup.findViewById(R.id.share);
 		ImageView imageView = (ImageView) viewGroup.findViewById(R.id.candidateImage);
 		imageView.setImageResource(candidate.getImageId());
 
-		CharSequence name = candidate.getName();
+		final CharSequence name = candidate.getName();
 		nameView.setText(name);
+
+		wikiButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://fr.m.wikipedia.org/wiki/Eva_Joly"));
+				context.startActivity(browserIntent);
+			}
+		});
+
+		shareButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent sharingIntent = new Intent(ACTION_SEND);
+				sharingIntent.setType("text/plain");
+				sharingIntent.putExtra(EXTRA_TEXT, "Je soutiens " + name+ " pour les élections http://joinplato.herokuapp.com/elections/4ed1cb0203ad190006000001");
+				context.startActivity(Intent.createChooser(sharingIntent, "Partager via"));
+			}
+		});
 
 		((ViewPager) collection).addView(viewGroup);
 

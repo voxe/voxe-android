@@ -46,42 +46,18 @@
             android:textColor="#000000"
             android:textSize="30sp"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/candidateBio"
+        
+        <Button
+            android:id="@+id/wiki"
             style="@style/RoundCornersTitle"
             android:layout_below="@id/candidateImage"
-            android:text="Bio" />
-
-        <TextView
-            android:id="@+id/candidateBioContent"
-            style="@style/Content"
-            android:layout_below="@id/candidateBio"
-            android:text="Né en 19XX, bidule a grandi a patati patata. Militant de la première heure de machin, il fonde en XXX..." />
-
-        <TextView
-            android:id="@+id/candidatePath"
-            style="@style/RoundCornersTitle"
-            android:layout_below="@id/candidateBioContent"
-            android:text="Parcours politique" />
-
-        <TextView
-            android:id="@+id/candidatePathContent"
-            style="@style/Content"
-            android:layout_below="@id/candidatePath"
-            android:text="1900-1901 : Maire de Trifouillis\n1945-1965 : Député de Bidule" />
+            android:text="Fiche wiki" />
         
-        <TextView
-            android:id="@+id/candidateMandates"
+        <Button
+            android:id="@+id/share"
             style="@style/RoundCornersTitle"
-            android:layout_below="@id/candidatePathContent"
-            android:text="Mandats actuels" />        
-            
-        <TextView
-            android:id="@+id/candidateMandatesContent"
-            style="@style/Content"
-            android:layout_below="@id/candidateMandates"
-            android:text="Sénateur de machin chose" />        
+            android:layout_below="@id/wiki"
+            android:text="Partager" />
         
     </RelativeLayout>
 
