@@ -17,7 +17,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_program"
         android:title="@string/menu_program"
-        android:icon="@drawable/ic_action_program"
+        android:icon="@drawable/ic_action_programs"
         android:showAsAction="always" />
 
     <item android:id="@+id/menu_candidates"

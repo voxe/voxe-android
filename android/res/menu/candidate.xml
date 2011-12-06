@@ -17,7 +17,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_debate"
         android:title="@string/menu_debate"
-        android:icon="@drawable/ic_action_debate"
+        android:icon="@drawable/ic_action_debates"
         android:showAsAction="always" />
     <item android:id="@+id/menu_search"
         android:title="@string/menu_search"
