@@ -8,7 +8,7 @@ import com.joinplato.android.model.ElectionHolder;
 import com.joinplato.android.model.PropositionHolder;
 
 @Rest("http://joinplato.herokuapp.com/api/v1")
-public interface ElectionResource {
+public interface ElectionClient {
 	
 	@Get("/elections/{electionId}")
 	ElectionHolder getElection(String electionId);
@@ -17,5 +17,7 @@ public interface ElectionResource {
 	PropositionHolder getPropositions(String electionId, String themeId, String candidateIds);
 	
 	RestTemplate getRestTemplate();
+
+	void setRestTemplate(RestTemplate restTemplate);
 
 }

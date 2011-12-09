@@ -48,7 +48,7 @@ public class CandidateListActivity extends ActionBarActivity {
 
 	@Background
 	void loadCandidates() {
-		ElectionHolder electionHolder = application.getElectionHolder();
+		ElectionHolder electionHolder = application.getElectionHolder().get();
 		List<Candidate> loadedCandidates = electionHolder.election.candidates;
 		Collections.sort(loadedCandidates);
 		updateCandidateGrid(loadedCandidates);

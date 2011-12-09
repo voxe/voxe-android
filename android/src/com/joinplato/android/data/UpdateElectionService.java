@@ -19,6 +19,7 @@ import android.content.Intent;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.joinplato.android.TheVoxeApplication;
 import com.joinplato.android.common.LogHelper;
 import com.joinplato.android.common.WakefulIntentService;
 import com.joinplato.android.model.Candidate;
@@ -27,10 +28,12 @@ import com.joinplato.android.model.Proposition;
 import com.joinplato.android.model.PropositionHolder;
 import com.joinplato.android.model.Theme;
 
+/**
+ * TODO add capptain logs
+ *
+ */
 public class UpdateElectionService extends WakefulIntentService {
-
-	private static final String ELECTION_ID_2007 = "4ed1cb0203ad190006000001";
-
+	
 	private static final int DURATION_24H = 1000 * 60 * 60 * 24;
 
 	public static void startUpdate(Context context) {
@@ -41,7 +44,7 @@ public class UpdateElectionService extends WakefulIntentService {
 
 	private ElectionAdapter dataAdapter;
 
-	private ElectionResource electionClient = new ElectionResource_();
+	private ElectionClient electionClient;
 
 	public UpdateElectionService() {
 		super(UpdateElectionService.class.getSimpleName());
@@ -56,7 +59,8 @@ public class UpdateElectionService extends WakefulIntentService {
 		objectMapper.configure(DeserializationConfig.Feature.USE_GETTERS_AS_SETTERS, false);
 		objectMapper.configure(SerializationConfig.Feature.AUTO_DETECT_GETTERS, false);
 
-		RestTemplate restTemplate = electionClient.getRestTemplate();
+		RestTemplate restTemplate = new RestTemplate();
+
 		List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
 		for (HttpMessageConverter<?> httpMessageConverter : messageConverters) {
 			if (httpMessageConverter instanceof MappingJacksonHttpMessageConverter) {
@@ -64,6 +68,8 @@ public class UpdateElectionService extends WakefulIntentService {
 				jacksonConverter.setObjectMapper(objectMapper);
 			}
 		}
+
+		electionClient = new ElectionClient_(restTemplate);
 	}
 
 	@Override
@@ -80,18 +86,37 @@ public class UpdateElectionService extends WakefulIntentService {
 			return;
 		}
 
-		String electionId = ELECTION_ID_2007;
+		String electionId = ((TheVoxeApplication) getApplication()).getElectionId();
 		long start = currentTimeMillis();
 		ElectionHolder electionHolder = electionClient.getElection(electionId);
 		LogHelper.logDuration("Election download in background", start);
 
+		/*
+		 * TODO Download images
+		 * 
+		 * The images are stored in a file, the file name being unique, so if a
+		 * photo is changed, the image will be downloaded again
+		 */
+
+		// List<Proposition> propositions = downloadPropositions(electionId,
+		// electionHolder);
+		// electionHolder.propositions = propositions;
+
+		LogHelper.logDuration("Whole download in background", start);
+
+		electionHolder.lastUpdateTimestamp = currentTimeMillis();
+
+		dataAdapter.save(electionHolder);
+	}
+
+	@SuppressWarnings("unused")
+	private List<Proposition> downloadPropositions(String electionId, ElectionHolder electionHolder) {
 		String candidateIds = Joiner.on(',').join(transform(electionHolder.election.candidates, new Function<Candidate, String>() {
 			@Override
 			public String apply(Candidate candidate) {
 				return candidate.id;
 			}
 		}));
-
 		List<Proposition> propositions = newArrayList();
 		long startPropositions = currentTimeMillis();
 		for (Theme theme : electionHolder.election.themes) {
@@ -101,12 +126,7 @@ public class UpdateElectionService extends WakefulIntentService {
 			LogHelper.logDuration("Downloaded theme " + theme.name, startProposition);
 		}
 		LogHelper.logDuration("Downloaded all themes", startPropositions);
-		LogHelper.logDuration("Whole download in background", start);
-
-		electionHolder.propositions = propositions;
-		electionHolder.lastUpdateTimestamp = currentTimeMillis();
-
-		dataAdapter.save(electionHolder);
+		return propositions;
 	}
 
 	private boolean shouldNotUpdate() {

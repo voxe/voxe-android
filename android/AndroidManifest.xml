@@ -22,44 +22,70 @@
         android:label="@string/app_name"
         android:name="com.joinplato.android.TheVoxeApplication"
         android:theme="@style/AppTheme" >
+<!--         <activity -->
+<!--             android:label="@string/app_name" -->
+<!--             android:name="com.joinplato.android.loading.LoadingActivity_" -->
+<!--             android:theme="@android:style/Theme.Translucent.NoTitleBar" > -->
+<!--             <intent-filter > -->
+<!--                 <action android:name="android.intent.action.MAIN" /> -->
+
+<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
+<!--             </intent-filter> -->
+<!--         </activity> -->
         <activity
-            android:label="@string/app_name"
-            android:name="com.joinplato.android.dashboard.DashboardActivity_" >
+            android:label="@string/candidates"
+            android:name="com.joinplato.android.webview.SelectCandidatesActivity_" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <activity
+                android:label="@string/select_theme"
+                android:name="com.joinplato.android.webview.SelectThemeActivity_" />
+            <activity android:name="com.joinplato.android.webview.CompareCanditatesActivity_" />
+
+            <!-- <activity -->
+            <!-- android:label="@string/app_name" -->
+            <!-- android:name="com.joinplato.android.dashboard.DashboardActivity_" > -->
+            <!-- <intent-filter > -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+            <!-- </activity> -->
+            <!-- <activity -->
+            <!-- android:label="@string/candidates" -->
+            <!-- android:name="com.joinplato.android.candidates.CandidateListActivity_" /> -->
+            <!-- <activity -->
+            <!-- android:label="@string/candidate" -->
+            <!-- android:name="com.joinplato.android.candidates.CandidateActivity_" /> -->
+            <!-- <activity -->
+            <!-- android:label="@string/compare" -->
+            <!-- android:name="com.joinplato.android.programs.ProgramsActivity_" /> -->
+            <!-- <activity -->
+            <!-- android:label="@string/quizz" -->
+            <!-- android:name="com.joinplato.android.quizz.QuizzActivity_" /> -->
+            <!-- <activity -->
+            <!-- android:label="@string/select_compare" -->
+            <!-- android:name="com.joinplato.android.programs.SelectCandidatesActivity_" /> -->
+            <!-- <activity -->
+            <!-- android:label="@string/debates" -->
+            <!-- android:name="com.joinplato.android.debate.DebateActivity_" /> -->
+
+            <receiver android:name="com.joinplato.android.data.SetAlarmBootReceiver" >
+                <intent-filter >
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                </intent-filter>
+            </receiver>
+            <receiver android:name="com.joinplato.android.data.StartElectionServiceAlarmReceiver" />
+
+            <service
+                android:exported="false"
+                android:name="com.joinplato.android.data.UpdateElectionService" />
         </activity>
-        <activity
-            android:label="@string/candidates"
-            android:name="com.joinplato.android.candidates.CandidateListActivity_" />
-        <activity
-            android:label="@string/candidate"
-            android:name="com.joinplato.android.candidates.CandidateActivity_" />
-        <activity
-            android:label="@string/compare"
-            android:name="com.joinplato.android.programs.ProgramsActivity_" />
-        <activity
-            android:label="@string/quizz"
-            android:name="com.joinplato.android.quizz.QuizzActivity_" />
-        <activity
-            android:label="@string/select_compare"
-            android:name="com.joinplato.android.programs.SelectCandidatesActivity_" />
-        <activity
-            android:label="@string/debates"
-            android:name="com.joinplato.android.debate.DebateActivity_" />
-
-        <receiver android:name="com.joinplato.android.data.SetAlarmBootReceiver" >
-            <intent-filter >
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name="com.joinplato.android.data.StartElectionServiceAlarmReceiver" />
-
-        <service
-            android:exported="false"
-            android:name="com.joinplato.android.data.UpdateElectionService" />
     </application>
 
 </manifest>

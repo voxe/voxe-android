@@ -16,7 +16,7 @@
 
 <resources>
 
-    <string name="app_name">The Voxe</string>
+    <string name="app_name">Voxe</string>
     <string name="candidates">Candidats</string>
     <string name="candidate">Candidat</string>
     <string name="compare">Comparez !</string>
@@ -41,5 +41,9 @@
     <string name="select_one_candidate">Merci de sélectionner au moins un candidat</string>
     <string name="select_a_theme">Sélectionnez un thème</string>
     <string name="wip">On y travaille !</string>
+    <string name="loading">Chargement...</string>
+    <string name="please_wait">Veuillez patienter</string>
+    <string name="updating">Mise à jour de l\'élection...</string>
+    <string name="select_theme">Sélectionnez un thème</string>
 
 </resources>

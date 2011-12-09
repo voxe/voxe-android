@@ -18,7 +18,7 @@
     android:id="@+id/gridview"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:columnWidth="90dp"
+    android:columnWidth="100dp"
     android:gravity="center"
     android:horizontalSpacing="5dp"
     android:layoutAnimation="@anim/layout_wave_scale"
