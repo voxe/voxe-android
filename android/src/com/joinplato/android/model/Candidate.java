@@ -12,6 +12,7 @@ public class Candidate implements Serializable, Comparable<Candidate> {
 	public String id;
 	public String firstName;
 	public String lastName;
+	public Photo photo;
 	
 	@Override
 	public int compareTo(Candidate another) {

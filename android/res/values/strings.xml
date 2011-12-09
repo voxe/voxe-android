@@ -45,5 +45,11 @@
     <string name="please_wait">Veuillez patienter</string>
     <string name="updating">Mise à jour de l\'élection...</string>
     <string name="select_theme">Sélectionnez un thème</string>
+    <string name="proposition_details">Détails de la proposition</string>
+    <string name="about">A propos</string>
+    <string name="about_content">L\'équipe Voxe déchire sa race!</string>
+    <string name="about_ok">Cool !</string>
+    <string name="share_compare" formatted="false">"J'ai comparé les candidats %s sur le thème %s grâce à Voxe! http://voxe.org/XXX"</string>
+   	<string name="share_proposition" formatted="false">"J'ai trouvé cette proposition sur Voxe: http://voxe.org/XXX/%s"</string>
 
 </resources>

@@ -12,13 +12,20 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-  -->
+-->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:id="@+id/menu_candidates"
-        android:title="@string/menu_candidates"
+    <item
+        android:id="@+id/menu_candidates"
         android:icon="@drawable/ic_action_candidates"
-        android:showAsAction="always" />    
-    
+        android:showAsAction="always"
+        android:title="@string/menu_candidates"/>
+
+    <item
+        android:id="@+id/menu_share"
+        android:icon="@drawable/ic_action_share"
+        android:showAsAction="always"
+        android:title="@string/menu_share"/>
+
 </menu>

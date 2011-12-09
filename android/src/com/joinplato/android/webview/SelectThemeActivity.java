@@ -6,9 +6,11 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 
 import com.google.common.base.Optional;
+import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -26,7 +28,7 @@ import com.joinplato.android.model.Election;
 import com.joinplato.android.model.ElectionHolder;
 import com.joinplato.android.model.Theme;
 
-@EActivity(R.layout.list)
+@EActivity(R.layout.select_theme)
 public class SelectThemeActivity extends ActionBarActivity {
 
 	private static final String SELECTED_CANDIDATES_EXTRA = "selectedCandidates";
@@ -59,6 +61,9 @@ public class SelectThemeActivity extends ActionBarActivity {
 
 	@ViewById
 	ListView list;
+	
+	@ViewById
+	View loadingLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +74,12 @@ public class SelectThemeActivity extends ActionBarActivity {
 		} else {
 			loadElectionHolder();
 		}
-
+	}
+	
+	@AfterViews
+	void showLoading() {
+		loadingLayout.setVisibility(View.VISIBLE);
+		list.setVisibility(View.GONE);
 	}
 
 	@Background
@@ -84,6 +94,8 @@ public class SelectThemeActivity extends ActionBarActivity {
 	void fillList(Election election) {
 		ThemeAdapter themeAdapter = new ThemeAdapter(this, election.themes);
 		list.setAdapter(themeAdapter);
+		loadingLayout.setVisibility(View.GONE);
+		list.setVisibility(View.VISIBLE);
 	}
 
 	@ItemClick

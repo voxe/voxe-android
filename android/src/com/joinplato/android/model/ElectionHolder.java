@@ -1,13 +1,15 @@
 package com.joinplato.android.model;
 
-import java.util.List;
 
 public class ElectionHolder {
-	
+
 	public long lastUpdateTimestamp;
-	
+
 	public Election election;
-	
-	public List<Proposition> propositions;
+
+	/**
+	 * We don't use the propositions right now
+	 */
+	// public List<Proposition> propositions;
 
 }

@@ -4,6 +4,7 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.currentTimeMillis;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -83,9 +84,11 @@ public class UpdateElectionService extends WakefulIntentService {
 
 	private void updateElection() {
 		if (shouldNotUpdate()) {
+			LogHelper.log("No need to update election data");
 			return;
 		}
 
+		LogHelper.log("Starting update of election in background");
 		String electionId = ((TheVoxeApplication) getApplication()).getElectionId();
 		long start = currentTimeMillis();
 		ElectionHolder electionHolder = electionClient.getElection(electionId);
@@ -101,6 +104,10 @@ public class UpdateElectionService extends WakefulIntentService {
 		// List<Proposition> propositions = downloadPropositions(electionId,
 		// electionHolder);
 		// electionHolder.propositions = propositions;
+		
+		Collections.sort(electionHolder.election.themes);
+		Collections.sort(electionHolder.election.candidates);
+		
 
 		LogHelper.logDuration("Whole download in background", start);
 
@@ -132,15 +139,17 @@ public class UpdateElectionService extends WakefulIntentService {
 	private boolean shouldNotUpdate() {
 		Optional<ElectionHolder> optional = dataAdapter.load();
 		if (optional.isPresent()) {
+			LogHelper.log("Optional is present");
 			ElectionHolder electionHolder = optional.get();
 
 			long now = System.currentTimeMillis();
 
 			long timeElapsedSinceLastUpdate = now - electionHolder.lastUpdateTimestamp;
-
+			LogHelper.log("TimeElapsed:"+timeElapsedSinceLastUpdate);
 			if (timeElapsedSinceLastUpdate < DURATION_24H) {
 				return true;
 			}
+			
 		}
 		return false;
 	}

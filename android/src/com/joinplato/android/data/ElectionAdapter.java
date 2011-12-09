@@ -36,6 +36,7 @@ public class ElectionAdapter {
 	public Optional<ElectionHolder> load() {
 
 		File storageFile = getStorageFile();
+		boolean loadedFromApk = false;
 		if (!storageFile.exists()) {
 			try {
 				InputSupplier<? extends InputStream> from = new InputSupplier<InputStream>() {
@@ -46,6 +47,7 @@ public class ElectionAdapter {
 					}
 				};
 				Files.copy(from, storageFile);
+				loadedFromApk = true;
 			} catch (IOException e) {
 				LogHelper.logException("Could not retrieve elections data from assets", e);
 			}
@@ -59,6 +61,7 @@ public class ElectionAdapter {
 			long start = System.currentTimeMillis();
 			Optional<ElectionHolder> optional = Optional.of(mapper.readValue(storageFile, ElectionHolder.class));
 			LogHelper.logDuration("Loading election data", start);
+			optional.get().lastUpdateTimestamp = 0;
 			return optional;
 		} catch (Exception e) {
 			LogHelper.logException("Could not read data from storage file " + storageFile, e);
