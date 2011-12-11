@@ -7,7 +7,12 @@ import static com.google.common.collect.Iterables.transform;
 import java.io.Serializable;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -40,6 +45,9 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 	private static final String SELECTED_CANDIDATES_EXTRA = "selectedCandidates";
 	private static final String SELECTED_THEME_EXTRA = "selectedTheme";
 
+	private static final String FAILING_URL_ARG = "failingUrl";
+	private static final String DESCRIPTION_ARG = "description";
+
 	public static void start(Context context, List<Candidate> selectedCandidates, Theme selectedTheme) {
 		Intent intent = new Intent(context, CompareCanditatesActivity_.class);
 		intent.putExtra(SELECTED_CANDIDATES_EXTRA, (Serializable) selectedCandidates);
@@ -48,13 +56,13 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 	}
 
 	private class CompareWebViewClient extends WebViewClient {
-		
+
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			loadingLayout.setVisibility(View.GONE);
 			webview.setVisibility(View.VISIBLE);
 		}
-		
+
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			if (url.contains(ShowPropositionActivity.SHOW_PROPOSITION_PATH_FRAGMENT)) {
@@ -65,6 +73,14 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 				webview.setVisibility(View.GONE);
 				return false;
 			}
+		}
+
+		@Override
+		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+			Bundle bundle = new Bundle();
+			bundle.putString(FAILING_URL_ARG, failingUrl);
+			bundle.putString(DESCRIPTION_ARG, description);
+			showDialog(R.id.webview_error_dialog, bundle);
 		}
 	}
 
@@ -79,9 +95,11 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 
 	@ViewById
 	WebView webview;
-	
+
 	@ViewById
 	View loadingLayout;
+	
+	private String failingUrl;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,23 +153,75 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		}
 	}
-	
+
 	@OptionsItem
 	void menuShareSelected() {
 		Intent sharingIntent = new Intent(ACTION_SEND);
 		sharingIntent.setType("text/plain");
-		
+
 		Iterable<String> candidateNames = transform(selectedCandidates, new Function<Candidate, String>() {
 			@Override
 			public String apply(Candidate input) {
 				return input.getName().toString();
 			}
 		});
-		
+
 		String candidateNamesJoined = Joiner.on(',').join(candidateNames);
 		String message = String.format(getString(R.string.share_compare), candidateNamesJoined, selectedTheme.name);
 		sharingIntent.putExtra(EXTRA_TEXT, message);
 		startActivity(Intent.createChooser(sharingIntent, "Partager via"));
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id, Bundle args) {
+		switch (id) {
+		case R.id.webview_error_dialog:
+			return createWebviewErrorDialog();
+		default:
+			return null;
+		}
+	}
+
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog, Bundle bundle) {
+		switch (id) {
+		case R.id.webview_error_dialog:
+			prepareWebviewErrorDialog((AlertDialog) dialog, bundle.getString(FAILING_URL_ARG), bundle.getString(DESCRIPTION_ARG));
+			break;
+		}
+	}
+
+	private Dialog createWebviewErrorDialog() {
+		return new AlertDialog.Builder(this) //
+				.setTitle(R.string.webview_error_dialog) //
+				.setMessage("") //
+				.setOnCancelListener(new OnCancelListener() {
+
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						finish();
+					}
+				}) //
+				.setPositiveButton(R.string.retry, new OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						webview.loadUrl(failingUrl);
+					}
+				}) //
+				.setNegativeButton(R.string.cancel, new OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+					}
+				}) //
+				.create();
+	}
+
+	private void prepareWebviewErrorDialog(AlertDialog dialog, String failingUrl, String description) {
+		this.failingUrl = failingUrl;
+		dialog.setMessage(String.format(getString(R.string.webview_error_dialog_message), description));
 	}
 
 }
