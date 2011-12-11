@@ -1,0 +1,13 @@
+package org.voxe.android.data;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+
+public class SetAlarmBootReceiver extends BroadcastReceiver {
+
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		StartElectionServiceAlarmReceiver.registerAlarm(context);
+	}
+}
