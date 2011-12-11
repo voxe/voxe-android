@@ -4,6 +4,10 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.currentTimeMillis;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,6 +20,8 @@ import org.springframework.web.client.RestTemplate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -25,16 +31,17 @@ import com.joinplato.android.common.LogHelper;
 import com.joinplato.android.common.WakefulIntentService;
 import com.joinplato.android.model.Candidate;
 import com.joinplato.android.model.ElectionHolder;
+import com.joinplato.android.model.PhotoSizeInfo;
 import com.joinplato.android.model.Proposition;
 import com.joinplato.android.model.PropositionHolder;
 import com.joinplato.android.model.Theme;
 
 /**
  * TODO add capptain logs
- *
+ * 
  */
 public class UpdateElectionService extends WakefulIntentService {
-	
+
 	private static final int DURATION_24H = 1000 * 60 * 60 * 24;
 
 	public static void startUpdate(Context context) {
@@ -46,6 +53,8 @@ public class UpdateElectionService extends WakefulIntentService {
 	private ElectionAdapter dataAdapter;
 
 	private ElectionClient electionClient;
+
+	private TheVoxeApplication application;
 
 	public UpdateElectionService() {
 		super(UpdateElectionService.class.getSimpleName());
@@ -83,6 +92,9 @@ public class UpdateElectionService extends WakefulIntentService {
 	}
 
 	private void updateElection() {
+		
+		application = (TheVoxeApplication) getApplication();
+		
 		if (shouldNotUpdate()) {
 			LogHelper.log("No need to update election data");
 			return;
@@ -94,26 +106,53 @@ public class UpdateElectionService extends WakefulIntentService {
 		ElectionHolder electionHolder = electionClient.getElection(electionId);
 		LogHelper.logDuration("Election download in background", start);
 
-		/*
-		 * TODO Download images
-		 * 
-		 * The images are stored in a file, the file name being unique, so if a
-		 * photo is changed, the image will be downloaded again
-		 */
+		long startPhotos = currentTimeMillis();
+		for (Candidate candidate : electionHolder.election.candidates) {
+
+			if (dataAdapter.shouldDownloadCandidatePhoto(candidate)) {
+
+				Optional<PhotoSizeInfo> largestSize = candidate.photo.sizes.getLargestSize();
+
+				if (largestSize.isPresent()) {
+
+					String urlString = largestSize.get().url;
+
+					URL url;
+					try {
+						url = new URL(urlString);
+
+						URLConnection openConnection = url.openConnection();
+
+						InputStream inputStream = openConnection.getInputStream();
+
+						Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+						candidate.photo.photoBitmap = bitmap;
+
+						dataAdapter.saveCandidatePhoto(candidate);
+
+					} catch (IOException e) {
+						LogHelper.logException("Could not download photo at url " + urlString, e);
+					}
+				}
+			}
+		}
+		LogHelper.logDuration("Downloaded candidate photos", startPhotos);
 
 		// List<Proposition> propositions = downloadPropositions(electionId,
 		// electionHolder);
 		// electionHolder.propositions = propositions;
-		
+
 		Collections.sort(electionHolder.election.themes);
 		Collections.sort(electionHolder.election.candidates);
-		
 
 		LogHelper.logDuration("Whole download in background", start);
 
 		electionHolder.lastUpdateTimestamp = currentTimeMillis();
 
 		dataAdapter.save(electionHolder);
+		
+		application.postReplaceElectionHolder(electionHolder);
 	}
 
 	@SuppressWarnings("unused")
@@ -137,19 +176,17 @@ public class UpdateElectionService extends WakefulIntentService {
 	}
 
 	private boolean shouldNotUpdate() {
-		Optional<ElectionHolder> optional = dataAdapter.load();
+		Optional<ElectionHolder> optional = application.getElectionHolder();
 		if (optional.isPresent()) {
-			LogHelper.log("Optional is present");
 			ElectionHolder electionHolder = optional.get();
 
 			long now = System.currentTimeMillis();
 
 			long timeElapsedSinceLastUpdate = now - electionHolder.lastUpdateTimestamp;
-			LogHelper.log("TimeElapsed:"+timeElapsedSinceLastUpdate);
 			if (timeElapsedSinceLastUpdate < DURATION_24H) {
 				return true;
 			}
-			
+
 		}
 		return false;
 	}

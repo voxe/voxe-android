@@ -4,16 +4,18 @@ import java.io.Serializable;
 
 import com.joinplato.android.R;
 
-
 public class Candidate implements Serializable, Comparable<Candidate> {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	public String id;
 	public String firstName;
 	public String lastName;
+
+	private transient String name;
+
 	public Photo photo;
-	
+
 	@Override
 	public int compareTo(Candidate another) {
 		int lastNameComparison = lastName.compareTo(another.lastName);
@@ -26,11 +28,14 @@ public class Candidate implements Serializable, Comparable<Candidate> {
 	}
 
 	public CharSequence getName() {
-		return firstName + " " + lastName;
+		if (name == null) {
+			name = firstName + " " + lastName;
+		}
+		return name;
 	}
 
-	public int getImageId() {
-		return R.drawable.christine_boutin;
+	public static int getDefaultCandidateImageId() {
+		return R.drawable.default_photo;
 	}
-	
+
 }

@@ -33,6 +33,7 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.joinplato.android.R;
 import com.joinplato.android.TheVoxeApplication;
 import com.joinplato.android.actionbar.ActionBarActivity;
+import com.joinplato.android.common.LogHelper;
 import com.joinplato.android.common.UIUtils;
 import com.joinplato.android.model.Candidate;
 import com.joinplato.android.model.Theme;
@@ -98,7 +99,7 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 
 	@ViewById
 	View loadingLayout;
-	
+
 	private String failingUrl;
 
 	@Override
@@ -125,6 +126,8 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 		String themeId = selectedTheme.id;
 
 		String webviewURL = String.format(WEBVIEW_URL_FORMAT, electionId, candidateIdsJoined, themeId);
+
+		LogHelper.log("Loading url " + webviewURL);
 
 		webview.loadUrl(webviewURL);
 	}

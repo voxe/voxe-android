@@ -56,7 +56,7 @@ public class CandidatePagerAdapter extends PagerAdapter {
 		Button wikiButton = (Button) viewGroup.findViewById(R.id.wiki);
 		Button shareButton = (Button) viewGroup.findViewById(R.id.share);
 		ImageView imageView = (ImageView) viewGroup.findViewById(R.id.candidateImage);
-		imageView.setImageResource(candidate.getImageId());
+		imageView.setImageResource(candidate.getDefaultCandidateImageId());
 
 		final CharSequence name = candidate.getName();
 		nameView.setText(name);

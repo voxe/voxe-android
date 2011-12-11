@@ -14,16 +14,18 @@ public class Candidate implements Serializable, Comparable<Candidate> {
 
 	public static List<Candidate> mockCandidates() {
 		List<Candidate> candidates = Arrays.asList( //
-				new Candidate("François", "Hollande", R.drawable.francois_hollande), //
-				new Candidate("Nicolas", "Sarkozy", R.drawable.nicolas_sarkozy), //
-				new Candidate("Jean-Luc", "Mélanchon", R.drawable.jean_luc_melenchon), //
-				new Candidate("Marine", "Lepen", R.drawable.marine_le_pen), //
-				new Candidate("Nathalie", "Arthaud", R.drawable.nathalie_arthaud), //
-				new Candidate("François", "Bayrou", R.drawable.francois_bayrou), //
-				new Candidate("Christine", "Boutin", R.drawable.christine_boutin), //
-				new Candidate("Jean-Pierre", "Chevènement", R.drawable.jean_pierre_chevenement), //
-				new Candidate("Eva", "Joly", R.drawable.eva_joly), //
-				new Candidate("Nicolas", "Dupont-Aignan", R.drawable.nicolas_dupont_aignan));
+				
+				);
+//				new Candidate("François", "Hollande", R.drawable.francois_hollande), //
+//				new Candidate("Nicolas", "Sarkozy", R.drawable.nicolas_sarkozy), //
+//				new Candidate("Jean-Luc", "Mélanchon", R.drawable.jean_luc_melenchon), //
+//				new Candidate("Marine", "Lepen", R.drawable.marine_le_pen), //
+//				new Candidate("Nathalie", "Arthaud", R.drawable.nathalie_arthaud), //
+//				new Candidate("François", "Bayrou", R.drawable.francois_bayrou), //
+//				new Candidate("Christine", "Boutin", R.drawable.christine_boutin), //
+//				new Candidate("Jean-Pierre", "Chevènement", R.drawable.jean_pierre_chevenement), //
+//				new Candidate("Eva", "Joly", R.drawable.eva_joly), //
+//				new Candidate("Nicolas", "Dupont-Aignan", R.drawable.nicolas_dupont_aignan));
 		Collections.sort(candidates);
 		return candidates;
 	}

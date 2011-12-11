@@ -24,6 +24,7 @@ import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.joinplato.android.R;
 import com.joinplato.android.TheVoxeApplication;
+import com.joinplato.android.TheVoxeApplication.UpdateElectionListener;
 import com.joinplato.android.actionbar.ActionBarActivity;
 import com.joinplato.android.model.Candidate;
 import com.joinplato.android.model.Election;
@@ -31,7 +32,7 @@ import com.joinplato.android.model.ElectionHolder;
 import com.joinplato.android.model.Theme;
 
 @EActivity(R.layout.select_candidates)
-public class SelectCandidatesActivity extends ActionBarActivity {
+public class SelectCandidatesActivity extends ActionBarActivity implements UpdateElectionListener {
 
 	private static final String SELECTED_THEME_EXTRA = "selectedTheme";
 
@@ -47,7 +48,7 @@ public class SelectCandidatesActivity extends ActionBarActivity {
 		intent.putExtra(SELECTED_THEME_EXTRA, selectedTheme);
 		context.startActivity(intent);
 	}
-	
+
 	@Extra(SELECTED_THEME_EXTRA)
 	Theme selectedTheme;
 
@@ -147,6 +148,28 @@ public class SelectCandidatesActivity extends ActionBarActivity {
 				.setMessage(R.string.about_content) //
 				.setPositiveButton(R.string.about_ok, null) //
 				.create();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		application.setUpdateElectionListener(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		application.setUpdateElectionListener(null);
+	}
+
+	@Override
+	public void onElectionUpdate(Optional<ElectionHolder> electionHolder) {
+		if (electionHolder.isPresent()) {
+			Election election = electionHolder.get().election;
+			/*
+			 *  TODO update UI. Handle updates when activity resumed
+			 */
+		}
 	}
 
 }

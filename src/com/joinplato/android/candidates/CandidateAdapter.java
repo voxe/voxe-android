@@ -60,7 +60,7 @@ public class CandidateAdapter extends BaseAdapter {
 		CharSequence name = candidate.getName();
 		nameView.setText(name);
 
-		imageView.setImageResource(candidate.getImageId());
+		imageView.setImageResource(candidate.getDefaultCandidateImageId());
 
 		return convertView;
 	}

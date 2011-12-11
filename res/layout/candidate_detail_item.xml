@@ -32,7 +32,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/default_candidate" />
+            android:src="@drawable/default_photo" />
 
         <TextView
             android:id="@+id/candidateName"

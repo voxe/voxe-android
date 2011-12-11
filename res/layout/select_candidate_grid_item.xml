@@ -25,7 +25,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/default_candidate" />
+        android:src="@drawable/default_photo" />
 
     <CheckBox
         android:id="@+id/candidateCheckbox"

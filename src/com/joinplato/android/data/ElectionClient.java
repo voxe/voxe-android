@@ -19,5 +19,5 @@ public interface ElectionClient {
 	RestTemplate getRestTemplate();
 
 	void setRestTemplate(RestTemplate restTemplate);
-
+	
 }
