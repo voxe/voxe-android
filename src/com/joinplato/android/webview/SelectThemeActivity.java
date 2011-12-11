@@ -21,6 +21,7 @@ import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.joinplato.android.R;
 import com.joinplato.android.TheVoxeApplication;
+import com.joinplato.android.TheVoxeApplication.UpdateElectionListener;
 import com.joinplato.android.actionbar.ActionBarActivity;
 import com.joinplato.android.common.UIUtils;
 import com.joinplato.android.model.Candidate;
@@ -29,7 +30,7 @@ import com.joinplato.android.model.ElectionHolder;
 import com.joinplato.android.model.Theme;
 
 @EActivity(R.layout.select_theme)
-public class SelectThemeActivity extends ActionBarActivity {
+public class SelectThemeActivity extends ActionBarActivity implements UpdateElectionListener {
 
 	private static final String SELECTED_CANDIDATES_EXTRA = "selectedCandidates";
 
@@ -65,6 +66,10 @@ public class SelectThemeActivity extends ActionBarActivity {
 	@ViewById
 	View loadingLayout;
 
+	private Election election;
+
+	private ThemeAdapter themeAdapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,7 +97,8 @@ public class SelectThemeActivity extends ActionBarActivity {
 
 	@UiThread
 	void fillList(Election election) {
-		ThemeAdapter themeAdapter = new ThemeAdapter(this, election.themes);
+		this.election = election;
+		themeAdapter = new ThemeAdapter(this, election.themes);
 		list.setAdapter(themeAdapter);
 		loadingLayout.setVisibility(View.GONE);
 		list.setVisibility(View.VISIBLE);
@@ -108,6 +114,44 @@ public class SelectThemeActivity extends ActionBarActivity {
 		SelectCandidatesActivity.start(this);
 		if (!UIUtils.isHoneycomb()) {
 			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+		}
+	}
+	
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		application.setUpdateElectionListener(this);
+		checkElectionChangedInBackground();
+	}
+
+	@Background
+	void checkElectionChangedInBackground() {
+		Optional<ElectionHolder> electionHolder = application.getElectionHolder();
+		if (electionHolder.isPresent()) {
+			updatedElectionIfNeeded(electionHolder.get().election);
+		}
+	}
+
+	@UiThread
+	void updatedElectionIfNeeded(Election election) {
+		if (this.election != election) {
+			this.election = election;
+			themeAdapter.updateThemes(election.themes);
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		application.setUpdateElectionListener(null);
+	}
+
+	@Override
+	public void onElectionUpdate(Optional<ElectionHolder> electionHolder) {
+		if (electionHolder.isPresent()) {
+			Election election = electionHolder.get().election;
+			updatedElectionIfNeeded(election);
 		}
 	}
 

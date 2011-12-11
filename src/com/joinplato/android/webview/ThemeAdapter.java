@@ -14,7 +14,7 @@ import com.joinplato.android.model.Theme;
 public class ThemeAdapter extends BaseAdapter {
 
 	private final Context context;
-	private final List<Theme> themes;
+	private List<Theme> themes;
 
 	public ThemeAdapter(Context context, List<Theme> themes) {
 		this.context = context;
@@ -51,6 +51,11 @@ public class ThemeAdapter extends BaseAdapter {
 		textView.setText(theme.name);
 		
 		return textView;
+	}
+
+	public void updateThemes(List<Theme> themes) {
+		this.themes = themes;
+		notifyDataSetChanged();
 	}
 
 }

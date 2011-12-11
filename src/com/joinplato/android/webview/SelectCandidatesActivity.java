@@ -68,6 +68,8 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 	@ViewById
 	View selectLayout;
 
+	Election election;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -91,6 +93,7 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 
 	@UiThread
 	void fillCandidateGrid(Election election) {
+		this.election = election;
 		candidates = SelectedCandidate.from(election.candidates);
 		adapter = new SelectCandidatesAdapter(this, candidates);
 		gridview.setAdapter(adapter);
@@ -154,6 +157,24 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 	protected void onResume() {
 		super.onResume();
 		application.setUpdateElectionListener(this);
+		checkElectionChangedInBackground();
+	}
+
+	@Background
+	void checkElectionChangedInBackground() {
+		Optional<ElectionHolder> electionHolder = application.getElectionHolder();
+		if (electionHolder.isPresent()) {
+			updatedElectionIfNeeded(electionHolder.get().election);
+		}
+	}
+
+	@UiThread
+	void updatedElectionIfNeeded(Election election) {
+		if (this.election != election) {
+			this.election = election;
+			candidates = SelectedCandidate.from(election.candidates);
+			adapter.updateCandidates(candidates);
+		}
 	}
 
 	@Override
@@ -166,9 +187,7 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 	public void onElectionUpdate(Optional<ElectionHolder> electionHolder) {
 		if (electionHolder.isPresent()) {
 			Election election = electionHolder.get().election;
-			/*
-			 *  TODO update UI. Handle updates when activity resumed
-			 */
+			updatedElectionIfNeeded(election);
 		}
 	}
 

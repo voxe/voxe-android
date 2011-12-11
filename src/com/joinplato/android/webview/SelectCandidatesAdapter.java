@@ -27,7 +27,7 @@ public class SelectCandidatesAdapter extends BaseAdapter {
 		}
 	}
 
-	private final List<SelectedCandidate> candidates;
+	private List<SelectedCandidate> candidates;
 	private final Context context;
 
 	public SelectCandidatesAdapter(Context context, List<SelectedCandidate> candidates) {
@@ -92,6 +92,11 @@ public class SelectCandidatesAdapter extends BaseAdapter {
 			ViewHolder viewHolder = (ViewHolder) candidateView.getTag();
 			viewHolder.checkbox.setChecked(candidate.isSelected());
 		}
+	}
+
+	public void updateCandidates(List<SelectedCandidate> candidates) {
+		this.candidates = candidates;
+		notifyDataSetChanged();
 	}
 
 }

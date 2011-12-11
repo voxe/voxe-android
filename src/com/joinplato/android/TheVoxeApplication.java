@@ -51,10 +51,16 @@ public class TheVoxeApplication extends Application {
 		}
 	}
 	
-	public void postReplaceElectionHolder(final ElectionHolder electionHolder) {
-		
+	public void reloadElectionHolder() {
+		ElectionAdapter electionAdapter = new ElectionAdapter(this);
+		Optional<ElectionHolder> optional = electionAdapter.load();
+		if (optional.isPresent()) {
+			postReplaceElectionHolder(optional);
+		}
+	}
+	
+	private void postReplaceElectionHolder(final Optional<ElectionHolder> electionHolder) {
 		handler.post(new Runnable() {
-			
 			@Override
 			public void run() {
 				replaceElectionHolder(electionHolder);
@@ -63,11 +69,11 @@ public class TheVoxeApplication extends Application {
 		
 	}
 		
-	public void replaceElectionHolder(final ElectionHolder electionHolder) {
+	private void replaceElectionHolder(Optional<ElectionHolder> electionHolder) {
 		synchronized (electionLock) {
-			this.electionHolder = Optional.fromNullable(electionHolder);
+			this.electionHolder = electionHolder;
 			if (updateElectionListener != null) {
-				updateElectionListener.onElectionUpdate(this.electionHolder);
+				updateElectionListener.onElectionUpdate(electionHolder);
 			}
 		}
 	}
