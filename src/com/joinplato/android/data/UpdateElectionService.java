@@ -152,7 +152,7 @@ public class UpdateElectionService extends WakefulIntentService {
 
 		dataAdapter.save(electionHolder);
 		
-		application.postReplaceElectionHolder(electionHolder);
+//		application.postReplaceElectionHolder(electionHolder);
 	}
 
 	@SuppressWarnings("unused")
