@@ -2,7 +2,6 @@ package com.joinplato.android.webview;
 
 import static android.content.Intent.ACTION_SEND;
 import static android.content.Intent.EXTRA_TEXT;
-import static com.google.common.collect.Iterables.transform;
 import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
@@ -11,8 +10,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -24,15 +21,14 @@ import com.joinplato.android.R;
 import com.joinplato.android.TheVoxeApplication;
 import com.joinplato.android.actionbar.ActionBarActivity;
 import com.joinplato.android.common.UIUtils;
-import com.joinplato.android.model.Candidate;
 
 @EActivity(R.layout.show_proposition)
 @OptionsMenu(R.menu.proposition)
 public class ShowPropositionActivity extends ActionBarActivity {
 
-	public static final String SHOW_PROPOSITION_PATH_FRAGMENT = "/webviews/propositions?id=";
+	public static final String SHOW_PROPOSITION_PATH_FRAGMENT = "/webviews/proposition?propositionId=";
 
-	private static final String WEBVIEW_URL_FORMAT = "http://voxe.org/webviews/propositions?id=%s";
+	private static final String WEBVIEW_URL_FORMAT = "http://voxe.org" + SHOW_PROPOSITION_PATH_FRAGMENT + "%s";
 
 	private static final String PROPOSITION_ID_EXTRA = "propositionId";
 
@@ -53,7 +49,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		}
 
 	}
-	
+
 	private class ShowPropositionWebViewClient extends WebViewClient {
 
 		@Override
@@ -86,7 +82,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	void prepareWebview() {
 		WebSettings settings = webview.getSettings();
 		settings.setJavaScriptEnabled(true);
-		
+
 		webview.setWebViewClient(new ShowPropositionWebViewClient());
 
 		String webviewURL = String.format(WEBVIEW_URL_FORMAT, propositionId);
@@ -110,13 +106,12 @@ public class ShowPropositionActivity extends ActionBarActivity {
 			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		}
 	}
-	
+
 	@OptionsItem
 	void menuShareSelected() {
 		Intent sharingIntent = new Intent(ACTION_SEND);
 		sharingIntent.setType("text/plain");
-		
-		
+
 		String message = String.format(getString(R.string.share_proposition), propositionId);
 		sharingIntent.putExtra(EXTRA_TEXT, message);
 		startActivity(Intent.createChooser(sharingIntent, "Partager via"));
