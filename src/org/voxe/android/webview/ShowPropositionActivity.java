@@ -85,7 +85,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	void prepareWebview() {
 		WebSettings settings = webview.getSettings();
 		settings.setJavaScriptEnabled(true);
-
+		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		webview.setWebViewClient(webviewClient);
 
 		String webviewURL = String.format(WEBVIEW_URL_FORMAT, propositionId);

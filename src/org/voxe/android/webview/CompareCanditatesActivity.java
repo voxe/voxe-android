@@ -82,6 +82,7 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 		// change to true when bug fixed
 		settings.setJavaScriptEnabled(false);
 		webview.setWebViewClient(webviewClient);
+		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
 		Iterable<String> candidacyIds = transform(selectedCandidates, new Function<Candidate, String>() {
 			@Override
