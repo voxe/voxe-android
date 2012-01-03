@@ -1,5 +1,8 @@
 package org.voxe.android.webview;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
+
 import java.util.List;
 
 import org.voxe.android.R;
@@ -13,7 +16,6 @@ import org.voxe.android.model.Theme;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -36,19 +38,6 @@ import com.googlecode.androidannotations.annotations.ViewById;
 public class SelectCandidatesActivity extends ActionBarActivity implements UpdateElectionListener {
 
 	private static final String SELECTED_THEME_EXTRA = "selectedTheme";
-
-	public static void start(Context context) {
-		Intent intent = new Intent(context, SelectCandidatesActivity_.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		context.startActivity(intent);
-	}
-
-	public static void start(Context context, Theme selectedTheme) {
-		Intent intent = new Intent(context, SelectCandidatesActivity_.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		intent.putExtra(SELECTED_THEME_EXTRA, selectedTheme);
-		context.startActivity(intent);
-	}
 
 	@Extra(SELECTED_THEME_EXTRA)
 	Theme selectedTheme;
@@ -117,9 +106,18 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 		List<Candidate> selectedCandidates = SelectedCandidate.filterSelected(candidates);
 		if (selectedCandidates.size() > 0) {
 			if (selectedTheme == null) {
-				SelectThemeActivity.start(this, selectedCandidates);
+				SelectThemeActivity_ //
+						.intent(this) //
+						.flags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP) //
+						.selectedCandidates(selectedCandidates) //
+						.start();
 			} else {
-				SelectThemeActivity.start(this, selectedCandidates, selectedTheme);
+				SelectThemeActivity_ //
+						.intent(this) //
+						.flags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP) //
+						.selectedCandidates(selectedCandidates) //
+						.selectedTheme(selectedTheme) //
+						.start();
 			}
 		} else {
 			Toast.makeText(this, R.string.select_one_candidate, Toast.LENGTH_SHORT).show();

@@ -1,6 +1,8 @@
 package org.voxe.android.webview;
 
-import java.io.Serializable;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
+
 import java.util.List;
 
 import org.voxe.android.R;
@@ -13,8 +15,6 @@ import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionHolder;
 import org.voxe.android.model.Theme;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -33,37 +33,18 @@ import com.googlecode.androidannotations.annotations.ViewById;
 @EActivity(R.layout.select_theme)
 public class SelectThemeActivity extends ActionBarActivity implements UpdateElectionListener {
 
-	private static final String SELECTED_CANDIDATES_EXTRA = "selectedCandidates";
-
-	private static final String SELECTED_THEME_EXTRA = "selectedTheme";
-
-	public static void start(Context context, List<Candidate> selectedCandidates) {
-		Intent intent = new Intent(context, SelectThemeActivity_.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		intent.putExtra(SELECTED_CANDIDATES_EXTRA, (Serializable) selectedCandidates);
-		context.startActivity(intent);
-	}
-
-	public static void start(Context context, List<Candidate> selectedCandidates, Theme selectedTheme) {
-		Intent intent = new Intent(context, SelectThemeActivity_.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		intent.putExtra(SELECTED_CANDIDATES_EXTRA, (Serializable) selectedCandidates);
-		intent.putExtra(SELECTED_THEME_EXTRA, selectedTheme);
-		context.startActivity(intent);
-	}
-
 	@App
 	TheVoxeApplication application;
 
-	@Extra(SELECTED_CANDIDATES_EXTRA)
+	@Extra("selectedCandidates")
 	List<Candidate> selectedCandidates;
 
-	@Extra(SELECTED_THEME_EXTRA)
+	@Extra("selectedTheme")
 	Theme selectedTheme;
 
 	@ViewById
 	ListView list;
-	
+
 	@ViewById
 	View loadingLayout;
 
@@ -76,12 +57,16 @@ public class SelectThemeActivity extends ActionBarActivity implements UpdateElec
 		super.onCreate(savedInstanceState);
 
 		if (selectedTheme != null) {
-			CompareCanditatesActivity.start(this, selectedCandidates, selectedTheme);
+			CompareCanditatesActivity_ //
+					.intent(this) //
+					.selectedCandidates(selectedCandidates) //
+					.selectedTheme(selectedTheme) //
+					.start();
 		} else {
 			loadElectionHolder();
 		}
 	}
-	
+
 	@AfterViews
 	void showLoading() {
 		loadingLayout.setVisibility(View.VISIBLE);
@@ -107,18 +92,21 @@ public class SelectThemeActivity extends ActionBarActivity implements UpdateElec
 
 	@ItemClick
 	void listItemClicked(Theme selectedTheme) {
-		CompareCanditatesActivity.start(this, selectedCandidates, selectedTheme);
+		CompareCanditatesActivity_ //
+				.intent(this) //
+				.selectedCandidates(selectedCandidates) //
+				.selectedTheme(selectedTheme) //
+				.start();
 	}
 
 	@OptionsItem
 	public void homeSelected() {
-		SelectCandidatesActivity.start(this);
+		SelectCandidatesActivity_.intent(this).flags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP).start();
 		if (!UIUtils.isHoneycomb()) {
 			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		}
 	}
-	
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();

@@ -2,6 +2,8 @@ package org.voxe.android.webview;
 
 import static android.content.Intent.ACTION_SEND;
 import static android.content.Intent.EXTRA_TEXT;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
 import org.voxe.android.R;
 import org.voxe.android.TheVoxeApplication;
@@ -20,12 +22,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -62,30 +64,6 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	}
 
-	private class ShowPropositionWebViewClient extends WebViewClient {
-
-		@Override
-		public void onPageFinished(WebView view, String url) {
-			loadingLayout.setVisibility(View.GONE);
-			webview.setVisibility(View.VISIBLE);
-		}
-
-		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			loadingLayout.setVisibility(View.VISIBLE);
-			webview.setVisibility(View.GONE);
-			return false;
-		}
-
-		@Override
-		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-			Bundle bundle = new Bundle();
-			bundle.putString(FAILING_URL_ARG, failingUrl);
-			bundle.putString(DESCRIPTION_ARG, description);
-			showDialog(R.id.webview_error_dialog, bundle);
-		}
-	}
-
 	@App
 	TheVoxeApplication application;
 
@@ -97,6 +75,9 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	@ViewById
 	WebView webview;
+	
+	@Inject
+	ShowPropositionWebviewClient webviewClient;
 
 	private String failingUrl;
 
@@ -105,7 +86,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		WebSettings settings = webview.getSettings();
 		settings.setJavaScriptEnabled(true);
 
-		webview.setWebViewClient(new ShowPropositionWebViewClient());
+		webview.setWebViewClient(webviewClient);
 
 		String webviewURL = String.format(WEBVIEW_URL_FORMAT, propositionId);
 
@@ -123,7 +104,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	@OptionsItem
 	public void homeSelected() {
-		SelectCandidatesActivity.start(this);
+		SelectCandidatesActivity_.intent(this).flags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP).start();
 		if (!UIUtils.isHoneycomb()) {
 			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		}
@@ -189,6 +170,13 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	private void prepareWebviewErrorDialog(AlertDialog dialog, String failingUrl, String description) {
 		this.failingUrl = failingUrl;
 		dialog.setMessage(String.format(getString(R.string.webview_error_dialog_message), description));
+	}
+
+	public void showLoadingErrorDialog(String description, String failingUrl2) {
+		Bundle bundle = new Bundle();
+		bundle.putString(FAILING_URL_ARG, failingUrl);
+		bundle.putString(DESCRIPTION_ARG, description);
+		showDialog(R.id.webview_error_dialog, bundle);		
 	}
 
 }
