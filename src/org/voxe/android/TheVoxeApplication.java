@@ -1,13 +1,13 @@
 package org.voxe.android;
 
+import org.voxe.android.data.ElectionAdapter;
+import org.voxe.android.data.StartElectionServiceAlarmReceiver;
+import org.voxe.android.model.ElectionHolder;
+
 import android.app.Application;
 import android.os.Handler;
 
 import com.google.common.base.Optional;
-import org.voxe.android.R;
-import org.voxe.android.data.ElectionAdapter;
-import org.voxe.android.data.StartElectionServiceAlarmReceiver;
-import org.voxe.android.model.ElectionHolder;
 
 public class TheVoxeApplication extends Application {
 	
