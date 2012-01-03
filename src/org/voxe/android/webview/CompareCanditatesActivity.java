@@ -14,7 +14,7 @@ import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.common.LogHelper;
 import org.voxe.android.common.UIUtils;
 import org.voxe.android.model.Candidate;
-import org.voxe.android.model.Theme;
+import org.voxe.android.model.Tag;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -43,9 +43,9 @@ import com.googlecode.androidannotations.annotations.ViewById;
 @OptionsMenu(R.menu.compare)
 public class CompareCanditatesActivity extends ActionBarActivity {
 
-	private static final String WEBVIEW_URL_FORMAT = "http://voxe.org/webviews/compare?electionId=%s&candidateIds=%s&themeId=%s";
+	private static final String WEBVIEW_URL_FORMAT = "http://voxe.org/webviews/compare?electionId=%s&candidacyIds=%s&tagId=%s";
 	private static final String SELECTED_CANDIDATES_EXTRA = "selectedCandidates";
-	private static final String SELECTED_THEME_EXTRA = "selectedTheme";
+	private static final String SELECTED_TAG_EXTRA = "selectedTag";
 
 	private static final String FAILING_URL_ARG = "failingUrl";
 	private static final String DESCRIPTION_ARG = "description";
@@ -56,8 +56,8 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 	@Extra(SELECTED_CANDIDATES_EXTRA)
 	List<Candidate> selectedCandidates;
 
-	@Extra(SELECTED_THEME_EXTRA)
-	Theme selectedTheme;
+	@Extra(SELECTED_TAG_EXTRA)
+	Tag selectedTag;
 
 	@ViewById
 	WebView webview;
@@ -73,27 +73,28 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle(selectedTheme.name);
+		setTitle(selectedTag.name);
 	}
 
 	@AfterViews
 	void prepareWebview() {
 		WebSettings settings = webview.getSettings();
-		settings.setJavaScriptEnabled(true);
+		// change to true when bug fixed
+		settings.setJavaScriptEnabled(false);
 		webview.setWebViewClient(webviewClient);
 
-		Iterable<String> candidateIds = transform(selectedCandidates, new Function<Candidate, String>() {
+		Iterable<String> candidacyIds = transform(selectedCandidates, new Function<Candidate, String>() {
 			@Override
 			public String apply(Candidate input) {
-				return input.id;
+				return input.candidacyId;
 			}
 		});
 
-		String candidateIdsJoined = Joiner.on(',').join(candidateIds);
+		String candidacyIdsJoined = Joiner.on(',').join(candidacyIds);
 		String electionId = application.getElectionId();
-		String themeId = selectedTheme.id;
+		String tagId = selectedTag.id;
 
-		String webviewURL = String.format(WEBVIEW_URL_FORMAT, electionId, candidateIdsJoined, themeId);
+		String webviewURL = String.format(WEBVIEW_URL_FORMAT, electionId, candidacyIdsJoined, tagId);
 
 		LogHelper.log("Loading url " + webviewURL);
 
@@ -121,7 +122,7 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 	void menuCandidatesSelected() {
 		SelectCandidatesActivity_.intent(this) //
 				.flags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP) //
-				.selectedTheme(selectedTheme) //
+				.selectedTheme(selectedTag) //
 				.start();
 		if (!UIUtils.isHoneycomb()) {
 			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
@@ -141,7 +142,7 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 		});
 
 		String candidateNamesJoined = Joiner.on(',').join(candidateNames);
-		String message = String.format(getString(R.string.share_compare), candidateNamesJoined, selectedTheme.name);
+		String message = String.format(getString(R.string.share_compare), candidateNamesJoined, selectedTag.name);
 		sharingIntent.putExtra(EXTRA_TEXT, message);
 		startActivity(Intent.createChooser(sharingIntent, "Partager via"));
 	}

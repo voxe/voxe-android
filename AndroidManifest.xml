@@ -33,7 +33,7 @@
         </activity>
         <activity
             android:label="@string/select_theme"
-            android:name="org.voxe.android.webview.SelectThemeActivity_" />
+            android:name="org.voxe.android.webview.SelectTagActivity_" />
         <activity android:name="org.voxe.android.webview.CompareCanditatesActivity_" />
         <activity
             android:label="@string/proposition_details"

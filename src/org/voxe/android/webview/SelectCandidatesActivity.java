@@ -12,7 +12,7 @@ import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionHolder;
-import org.voxe.android.model.Theme;
+import org.voxe.android.model.Tag;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -40,7 +40,7 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 	private static final String SELECTED_THEME_EXTRA = "selectedTheme";
 
 	@Extra(SELECTED_THEME_EXTRA)
-	Theme selectedTheme;
+	Tag selectedTheme;
 
 	@App
 	TheVoxeApplication application;
@@ -84,7 +84,7 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 	@UiThread
 	void fillCandidateGrid(Election election) {
 		this.election = election;
-		candidates = SelectedCandidate.from(election.candidates);
+		candidates = SelectedCandidate.from(election.getMainCandidates());
 		adapter = new SelectCandidatesAdapter(this, candidates);
 		gridview.setAdapter(adapter);
 		loadingLayout.setVisibility(View.GONE);
@@ -106,17 +106,17 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 		List<Candidate> selectedCandidates = SelectedCandidate.filterSelected(candidates);
 		if (selectedCandidates.size() > 0) {
 			if (selectedTheme == null) {
-				SelectThemeActivity_ //
+				SelectTagActivity_ //
 						.intent(this) //
 						.flags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP) //
 						.selectedCandidates(selectedCandidates) //
 						.start();
 			} else {
-				SelectThemeActivity_ //
+				SelectTagActivity_ //
 						.intent(this) //
 						.flags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP) //
 						.selectedCandidates(selectedCandidates) //
-						.selectedTheme(selectedTheme) //
+						.selectedTag(selectedTheme) //
 						.start();
 			}
 		} else {
@@ -126,7 +126,7 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		selectedTheme = (Theme) intent.getSerializableExtra(SELECTED_THEME_EXTRA);
+		selectedTheme = (Tag) intent.getSerializableExtra(SELECTED_THEME_EXTRA);
 	}
 
 	@OptionsItem
@@ -171,7 +171,7 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 	void updatedElectionIfNeeded(Election election) {
 		if (this.election != election) {
 			this.election = election;
-			candidates = SelectedCandidate.from(election.candidates);
+			candidates = SelectedCandidate.from(election.getMainCandidates());
 			adapter.updateCandidates(candidates);
 		}
 	}

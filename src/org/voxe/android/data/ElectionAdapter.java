@@ -9,6 +9,12 @@ import java.io.OutputStream;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
+import org.voxe.android.R;
+import org.voxe.android.TheVoxeApplication;
+import org.voxe.android.common.LogHelper;
+import org.voxe.android.model.Candidate;
+import org.voxe.android.model.ElectionHolder;
+import org.voxe.android.model.PhotoSizeInfo;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -19,11 +25,6 @@ import android.os.Environment;
 import com.google.common.base.Optional;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
-import org.voxe.android.R;
-import org.voxe.android.TheVoxeApplication;
-import org.voxe.android.common.LogHelper;
-import org.voxe.android.model.Candidate;
-import org.voxe.android.model.ElectionHolder;
 
 public class ElectionAdapter {
 
@@ -97,14 +98,14 @@ public class ElectionAdapter {
 			electionHolder.lastUpdateTimestamp = 0;
 			LogHelper.logDuration("Loaded election data", start);
 
-			if (electionHolder.election.candidates != null) {
+			if (electionHolder.election.candidacies != null) {
 				long startPhotos = System.currentTimeMillis();
 
-				for (Candidate candidate : electionHolder.election.candidates) {
-					if (candidate.photo != null) {
-						String photoId = candidate.photo.id;
+				for (Candidate candidate : electionHolder.election.getMainCandidates()) {
+					Optional<File> optionalFile = getCandidatePhotoFile(candidate);
 
-						File file = getFile(photoId);
+					if (optionalFile.isPresent()) {
+						File file = optionalFile.get();
 						if (file.exists()) {
 							Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
 							candidate.photo.photoBitmap = bitmap;
@@ -123,19 +124,46 @@ public class ElectionAdapter {
 	}
 
 	public boolean shouldDownloadCandidatePhoto(Candidate candidate) {
-		if (candidate.photo == null) {
+
+		Optional<File> optionalFile = getCandidatePhotoFile(candidate);
+
+		if (optionalFile.isPresent()) {
+			return !optionalFile.get().exists();
+		} else {
 			return false;
 		}
-		String photoId = candidate.photo.id;
-		File file = getFile(photoId);
-		return !file.exists();
+	}
+
+	private Optional<File> getCandidatePhotoFile(Candidate candidate) {
+
+		Optional<String> optionalPhotoId = getCandidatePhotoId(candidate);
+
+		if (optionalPhotoId.isPresent()) {
+			String filename = optionalPhotoId.get();
+			File file = getFile(filename);
+			return Optional.of(file);
+		} else {
+			return Optional.absent();
+		}
+	}
+
+	private Optional<String> getCandidatePhotoId(Candidate candidate) {
+		if (candidate.photo != null) {
+			Optional<PhotoSizeInfo> largestSize = candidate.photo.sizes.getLargestSize();
+			if (largestSize.isPresent()) {
+				PhotoSizeInfo photoSizeInfo = largestSize.get();
+				String photoId = photoSizeInfo.getUniqueId();
+				return Optional.of(photoId);
+			}
+		}
+		return Optional.absent();
 	}
 
 	public void saveCandidatePhoto(Candidate candidate) {
 		Bitmap photoBitmap = candidate.photo.photoBitmap;
 		if (photoBitmap != null) {
 
-			String photoId = candidate.photo.id;
+			String photoId = getCandidatePhotoId(candidate).get();
 			File file = getFile(photoId);
 
 			OutputStream fOut = null;

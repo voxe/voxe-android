@@ -13,7 +13,7 @@ public class TheVoxeApplication extends Application {
 	
 	public static final boolean COPY_TO_SD = true;
 
-	private static final String ELECTION_ID_2007 = "4ed1cb0203ad190006000001";
+	private static final String ELECTION_ID_2007 = "4ef479f8bc60fb0004000001";
 
 	private volatile Optional<ElectionHolder> electionHolder = Optional.absent();
 

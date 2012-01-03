@@ -13,7 +13,7 @@ import org.voxe.android.common.UIUtils;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionHolder;
-import org.voxe.android.model.Theme;
+import org.voxe.android.model.Tag;
 
 import android.os.Bundle;
 import android.view.View;
@@ -31,7 +31,7 @@ import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.select_theme)
-public class SelectThemeActivity extends ActionBarActivity implements UpdateElectionListener {
+public class SelectTagActivity extends ActionBarActivity implements UpdateElectionListener {
 
 	@App
 	TheVoxeApplication application;
@@ -39,8 +39,8 @@ public class SelectThemeActivity extends ActionBarActivity implements UpdateElec
 	@Extra("selectedCandidates")
 	List<Candidate> selectedCandidates;
 
-	@Extra("selectedTheme")
-	Theme selectedTheme;
+	@Extra("selectedTag")
+	Tag selectedTag;
 
 	@ViewById
 	ListView list;
@@ -50,17 +50,17 @@ public class SelectThemeActivity extends ActionBarActivity implements UpdateElec
 
 	private Election election;
 
-	private ThemeAdapter themeAdapter;
+	private TagAdapter tagAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (selectedTheme != null) {
+		if (selectedTag != null) {
 			CompareCanditatesActivity_ //
 					.intent(this) //
 					.selectedCandidates(selectedCandidates) //
-					.selectedTheme(selectedTheme) //
+					.selectedTag(selectedTag) //
 					.start();
 		} else {
 			loadElectionHolder();
@@ -84,18 +84,18 @@ public class SelectThemeActivity extends ActionBarActivity implements UpdateElec
 	@UiThread
 	void fillList(Election election) {
 		this.election = election;
-		themeAdapter = new ThemeAdapter(this, election.themes);
-		list.setAdapter(themeAdapter);
+		tagAdapter = new TagAdapter(this, election.tags);
+		list.setAdapter(tagAdapter);
 		loadingLayout.setVisibility(View.GONE);
 		list.setVisibility(View.VISIBLE);
 	}
 
 	@ItemClick
-	void listItemClicked(Theme selectedTheme) {
+	void listItemClicked(Tag selectedTag) {
 		CompareCanditatesActivity_ //
 				.intent(this) //
 				.selectedCandidates(selectedCandidates) //
-				.selectedTheme(selectedTheme) //
+				.selectedTag(selectedTag) //
 				.start();
 	}
 
@@ -126,7 +126,7 @@ public class SelectThemeActivity extends ActionBarActivity implements UpdateElec
 	void updatedElectionIfNeeded(Election election) {
 		if (this.election != election) {
 			this.election = election;
-			themeAdapter.updateThemes(election.themes);
+			tagAdapter.updateThemes(election.tags);
 		}
 	}
 

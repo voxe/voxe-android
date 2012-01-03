@@ -1,7 +1,5 @@
 package org.voxe.android.data;
 
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.currentTimeMillis;
 
 import java.io.IOException;
@@ -23,17 +21,12 @@ import org.voxe.android.common.WakefulIntentService;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.ElectionHolder;
 import org.voxe.android.model.PhotoSizeInfo;
-import org.voxe.android.model.Proposition;
-import org.voxe.android.model.PropositionHolder;
-import org.voxe.android.model.Theme;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 
 /**
@@ -92,9 +85,9 @@ public class UpdateElectionService extends WakefulIntentService {
 	}
 
 	private void updateElection() {
-		
+
 		application = (TheVoxeApplication) getApplication();
-		
+
 		if (shouldNotUpdate()) {
 			LogHelper.log("No need to update election data");
 			return;
@@ -103,11 +96,18 @@ public class UpdateElectionService extends WakefulIntentService {
 		LogHelper.log("Starting update of election in background");
 		String electionId = ((TheVoxeApplication) getApplication()).getElectionId();
 		long start = currentTimeMillis();
-		ElectionHolder electionHolder = electionClient.getElection(electionId);
+
+		ElectionResponse response = electionClient.getElection(electionId);
+
+		if (!response.meta.isOk()) {
+			throw new RuntimeException("Response code not OK: " + response.meta.code);
+		}
+
+		ElectionHolder electionHolder = response.response;
 		LogHelper.logDuration("Election download in background", start);
 
 		long startPhotos = currentTimeMillis();
-		for (Candidate candidate : electionHolder.election.candidates) {
+		for (Candidate candidate : electionHolder.election.getMainCandidates()) {
 
 			if (dataAdapter.shouldDownloadCandidatePhoto(candidate)) {
 
@@ -139,40 +139,15 @@ public class UpdateElectionService extends WakefulIntentService {
 		}
 		LogHelper.logDuration("Downloaded candidate photos", startPhotos);
 
-		// List<Proposition> propositions = downloadPropositions(electionId,
-		// electionHolder);
-		// electionHolder.propositions = propositions;
-
-		Collections.sort(electionHolder.election.themes);
-		Collections.sort(electionHolder.election.candidates);
+		Collections.sort(electionHolder.election.tags);
 
 		LogHelper.logDuration("Whole download in background", start);
 
 		electionHolder.lastUpdateTimestamp = currentTimeMillis();
 
 		dataAdapter.save(electionHolder);
-		
-		application.reloadElectionHolder();
-	}
 
-	@SuppressWarnings("unused")
-	private List<Proposition> downloadPropositions(String electionId, ElectionHolder electionHolder) {
-		String candidateIds = Joiner.on(',').join(transform(electionHolder.election.candidates, new Function<Candidate, String>() {
-			@Override
-			public String apply(Candidate candidate) {
-				return candidate.id;
-			}
-		}));
-		List<Proposition> propositions = newArrayList();
-		long startPropositions = currentTimeMillis();
-		for (Theme theme : electionHolder.election.themes) {
-			long startProposition = currentTimeMillis();
-			PropositionHolder propositionHolder = electionClient.getPropositions(electionId, theme.id, candidateIds);
-			propositions.addAll(propositionHolder.propositions);
-			LogHelper.logDuration("Downloaded theme " + theme.name, startProposition);
-		}
-		LogHelper.logDuration("Downloaded all themes", startPropositions);
-		return propositions;
+		application.reloadElectionHolder();
 	}
 
 	private boolean shouldNotUpdate() {

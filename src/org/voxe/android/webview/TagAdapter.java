@@ -2,7 +2,7 @@ package org.voxe.android.webview;
 
 import java.util.List;
 
-import org.voxe.android.model.Theme;
+import org.voxe.android.model.Tag;
 
 import android.R;
 import android.content.Context;
@@ -12,24 +12,24 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 
-public class ThemeAdapter extends BaseAdapter {
+public class TagAdapter extends BaseAdapter {
 
 	private final Context context;
-	private List<Theme> themes;
+	private List<Tag> tags;
 
-	public ThemeAdapter(Context context, List<Theme> themes) {
+	public TagAdapter(Context context, List<Tag> tags) {
 		this.context = context;
-		this.themes = themes;
+		this.tags = tags;
 	}
 
 	@Override
 	public int getCount() {
-		return themes.size();
+		return tags.size();
 	}
 
 	@Override
-	public Theme getItem(int position) {
-		return themes.get(position);
+	public Tag getItem(int position) {
+		return tags.get(position);
 	}
 
 	@Override
@@ -47,15 +47,15 @@ public class ThemeAdapter extends BaseAdapter {
 			textView = (TextView) convertView;
 		}
 		
-		Theme theme = getItem(position);
+		Tag tag = getItem(position);
 		
-		textView.setText(theme.name);
+		textView.setText(tag.name);
 		
 		return textView;
 	}
 
-	public void updateThemes(List<Theme> themes) {
-		this.themes = themes;
+	public void updateThemes(List<Tag> tags) {
+		this.tags = tags;
 		notifyDataSetChanged();
 	}
 

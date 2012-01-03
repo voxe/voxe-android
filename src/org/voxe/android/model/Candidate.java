@@ -13,6 +13,8 @@ public class Candidate implements Serializable, Comparable<Candidate> {
 	public String lastName;
 
 	private transient String name;
+	
+	public String candidacyId;
 
 	public Photo photo;
 

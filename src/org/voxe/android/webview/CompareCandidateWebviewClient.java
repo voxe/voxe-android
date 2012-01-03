@@ -1,5 +1,7 @@
 package org.voxe.android.webview;
 
+import org.voxe.android.common.LogHelper;
+
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -10,16 +12,16 @@ import com.googlecode.androidannotations.annotations.ViewById;
 
 @Enhanced
 public class CompareCandidateWebviewClient extends WebViewClient {
-	
+
 	@ViewById
 	WebView webview;
 
 	@ViewById
 	View loadingLayout;
-	
+
 	@RootContext
 	CompareCanditatesActivity activity;
-	
+
 	@Override
 	public void onPageFinished(WebView view, String url) {
 		loadingLayout.setVisibility(View.GONE);
@@ -28,6 +30,7 @@ public class CompareCandidateWebviewClient extends WebViewClient {
 
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
+		LogHelper.log("Loading url: " + url);
 		if (url.contains(ShowPropositionActivity.SHOW_PROPOSITION_PATH_FRAGMENT)) {
 			ShowPropositionActivity.start(activity, url);
 			return true;
