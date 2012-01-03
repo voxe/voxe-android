@@ -15,6 +15,7 @@ import org.voxe.android.common.LogHelper;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.ElectionHolder;
 import org.voxe.android.model.PhotoSizeInfo;
+import org.voxe.android.model.Tag;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -113,6 +114,17 @@ public class ElectionAdapter {
 					}
 				}
 
+				for (Tag tag : electionHolder.election.tags) {
+					Optional<File> optionalFile = getTagImageFile(tag);
+					if (optionalFile.isPresent()) {
+						File file = optionalFile.get();
+						if (file.exists()) {
+							Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+							tag.icon.bitmap = bitmap;
+						}
+					}
+				}
+
 				LogHelper.logDuration("Loaded photos", startPhotos);
 			}
 
@@ -124,7 +136,6 @@ public class ElectionAdapter {
 	}
 
 	public boolean shouldDownloadCandidatePhoto(Candidate candidate) {
-
 		Optional<File> optionalFile = getCandidatePhotoFile(candidate);
 
 		if (optionalFile.isPresent()) {
@@ -135,9 +146,12 @@ public class ElectionAdapter {
 	}
 
 	private Optional<File> getCandidatePhotoFile(Candidate candidate) {
-
 		Optional<String> optionalPhotoId = getCandidatePhotoId(candidate);
 
+		return getPhotoFileFromId(optionalPhotoId);
+	}
+
+	private Optional<File> getPhotoFileFromId(Optional<String> optionalPhotoId) {
 		if (optionalPhotoId.isPresent()) {
 			String filename = optionalPhotoId.get();
 			File file = getFile(filename);
@@ -162,30 +176,32 @@ public class ElectionAdapter {
 	public void saveCandidatePhoto(Candidate candidate) {
 		Bitmap photoBitmap = candidate.photo.photoBitmap;
 		if (photoBitmap != null) {
-
 			String photoId = getCandidatePhotoId(candidate).get();
-			File file = getFile(photoId);
+			saveImage(photoBitmap, photoId);
+		}
+	}
 
-			OutputStream fOut = null;
-			try {
-				fOut = new FileOutputStream(file);
-				photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-				copyToSdcard(file, photoId);
+	private void saveImage(Bitmap bitmap, String photoId) {
+		File file = getFile(photoId);
 
-			} catch (IOException e) {
-				LogHelper.logException("Could not save bitmap for candidate " + candidate.getName() + " with id " + photoId + " to " + file.getAbsolutePath(), e);
-				return;
-			} finally {
-				if (fOut != null) {
-					try {
-						fOut.flush();
-						fOut.close();
-					} catch (IOException e) {
-						// Do nothing
-					}
+		OutputStream fOut = null;
+		try {
+			fOut = new FileOutputStream(file);
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+			copyToSdcard(file, photoId);
+
+		} catch (IOException e) {
+			LogHelper.logException("Could not save bitmap for candidate with id " + photoId + " to " + file.getAbsolutePath(), e);
+			return;
+		} finally {
+			if (fOut != null) {
+				try {
+					fOut.flush();
+					fOut.close();
+				} catch (IOException e) {
+					// Do nothing
 				}
 			}
-
 		}
 	}
 
@@ -218,6 +234,39 @@ public class ElectionAdapter {
 		File fileAbsolutePath = context.getFileStreamPath(filename);
 		LogHelper.log(String.format("Full path for relative path [%s]: [%s]", filename, fileAbsolutePath.getAbsolutePath()));
 		return fileAbsolutePath;
+	}
+
+	public boolean shouldDownloadTagPhoto(Tag tag) {
+		Optional<File> optionalFile = getTagImageFile(tag);
+
+		if (optionalFile.isPresent()) {
+			return !optionalFile.get().exists();
+		} else {
+			return false;
+		}
+	}
+
+	private Optional<File> getTagImageFile(Tag tag) {
+		Optional<String> optionalImageId = getTagImageId(tag);
+
+		return getPhotoFileFromId(optionalImageId);
+	}
+
+	private Optional<String> getTagImageId(Tag tag) {
+		if (tag.icon != null) {
+			Optional<String> uniqueId = tag.icon.getUniqueId();
+			return uniqueId;
+		} else {
+			return Optional.absent();
+		}
+	}
+
+	public void saveTagImage(Tag tag) {
+		Bitmap bitmap = tag.icon.bitmap;
+		if (bitmap != null) {
+			String imageId = getTagImageId(tag).get();
+			saveImage(bitmap, imageId);
+		}
 	}
 
 }

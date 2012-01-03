@@ -21,6 +21,7 @@ import org.voxe.android.common.WakefulIntentService;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.ElectionHolder;
 import org.voxe.android.model.PhotoSizeInfo;
+import org.voxe.android.model.Tag;
 
 import android.content.Context;
 import android.content.Intent;
@@ -137,6 +138,39 @@ public class UpdateElectionService extends WakefulIntentService {
 				}
 			}
 		}
+		
+		for (Tag tag : electionHolder.election.tags) {
+
+			if (dataAdapter.shouldDownloadTagPhoto(tag)) {
+
+				Optional<String> largestIconUrl = tag.icon.getLargestIconUrl();
+
+				if (largestIconUrl.isPresent()) {
+
+					String urlString = largestIconUrl.get();
+
+					URL url;
+					try {
+						url = new URL(urlString);
+
+						URLConnection openConnection = url.openConnection();
+
+						InputStream inputStream = openConnection.getInputStream();
+
+						Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+						tag.icon.bitmap = bitmap;
+
+						dataAdapter.saveTagImage(tag);
+
+					} catch (IOException e) {
+						LogHelper.logException("Could not download photo at url " + urlString, e);
+					}
+				}
+			}
+		}
+		
+		
 		LogHelper.logDuration("Downloaded candidate photos", startPhotos);
 
 		Collections.sort(electionHolder.election.tags);
