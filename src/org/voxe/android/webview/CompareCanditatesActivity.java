@@ -73,7 +73,7 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle(selectedTag.name);
+		setTitle(selectedTag.getHackedTagName());
 	}
 
 	@AfterViews
@@ -143,7 +143,7 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 		});
 
 		String candidateNamesJoined = Joiner.on(',').join(candidateNames);
-		String message = String.format(getString(R.string.share_compare), candidateNamesJoined, selectedTag.name);
+		String message = String.format(getString(R.string.share_compare), candidateNamesJoined, selectedTag.getHackedTagName());
 		sharingIntent.putExtra(EXTRA_TEXT, message);
 		startActivity(Intent.createChooser(sharingIntent, "Partager via"));
 	}

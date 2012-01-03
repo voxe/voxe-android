@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-
 public class TagAdapter extends BaseAdapter {
 
 	private final Context context;
@@ -39,18 +38,18 @@ public class TagAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
+
 		TextView textView;
 		if (convertView == null) {
 			textView = (TextView) View.inflate(context, R.layout.simple_list_item_1, null);
 		} else {
 			textView = (TextView) convertView;
 		}
-		
+
 		Tag tag = getItem(position);
-		
-		textView.setText(tag.name);
-		
+
+		textView.setText((position + 1) + ". " + tag.getHackedTagName());
+
 		return textView;
 	}
 
