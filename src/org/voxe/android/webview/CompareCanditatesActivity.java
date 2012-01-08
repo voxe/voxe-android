@@ -145,7 +145,7 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 		String candidateNamesJoined = Joiner.on(',').join(candidateNames);
 		String message = String.format(getString(R.string.share_compare), candidateNamesJoined, selectedTag.getHackedTagName());
 		sharingIntent.putExtra(EXTRA_TEXT, message);
-		startActivity(Intent.createChooser(sharingIntent, "Partager via"));
+		startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_with)));
 	}
 
 	@Override
