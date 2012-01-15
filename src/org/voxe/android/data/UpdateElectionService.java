@@ -27,13 +27,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 
 import com.google.common.base.Optional;
+import com.googlecode.androidannotations.annotations.EService;
+import com.googlecode.androidannotations.annotations.rest.RestService;
+import com.ubikod.capptain.android.sdk.CapptainAgent;
 
-/**
- * TODO add capptain logs
- * 
- */
+@EService
 public class UpdateElectionService extends WakefulIntentService {
 
 	private static final int DURATION_24H = 1000 * 60 * 60 * 24;
@@ -46,7 +47,8 @@ public class UpdateElectionService extends WakefulIntentService {
 
 	private ElectionAdapter dataAdapter;
 
-	private ElectionClient electionClient;
+	@RestService
+	ElectionClient electionClient;
 
 	private TheVoxeApplication application;
 
@@ -73,7 +75,7 @@ public class UpdateElectionService extends WakefulIntentService {
 			}
 		}
 
-		electionClient = new ElectionClient_(restTemplate);
+		electionClient.setRestTemplate(restTemplate);
 	}
 
 	@Override
@@ -176,6 +178,9 @@ public class UpdateElectionService extends WakefulIntentService {
 		Collections.sort(electionHolder.election.tags);
 
 		LogHelper.logDuration("Whole download in background", start);
+		Bundle bundle = new Bundle();
+		bundle.putLong("duration", currentTimeMillis() - start);
+		CapptainAgent.getInstance(this).sendEvent("data_update", bundle);
 
 		electionHolder.lastUpdateTimestamp = currentTimeMillis();
 

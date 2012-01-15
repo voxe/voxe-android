@@ -8,6 +8,7 @@ import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 import org.voxe.android.R;
 import org.voxe.android.TheVoxeApplication;
 import org.voxe.android.actionbar.ActionBarActivity;
+import org.voxe.android.common.Analytics;
 import org.voxe.android.common.UIUtils;
 
 import android.app.AlertDialog;
@@ -75,9 +76,12 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	@ViewById
 	WebView webview;
-	
+
 	@Inject
 	ShowPropositionWebviewClient webviewClient;
+
+	@Inject
+	Analytics analytics;
 
 	private String failingUrl;
 
@@ -176,7 +180,19 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		Bundle bundle = new Bundle();
 		bundle.putString(FAILING_URL_ARG, failingUrl);
 		bundle.putString(DESCRIPTION_ARG, description);
-		showDialog(R.id.webview_error_dialog, bundle);		
+		showDialog(R.id.webview_error_dialog, bundle);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		analytics.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		analytics.onResume();
 	}
 
 }

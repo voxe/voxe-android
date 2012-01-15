@@ -12,9 +12,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <!-- TODO remove permission when releasing -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:hardwareAccelerated="true"
@@ -48,7 +47,53 @@
 
         <service
             android:exported="false"
-            android:name="org.voxe.android.data.UpdateElectionService" />
+            android:name="org.voxe.android.data.UpdateElectionService_" />
+
+        <meta-data
+            android:name="capptain:reportLocation"
+            android:value="true" />
+
+        <service
+            android:label="VoxeService"
+            android:name="com.ubikod.capptain.android.service.CapptainService"
+            android:process=":Capptain" >
+            <intent-filter >
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="com.ubikod.capptain.ICapptainService" />
+
+                <data android:scheme="capptain" />
+            </intent-filter>
+
+            <meta-data
+                android:name="capptain:api:level"
+                android:value="11" />
+            <meta-data
+                android:name="capptain:api:id"
+                android:value="b6a5b1113175bf391e442a8653876b84" />
+        </service>
+
+        <meta-data
+            android:name="capptain:track:browser:enabled"
+            android:value="false" />
+
+        <receiver android:name="com.ubikod.capptain.android.sdk.track.CapptainTrackReceiver" >
+            <intent-filter >
+                <action android:name="com.ubikod.capptain.intent.action.APPID_GOT" />
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name="com.ubikod.capptain.android.sdk.track.CapptainTrackActivity" >
+            <intent-filter >
+                <data android:scheme="capptain.org.voxe.android" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

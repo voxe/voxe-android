@@ -9,6 +9,7 @@ import org.voxe.android.R;
 import org.voxe.android.TheVoxeApplication;
 import org.voxe.android.TheVoxeApplication.UpdateElectionListener;
 import org.voxe.android.actionbar.ActionBarActivity;
+import org.voxe.android.common.Analytics;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionHolder;
@@ -29,6 +30,7 @@ import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.UiThread;
@@ -57,6 +59,9 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 
 	@ViewById
 	View selectLayout;
+	
+	@Inject
+	Analytics analytics;
 
 	Election election;
 
@@ -155,6 +160,7 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 	@Override
 	protected void onResume() {
 		super.onResume();
+		analytics.onResume();
 		application.setUpdateElectionListener(this);
 		checkElectionChangedInBackground();
 	}
@@ -179,6 +185,7 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 	@Override
 	protected void onPause() {
 		super.onPause();
+		analytics.onPause();
 		application.setUpdateElectionListener(null);
 	}
 
@@ -189,5 +196,5 @@ public class SelectCandidatesActivity extends ActionBarActivity implements Updat
 			updatedElectionIfNeeded(election);
 		}
 	}
-
+	
 }

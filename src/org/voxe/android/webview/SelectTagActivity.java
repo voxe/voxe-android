@@ -9,6 +9,7 @@ import org.voxe.android.R;
 import org.voxe.android.TheVoxeApplication;
 import org.voxe.android.TheVoxeApplication.UpdateElectionListener;
 import org.voxe.android.actionbar.ActionBarActivity;
+import org.voxe.android.common.Analytics;
 import org.voxe.android.common.UIUtils;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
@@ -25,6 +26,7 @@ import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.UiThread;
@@ -47,6 +49,9 @@ public class SelectTagActivity extends ActionBarActivity implements UpdateElecti
 
 	@ViewById
 	View loadingLayout;
+	
+	@Inject
+	Analytics analytics;
 
 	private Election election;
 
@@ -110,6 +115,7 @@ public class SelectTagActivity extends ActionBarActivity implements UpdateElecti
 	@Override
 	protected void onResume() {
 		super.onResume();
+		analytics.onResume();
 		application.setUpdateElectionListener(this);
 		checkElectionChangedInBackground();
 	}
@@ -133,6 +139,7 @@ public class SelectTagActivity extends ActionBarActivity implements UpdateElecti
 	@Override
 	protected void onPause() {
 		super.onPause();
+		analytics.onPause();
 		application.setUpdateElectionListener(null);
 	}
 

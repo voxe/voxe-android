@@ -3,6 +3,9 @@ package org.voxe.android.common;
 import static java.lang.System.currentTimeMillis;
 import android.util.Log;
 
+/*
+ * TODO Disable logs for release
+ */
 public class LogHelper {
 
 	public static void logException(String message, Exception exception) {

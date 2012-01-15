@@ -11,6 +11,7 @@ import java.util.List;
 import org.voxe.android.R;
 import org.voxe.android.TheVoxeApplication;
 import org.voxe.android.actionbar.ActionBarActivity;
+import org.voxe.android.common.Analytics;
 import org.voxe.android.common.LogHelper;
 import org.voxe.android.common.UIUtils;
 import org.voxe.android.model.Candidate;
@@ -67,6 +68,9 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 	
 	@Inject
 	CompareCandidateWebviewClient webviewClient;
+	
+	@Inject
+	Analytics analytics;
 
 	private String failingUrl;
 
@@ -205,6 +209,18 @@ public class CompareCanditatesActivity extends ActionBarActivity {
 	private void prepareWebviewErrorDialog(AlertDialog dialog, String failingUrl, String description) {
 		this.failingUrl = failingUrl;
 		dialog.setMessage(String.format(getString(R.string.webview_error_dialog_message), description));
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		analytics.onPause();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		analytics.onResume();
 	}
 
 }

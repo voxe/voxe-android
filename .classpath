@@ -11,6 +11,9 @@
 	<classpathentry kind="lib" path="lib/spring-android-rest-template-1.0.0.M4.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-core-asl-1.9.2.jar"/>
 	<classpathentry kind="lib" path="lib/androidannotations-2.3-SNAPSHOT-api.jar"/>
+	<classpathentry kind="lib" path="lib/capptain-agent.jar"/>
+	<classpathentry kind="lib" path="lib/capptain-common.jar"/>
+	<classpathentry kind="lib" path="lib/capptain-service.jar"/>
 	<classpathentry kind="src" path=".apt_generated">
 		<attributes>
 			<attribute name="optional" value="true"/>

@@ -8,9 +8,10 @@ import android.app.Application;
 import android.os.Handler;
 
 import com.google.common.base.Optional;
+import com.ubikod.capptain.android.sdk.CapptainAgentUtils;
 
 public class TheVoxeApplication extends Application {
-	
+
 	public static final boolean COPY_TO_SD = true;
 
 	private static final String ELECTION_ID_2007 = "4ef479f8bc60fb0004000001";
@@ -18,11 +19,11 @@ public class TheVoxeApplication extends Application {
 	private volatile Optional<ElectionHolder> electionHolder = Optional.absent();
 
 	private final Object electionLock = new Object();
-	
+
 	private final Handler handler = new Handler();
-	
+
 	private UpdateElectionListener updateElectionListener;
-	
+
 	public interface UpdateElectionListener {
 		public void onElectionUpdate(Optional<ElectionHolder> electionHolder);
 	}
@@ -30,6 +31,8 @@ public class TheVoxeApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		if (CapptainAgentUtils.isInDedicatedCapptainProcess(this))
+			return;
 		preloadInBackground();
 		StartElectionServiceAlarmReceiver.registerAlarm(this);
 	}
@@ -51,7 +54,7 @@ public class TheVoxeApplication extends Application {
 			return electionHolder;
 		}
 	}
-	
+
 	public void reloadElectionHolder() {
 		ElectionAdapter electionAdapter = new ElectionAdapter(this);
 		Optional<ElectionHolder> optional = electionAdapter.load();
@@ -59,7 +62,7 @@ public class TheVoxeApplication extends Application {
 			postReplaceElectionHolder(optional);
 		}
 	}
-	
+
 	private void postReplaceElectionHolder(final Optional<ElectionHolder> electionHolder) {
 		handler.post(new Runnable() {
 			@Override
@@ -67,9 +70,9 @@ public class TheVoxeApplication extends Application {
 				replaceElectionHolder(electionHolder);
 			}
 		});
-		
+
 	}
-		
+
 	private void replaceElectionHolder(Optional<ElectionHolder> electionHolder) {
 		synchronized (electionLock) {
 			this.electionHolder = electionHolder;
@@ -78,7 +81,7 @@ public class TheVoxeApplication extends Application {
 			}
 		}
 	}
-	
+
 	public void setUpdateElectionListener(UpdateElectionListener updateElectionListener) {
 		this.updateElectionListener = updateElectionListener;
 	}
