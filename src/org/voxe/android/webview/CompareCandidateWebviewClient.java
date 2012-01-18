@@ -2,47 +2,43 @@ package org.voxe.android.webview;
 
 import org.voxe.android.common.LogHelper;
 
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.googlecode.androidannotations.annotations.Enhanced;
 import com.googlecode.androidannotations.annotations.RootContext;
-import com.googlecode.androidannotations.annotations.ViewById;
 
 @Enhanced
 public class CompareCandidateWebviewClient extends WebViewClient {
 
-	@ViewById
-	WebView webview;
-
-	@ViewById
-	View loadingLayout;
-
 	@RootContext
 	CompareCanditatesActivity activity;
+	
+	private ComparisonView comparisonView;
+	
+	public void bind(ComparisonView comparisonView) {
+		this.comparisonView = comparisonView;
+	}
 
 	@Override
 	public void onPageFinished(WebView view, String url) {
-		loadingLayout.setVisibility(View.GONE);
-		webview.setVisibility(View.VISIBLE);
+		LogHelper.log("Finished loading url: " + url);
+		comparisonView.endLoading(url);
 	}
 
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-		LogHelper.log("Loading url: " + url);
+		LogHelper.log("Client received loading url: " + url);
 		if (url.contains(ShowPropositionActivity.SHOW_PROPOSITION_PATH_FRAGMENT)) {
 			ShowPropositionActivity.start(activity, url);
 			return true;
 		} else {
-			loadingLayout.setVisibility(View.VISIBLE);
-			webview.setVisibility(View.GONE);
 			return false;
 		}
 	}
 
 	@Override
 	public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-		activity.showLoadingErrorDialog(description, failingUrl);
+		activity.showLoadingErrorDialog(description);
 	}
 }

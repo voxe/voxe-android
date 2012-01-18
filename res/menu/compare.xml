@@ -17,12 +17,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menu_candidates"
-        android:icon="@drawable/ic_action_candidates"
-        android:showAsAction="always"
-        android:title="@string/menu_candidates"/>
-
-    <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_action_share"
         android:showAsAction="always"

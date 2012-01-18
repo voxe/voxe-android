@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="auto"
     package="org.voxe.android"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="7"
+        android:minSdkVersion="8"
         android:targetSdkVersion="14" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,17 +24,13 @@
         android:theme="@style/AppTheme" >
         <activity
             android:label="@string/app_name"
-            android:name="org.voxe.android.webview.SelectCandidatesActivity_" >
+            android:name="org.voxe.android.webview.CompareCanditatesActivity_" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:label="@string/select_theme"
-            android:name="org.voxe.android.webview.SelectTagActivity_" />
-        <activity android:name="org.voxe.android.webview.CompareCanditatesActivity_" />
         <activity
             android:label="@string/proposition_details"
             android:name="org.voxe.android.webview.ShowPropositionActivity_" />

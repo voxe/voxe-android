@@ -232,7 +232,6 @@ public class ElectionAdapter {
 
 	private File getFile(String filename) {
 		File fileAbsolutePath = context.getFileStreamPath(filename);
-		LogHelper.log(String.format("Full path for relative path [%s]: [%s]", filename, fileAbsolutePath.getAbsolutePath()));
 		return fileAbsolutePath;
 	}
 

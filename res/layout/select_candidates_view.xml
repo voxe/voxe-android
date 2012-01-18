@@ -13,9 +13,4 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/list"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:columnWidth="100dp" />
+<org.voxe.android.webview.SelectCandidatesView_ xmlns:android="http://schemas.android.com/apk/res/android" />

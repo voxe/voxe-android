@@ -2,14 +2,11 @@ package org.voxe.android.webview;
 
 import static android.content.Intent.ACTION_SEND;
 import static android.content.Intent.EXTRA_TEXT;
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
-import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
 import org.voxe.android.R;
 import org.voxe.android.TheVoxeApplication;
 import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.common.Analytics;
-import org.voxe.android.common.UIUtils;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -37,7 +34,7 @@ import com.googlecode.androidannotations.annotations.ViewById;
 @OptionsMenu(R.menu.proposition)
 public class ShowPropositionActivity extends ActionBarActivity {
 
-	public static final String SHOW_PROPOSITION_PATH_FRAGMENT = "/webviews/proposition?propositionId=";
+	public static final String SHOW_PROPOSITION_PATH_FRAGMENT = "/webviews/propositions/";
 
 	private static final String WEBVIEW_URL_FORMAT = "http://voxe.org" + SHOW_PROPOSITION_PATH_FRAGMENT + "%s";
 
@@ -108,10 +105,11 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	@OptionsItem
 	public void homeSelected() {
-		SelectCandidatesActivity_.intent(this).flags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP).start();
-		if (!UIUtils.isHoneycomb()) {
-			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
-		}
+//		SelectCandidatesActivity_.intent(this).flags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP).start();
+//		if (!UIUtils.isHoneycomb()) {
+//			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+//		}
+		finish();
 	}
 
 	@OptionsItem

@@ -41,7 +41,7 @@ public class UpdateElectionService extends WakefulIntentService {
 
 	public static void startUpdate(Context context) {
 		acquireStaticLock(context);
-		Intent updateIntent = new Intent(context, UpdateElectionService.class);
+		Intent updateIntent = new Intent(context, UpdateElectionService_.class);
 		context.startService(updateIntent);
 	}
 
@@ -55,6 +55,11 @@ public class UpdateElectionService extends WakefulIntentService {
 	public UpdateElectionService() {
 		super(UpdateElectionService.class.getSimpleName());
 		dataAdapter = new ElectionAdapter(this);
+	}
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
 		prepareElectionClient();
 	}
 

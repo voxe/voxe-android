@@ -9,6 +9,9 @@ import android.graphics.Bitmap;
 import android.util.Base64;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 public class Icon implements Serializable {
 
@@ -29,13 +32,29 @@ public class Icon implements Serializable {
 	public Optional<String> getLargestIconUrl() {
 
 		if (largestIconUrl == null) {
+			
+			/*
+			 * Temp hack to filter images > 64
+			 */
+			Iterable<Integer> filteredSizes = Iterables.filter(sizes, new Predicate<Integer>() {
+				@Override
+				public boolean apply(Integer input) {
+					return input <= 64;
+				}
+			});
+			
+			/*
+			 * Replacing sizes after filtering
+			 */
+			sizes = Lists.newArrayList(filteredSizes);
+			
 			if (sizes.size() == 0) {
 				largestIconUrl = Optional.absent();
 			} else {
 				StringBuilder sb = new StringBuilder();
 
 				sb.append(prefix);
-
+				
 				sort(sizes);
 
 				Integer largestSize = sizes.get(sizes.size() - 1);
