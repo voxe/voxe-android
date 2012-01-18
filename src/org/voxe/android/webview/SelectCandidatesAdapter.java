@@ -1,6 +1,11 @@
 package org.voxe.android.webview;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.voxe.android.R;
+import org.voxe.android.model.Candidate;
 
 import android.content.Context;
 import android.view.View;
@@ -9,9 +14,6 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.voxe.android.R;
-import org.voxe.android.model.Candidate;
 
 public class SelectCandidatesAdapter extends BaseAdapter {
 	
@@ -95,6 +97,20 @@ public class SelectCandidatesAdapter extends BaseAdapter {
 	}
 
 	public void updateCandidates(List<SelectedCandidate> candidates) {
+		
+		Map<String, SelectedCandidate> oldCandidatesById = new HashMap<String, SelectedCandidate>();
+		
+		for(SelectedCandidate oldSelectedCandidate : this.candidates) {
+			oldCandidatesById.put(oldSelectedCandidate.getCandidate().id, oldSelectedCandidate);
+		}
+		
+		for(SelectedCandidate newSelectedCandidate : candidates) {
+			SelectedCandidate oldSelectedCandidate = oldCandidatesById.get(newSelectedCandidate.getCandidate().id);
+			if (oldSelectedCandidate != null && oldSelectedCandidate.isSelected()) {
+				newSelectedCandidate.toggleSelected();
+			}
+		}
+		
 		this.candidates = candidates;
 		notifyDataSetChanged();
 	}

@@ -72,7 +72,7 @@ public class ComparisonView extends RelativeLayout {
 		webview.setWebViewClient(webviewClient);
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		loadingLayout.setVisibility(View.GONE);
-		webview.setVisibility(View.VISIBLE);
+//		webview.setVisibility(View.VISIBLE);
 	}
 
 	/**
@@ -181,13 +181,13 @@ public class ComparisonView extends RelativeLayout {
 		if (url.equals(currentLoadingUrl)) {
 			currentLoadingUrl = null;
 			loadingLayout.setVisibility(View.GONE);
-			webview.setVisibility(View.VISIBLE);
+//			webview.setVisibility(View.VISIBLE);
 		}
 	}
 
 	public void startLoading() {
 		loadingLayout.setVisibility(View.VISIBLE);
-		webview.setVisibility(View.GONE);
+//		webview.setVisibility(View.GONE);
 	}
 
 }

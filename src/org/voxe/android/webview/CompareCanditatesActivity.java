@@ -51,13 +51,12 @@ import com.googlecode.androidannotations.annotations.ViewById;
 @OptionsMenu(R.menu.compare)
 public class CompareCanditatesActivity extends ActionBarActivity implements UpdateElectionListener, OnCandidatesSelectedListener, OnTagSelectedListener {
 
-
 	private static final int SELECT_CANDIDATES_PAGE = 0;
 
 	private static final int COMPARISON_PAGE = 1;
 
 	private static final int SELECT_TAG_PAGE = 2;
-	
+
 	private static final String DESCRIPTION_DIALOG_ARG = "description";
 
 	@Inject
@@ -132,7 +131,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 
 		selectCandidatesView.updateCandidates(election.getMainCandidates());
 		selectTagView.updateTags(election.tags);
-		
+
 		viewPager.setCurrentItem(COMPARISON_PAGE);
 	}
 
@@ -256,8 +255,10 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	@UiThread
 	void updatedElectionIfNeeded(Election election) {
 		if (this.election != election) {
+			if (this.election != null) {
+				Toast.makeText(this, R.string.updated_data, Toast.LENGTH_SHORT).show();
+			}
 			this.election = election;
-			Toast.makeText(this, R.string.updated_data, Toast.LENGTH_SHORT).show();
 			selectCandidatesView.updateCandidates(election.getMainCandidates());
 			selectTagView.updateTags(election.tags);
 		}
