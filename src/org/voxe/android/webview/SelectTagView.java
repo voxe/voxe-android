@@ -19,17 +19,13 @@ import com.googlecode.androidannotations.annotations.ViewById;
 @EViewGroup(R.layout.select_theme)
 public class SelectTagView extends FrameLayout {
 
-	public interface OnTagSelectedListener {
-		void onTagSelected();
-	}
-
 	@ViewById
 	ListView list;
 
 	private TagAdapter tagAdapter;
 
-	private OnTagSelectedListener onTagSelectedListener;
-
+	private PageController pageController;
+	
 	private Tag selectedTag;
 
 	public SelectTagView(Context context, AttributeSet attrs) {
@@ -49,17 +45,15 @@ public class SelectTagView extends FrameLayout {
 	@ItemClick
 	void listItemClicked(Tag selectedTag) {
 		this.selectedTag = selectedTag;
-		if (onTagSelectedListener != null) {
-			onTagSelectedListener.onTagSelected();
-		}
+		pageController.showComparisonPage();
 	}
 	
 	public Tag getSelectedTag() {
 		return selectedTag;
 	}
 
-	public void setOnTagSelectedListener(OnTagSelectedListener onTagSelectedListener) {
-		this.onTagSelectedListener = onTagSelectedListener;
+	public void setPageController(PageController pageController) {
+		this.pageController = pageController;
 	}
 
 }

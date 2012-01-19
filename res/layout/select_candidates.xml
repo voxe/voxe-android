@@ -17,7 +17,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/compareButton"
@@ -29,18 +29,11 @@
         android:paddingTop="15dp"
         android:text="@string/compare"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/compare_text_color" />
+        android:textColor="@color/actionbar_title_color" />
 
-    <GridView
-        android:id="@+id/gridview"
+    <ListView
+        android:id="@+id/listView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:columnWidth="90dp"
-        android:gravity="center"
-        android:horizontalSpacing="5dp"
-        android:layoutAnimation="@anim/layout_wave_scale"
-        android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="5dp" />
+        android:layout_height="fill_parent" />
 
 </LinearLayout>

@@ -10,7 +10,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.GridView;
+import android.widget.ListView;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Click;
@@ -18,33 +18,26 @@ import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ViewById;
 
-/*
- * TODO reselect candidates on update
- */
 @EViewGroup(R.layout.select_candidates)
 public class SelectCandidatesView extends FrameLayout {
-
-	public interface OnCandidatesSelectedListener {
-		void onCandidatesSelected();
-	}
 
 	private List<SelectedCandidate> candidates = new ArrayList<SelectedCandidate>();
 
 	private SelectCandidatesAdapter adapter;
 
-	private OnCandidatesSelectedListener onCandidatesSelectedListener;
-
+	private PageController pageController;
+	
 	@ViewById
-	GridView gridview;
+	ListView listView;
 
 	public SelectCandidatesView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
-	
+
 	@AfterViews
 	void initAdapter() {
 		adapter = new SelectCandidatesAdapter(getContext(), candidates);
-		gridview.setAdapter(adapter);
+		listView.setAdapter(adapter);
 	}
 
 	public void updateCandidates(List<Candidate> mainCandidates) {
@@ -53,11 +46,11 @@ public class SelectCandidatesView extends FrameLayout {
 	}
 
 	@ItemClick
-	void gridviewItemClicked(SelectedCandidate candidate) {
+	void listViewItemClicked(SelectedCandidate candidate) {
 		candidate.toggleSelected();
 
 		int position = candidates.indexOf(candidate);
-		View candidateView = gridview.getChildAt(position - gridview.getFirstVisiblePosition());
+		View candidateView = listView.getChildAt(position - listView.getFirstVisiblePosition());
 
 		adapter.updateCheckbox(candidateView, candidate);
 	}
@@ -68,13 +61,10 @@ public class SelectCandidatesView extends FrameLayout {
 
 	@Click
 	public void compareButtonClicked() {
-		if (onCandidatesSelectedListener != null) {
-			onCandidatesSelectedListener.onCandidatesSelected();
-		}
+		pageController.showComparisonPage();
 	}
 
-	public void setOnCandidatesSelectedListener(OnCandidatesSelectedListener onCandidatesSelectedListener) {
-		this.onCandidatesSelectedListener = onCandidatesSelectedListener;
+	public void setPageController(PageController pageController) {
+		this.pageController = pageController;
 	}
-
 }

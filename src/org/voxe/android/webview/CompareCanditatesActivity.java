@@ -14,8 +14,6 @@ import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionHolder;
 import org.voxe.android.model.Tag;
-import org.voxe.android.webview.SelectCandidatesView.OnCandidatesSelectedListener;
-import org.voxe.android.webview.SelectTagView.OnTagSelectedListener;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -39,6 +37,7 @@ import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.res.StringRes;
 
 /**
  * TODO show hackedTagName of selected tag in top view
@@ -49,7 +48,7 @@ import com.googlecode.androidannotations.annotations.ViewById;
  */
 @EActivity(R.layout.compare_pager)
 @OptionsMenu(R.menu.compare)
-public class CompareCanditatesActivity extends ActionBarActivity implements UpdateElectionListener, OnCandidatesSelectedListener, OnTagSelectedListener {
+public class CompareCanditatesActivity extends ActionBarActivity implements UpdateElectionListener, PageController {
 
 	private static final int SELECT_CANDIDATES_PAGE = 0;
 
@@ -71,9 +70,6 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	@App
 	TheVoxeApplication application;
 
-	/**
-	 * TODO inject
-	 */
 	ComparisonView comparisonView;
 
 	private SelectCandidatesView selectCandidatesView;
@@ -89,8 +85,9 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 		selectCandidatesView = (SelectCandidatesView) View.inflate(this, R.layout.select_candidates_view, null);
 		selectTagView = (SelectTagView) View.inflate(this, R.layout.select_tag_view, null);
 
-		selectCandidatesView.setOnCandidatesSelectedListener(this);
-		selectTagView.setOnTagSelectedListener(this);
+		selectCandidatesView.setPageController(this);
+		selectTagView.setPageController(this);
+		comparisonView.setPageController(this);
 
 		List<View> pagerViews = Arrays.<View> asList(selectCandidatesView, comparisonView, selectTagView);
 
@@ -105,6 +102,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 				}
 			}
 		});
+
 	}
 
 	@AfterViews
@@ -132,7 +130,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 		selectCandidatesView.updateCandidates(election.getMainCandidates());
 		selectTagView.updateTags(election.tags);
 
-		viewPager.setCurrentItem(COMPARISON_PAGE);
+		showComparisonPage();
 	}
 
 	@Override
@@ -271,30 +269,37 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 			updatedElectionIfNeeded(election);
 		}
 	}
-
-	@Override
-	public void onCandidatesSelected() {
-		viewPager.setCurrentItem(COMPARISON_PAGE);
-	}
-
-	@Override
-	public void onTagSelected() {
-		viewPager.setCurrentItem(COMPARISON_PAGE);
-	}
+	
+	@StringRes
+	String candidates, appName;
 
 	protected void comparisonPageSelected() {
 		List<Candidate> selectedCandidates = selectCandidatesView.getSelectedCandidates();
 		if (selectedCandidates.size() == 0) {
-			viewPager.setCurrentItem(SELECT_CANDIDATES_PAGE);
-			Toast.makeText(getApplicationContext(), R.string.select_one_candidate, Toast.LENGTH_LONG).show();
+			showSelectedCandidatesPage();
 		} else {
 			Tag selectedTag = selectTagView.getSelectedTag();
 			if (selectedTag == null) {
-				viewPager.setCurrentItem(SELECT_TAG_PAGE);
+				showSelectTagPage();
 			} else {
 				comparisonView.showComparison(selectedCandidates, selectedTag);
 			}
 		}
+	}
+
+	@Override
+	public void showComparisonPage() {
+		viewPager.setCurrentItem(COMPARISON_PAGE);
+	}
+
+	@Override
+	public void showSelectedCandidatesPage() {
+		viewPager.setCurrentItem(SELECT_CANDIDATES_PAGE);
+	}
+
+	@Override
+	public void showSelectTagPage() {
+		viewPager.setCurrentItem(SELECT_TAG_PAGE);
 	}
 
 }

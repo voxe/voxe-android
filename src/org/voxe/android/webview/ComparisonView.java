@@ -19,12 +19,15 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
+import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -41,6 +44,12 @@ public class ComparisonView extends RelativeLayout {
 	@ViewById
 	View loadingLayout;
 
+	@ViewById
+	TextView selectedCandidatesNumber, selectedTagName;
+
+	@ViewById
+	ImageView selectedTagIcon;
+
 	@Inject
 	CompareCandidateWebviewClient webviewClient;
 
@@ -53,11 +62,13 @@ public class ComparisonView extends RelativeLayout {
 	@App
 	TheVoxeApplication application;
 
+	private PageController pageController;
+
 	private List<Candidate> selectedCandidates;
 
 	private Tag selectedTag;
 
-	private String currentLoadingUrl;
+	private String currentLoadedUrl;
 
 	public ComparisonView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -72,7 +83,6 @@ public class ComparisonView extends RelativeLayout {
 		webview.setWebViewClient(webviewClient);
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		loadingLayout.setVisibility(View.GONE);
-//		webview.setVisibility(View.VISIBLE);
 	}
 
 	/**
@@ -102,10 +112,18 @@ public class ComparisonView extends RelativeLayout {
 
 		LogHelper.log("Loading url " + webviewURL);
 
-		currentLoadingUrl = webviewURL;
-		webview.loadUrl(webviewURL);
-		startLoading();
+		currentLoadedUrl = webviewURL;
+		loadUrl();
 
+		selectedCandidatesNumber.setText("" + selectedCandidates.size());
+		selectedTagName.setText(selectedTag.getHackedTagName());
+		selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
+
+	}
+	
+	private void loadUrl() {
+		webview.loadUrl(currentLoadedUrl);
+		startLoading();
 	}
 
 	private boolean notNewComparison(List<Candidate> selectedCandidates, Tag selectedTag) {
@@ -141,8 +159,8 @@ public class ComparisonView extends RelativeLayout {
 	}
 
 	public void reloadComparison() {
-		if (selectedCandidates != null && selectedTag != null) {
-			showComparison(selectedCandidates, selectedTag);
+		if (currentLoadedUrl != null) {
+			loadUrl();
 		}
 	}
 
@@ -178,16 +196,32 @@ public class ComparisonView extends RelativeLayout {
 	}
 
 	public void endLoading(String url) {
-		if (url.equals(currentLoadingUrl)) {
-			currentLoadingUrl = null;
+		if (url.equals(currentLoadedUrl)) {
 			loadingLayout.setVisibility(View.GONE);
-//			webview.setVisibility(View.VISIBLE);
 		}
 	}
 
 	public void startLoading() {
 		loadingLayout.setVisibility(View.VISIBLE);
-//		webview.setVisibility(View.GONE);
+	}
+
+	@Click
+	void reloadComparisonClicked() {
+		reloadComparison();
+	}
+
+	@Click
+	void selectCandidatesButtonClicked() {
+		pageController.showSelectedCandidatesPage();
+	}
+
+	@Click
+	void selectTagButtonClicked() {
+		pageController.showSelectTagPage();
+	}
+
+	public void setPageController(PageController pageController) {
+		this.pageController = pageController;
 	}
 
 }
