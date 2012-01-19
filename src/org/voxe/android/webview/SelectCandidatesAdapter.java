@@ -1,8 +1,8 @@
 package org.voxe.android.webview;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.voxe.android.R;
 import org.voxe.android.model.Candidate;
@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class SelectCandidatesAdapter extends BaseAdapter {
 	
@@ -30,9 +29,9 @@ public class SelectCandidatesAdapter extends BaseAdapter {
 	private List<SelectedCandidate> candidates;
 	private final Context context;
 
-	public SelectCandidatesAdapter(Context context, List<SelectedCandidate> candidates) {
+	public SelectCandidatesAdapter(Context context) {
 		this.context = context;
-		this.candidates = candidates;
+		this.candidates = new ArrayList<SelectedCandidate>();
 	}
 
 	@Override
@@ -91,17 +90,11 @@ public class SelectCandidatesAdapter extends BaseAdapter {
 		}
 	}
 
-	public void updateCandidates(List<SelectedCandidate> candidates) {
-		
-		Map<String, SelectedCandidate> oldCandidatesById = new HashMap<String, SelectedCandidate>();
-		
-		for(SelectedCandidate oldSelectedCandidate : this.candidates) {
-			oldCandidatesById.put(oldSelectedCandidate.getCandidate().id, oldSelectedCandidate);
-		}
+	public void updateCandidates(List<SelectedCandidate> candidates, Set<String> selectedCandidateIds) {
 		
 		for(SelectedCandidate newSelectedCandidate : candidates) {
-			SelectedCandidate oldSelectedCandidate = oldCandidatesById.get(newSelectedCandidate.getCandidate().id);
-			if (oldSelectedCandidate != null && oldSelectedCandidate.isSelected()) {
+			String newCandidateId = newSelectedCandidate.getCandidate().id;
+			if (selectedCandidateIds.contains(newCandidateId)) {
 				newSelectedCandidate.toggleSelected();
 			}
 		}
