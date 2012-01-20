@@ -22,13 +22,13 @@
     <TextView
         android:id="@+id/compareButton"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:background="@drawable/compare_background"
         android:gravity="center"
         android:paddingBottom="15dp"
         android:paddingTop="15dp"
         android:text="@string/compare"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22dp"
         android:textColor="@color/actionbar_title_color" />
 
     <ListView
