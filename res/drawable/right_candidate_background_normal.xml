@@ -4,8 +4,8 @@
 
     <gradient
         android:angle="270"
-        android:endColor="#7fA3D3"
-        android:startColor="#5e81b1" />
+        android:endColor="#ddd"
+        android:startColor="#fff" />
 
     <!--
     Notice that we use android:bottomLeftRadius instead of right because of an Android bug, fixed in API 12. 
@@ -19,6 +19,6 @@
 
     <stroke
         android:width="1dp"
-        android:color="#42577d" />
+        android:color="#838383" />
 
 </shape>

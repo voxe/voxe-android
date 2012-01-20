@@ -160,50 +160,14 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 		comparisonView.shareComparison();
 	}
 
-	public void showLoadingErrorDialog(String description) {
-		Bundle bundle = new Bundle();
-		bundle.putString(DESCRIPTION_DIALOG_ARG, description);
-		showDialog(R.id.webview_error_dialog, bundle);
-	}
-
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		switch (id) {
-		case R.id.webview_error_dialog:
-			return createWebviewErrorDialog();
 		case R.id.about_dialog:
 			return createAboutDialog();
 		default:
 			return null;
 		}
-	}
-
-	private Dialog createWebviewErrorDialog() {
-		return new AlertDialog.Builder(this) //
-				.setTitle(R.string.webview_error_dialog) //
-				.setMessage("") //
-				.setOnCancelListener(new OnCancelListener() {
-
-					@Override
-					public void onCancel(DialogInterface dialog) {
-						finish();
-					}
-				}) //
-				.setPositiveButton(R.string.retry, new OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						comparisonView.reloadComparison();
-					}
-				}) //
-				.setNegativeButton(R.string.cancel, new OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						finish();
-					}
-				}) //
-				.create();
 	}
 
 	private Dialog createAboutDialog() {
@@ -212,19 +176,6 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 				.setMessage(R.string.about_content) //
 				.setPositiveButton(R.string.about_ok, null) //
 				.create();
-	}
-
-	@Override
-	protected void onPrepareDialog(int id, Dialog dialog, Bundle bundle) {
-		switch (id) {
-		case R.id.webview_error_dialog:
-			prepareWebviewErrorDialog((AlertDialog) dialog, bundle.getString(DESCRIPTION_DIALOG_ARG));
-			break;
-		}
-	}
-
-	private void prepareWebviewErrorDialog(AlertDialog dialog, String description) {
-		dialog.setMessage(String.format(getString(R.string.webview_error_dialog_message), description));
 	}
 
 	@Override

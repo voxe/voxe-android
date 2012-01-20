@@ -1,127 +1,111 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="60dp"
+        android:background="@drawable/compare_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp" >
+
+        <!-- ADT says this could be optimized to a simple TextView, using android:drawableRight. I don't know how to let the image fit :) -->
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/compare_background"
+            android:id="@+id/selectCandidatesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/left_candidate_background"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp" >
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp" >
 
-            <!-- ADT says this could be optimized to a simple TextView, using android:drawableRight. I don't know how to let the image fit :) -->
-
-            <LinearLayout
-                android:id="@+id/selectCandidatesButton"
+            <TextView
+                android:id="@+id/selectedCandidatesNumber"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:background="@drawable/left_candidate_background"
+                android:layout_height="fill_parent"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp" >
+                android:text="0"
+                android:textColor="#000"
+                android:textSize="22dp" />
 
-                <TextView
-                    android:id="@+id/selectedCandidatesNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:gravity="center_vertical"
-                    android:text="0"
-                    android:textColor="#fff"
-                    android:textSize="22dp" />
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/candidates" />
-            </LinearLayout>
-
-            <ImageButton
-                android:id="@+id/reloadComparison"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/refresh_compare_background"
-                android:contentDescription="@string/refresh"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:src="@drawable/ic_action_refresh" />
-
-            <!-- ADT says this could be optimized to a simple TextView, using android:drawableLeft. I don't know how to let the image fit :) -->
-
-            <LinearLayout
-                android:id="@+id/selectTagButton"
-                android:layout_width="fill_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/right_candidate_background"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp" >
-
-                <ImageView
-                    android:id="@+id/selectedTagIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_home" />
-
-                <TextView
-                    android:id="@+id/selectedTagName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="5dp"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:singleLine="true"
-                    android:text="@string/theme"
-                    android:textColor="#fff"
-                    android:textSize="22dp" />
-            </LinearLayout>
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/candidates" />
         </LinearLayout>
 
-        <WebView
-            android:id="@+id/webview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/loadingLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="#eee"
-        android:orientation="horizontal" >
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+        <FrameLayout
+            android:id="@+id/reloadComparison"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:text="@string/loading"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:layout_marginRight="10dp"
+            android:background="@drawable/refresh_compare_background" >
+
+            <ImageView
+                android:id="@+id/reloadButtonImage"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/refresh"
+                android:src="@drawable/ic_action_refresh" />
+
+            <ProgressBar
+                android:id="@+id/reloadingProgress"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <!-- ADT says this could be optimized to a simple TextView, using android:drawableLeft. I don't know how to let the image fit :) -->
+
+        <LinearLayout
+            android:id="@+id/selectTagButton"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/right_candidate_background"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp" >
+
+            <ImageView
+                android:id="@+id/selectedTagIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_home" />
+
+            <TextView
+                android:id="@+id/selectedTagName"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/theme"
+                android:textColor="#000"
+                android:textSize="22dp" />
+        </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

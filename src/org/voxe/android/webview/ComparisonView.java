@@ -42,9 +42,6 @@ public class ComparisonView extends RelativeLayout {
 	WebView webview;
 
 	@ViewById
-	View loadingLayout;
-
-	@ViewById
 	TextView selectedCandidatesNumber, selectedTagName;
 
 	@ViewById
@@ -59,6 +56,12 @@ public class ComparisonView extends RelativeLayout {
 	@StringRes
 	String shareCompare;
 
+	@ViewById
+	View reloadButtonImage;
+
+	@ViewById
+	View reloadingProgress;
+
 	@App
 	TheVoxeApplication application;
 
@@ -69,6 +72,8 @@ public class ComparisonView extends RelativeLayout {
 	private Tag selectedTag;
 
 	private String currentLoadedUrl;
+
+	boolean loading = false;
 
 	public ComparisonView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -82,7 +87,6 @@ public class ComparisonView extends RelativeLayout {
 		settings.setJavaScriptEnabled(false);
 		webview.setWebViewClient(webviewClient);
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-		loadingLayout.setVisibility(View.GONE);
 	}
 
 	/**
@@ -120,7 +124,7 @@ public class ComparisonView extends RelativeLayout {
 		selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
 
 	}
-	
+
 	private void loadUrl() {
 		webview.loadUrl(currentLoadedUrl);
 		startLoading();
@@ -158,12 +162,6 @@ public class ComparisonView extends RelativeLayout {
 		return NOT_NEW;
 	}
 
-	public void reloadComparison() {
-		if (currentLoadedUrl != null) {
-			loadUrl();
-		}
-	}
-
 	public void shareComparison() {
 		if (selectedCandidates != null && selectedTag != null) {
 			Intent sharingIntent = new Intent(ACTION_SEND);
@@ -197,17 +195,23 @@ public class ComparisonView extends RelativeLayout {
 
 	public void endLoading(String url) {
 		if (url.equals(currentLoadedUrl)) {
-			loadingLayout.setVisibility(View.GONE);
+			loading = false;
+			reloadButtonImage.setVisibility(VISIBLE);
+			reloadingProgress.setVisibility(GONE);
 		}
 	}
 
 	public void startLoading() {
-		loadingLayout.setVisibility(View.VISIBLE);
+		loading = true;
+		reloadButtonImage.setVisibility(GONE);
+		reloadingProgress.setVisibility(VISIBLE);
 	}
 
 	@Click
 	void reloadComparisonClicked() {
-		reloadComparison();
+		if (!loading && currentLoadedUrl != null) {
+			loadUrl();
+		}
 	}
 
 	@Click

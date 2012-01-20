@@ -29,7 +29,7 @@
         android:paddingTop="15dp"
         android:text="@string/compare"
         android:textSize="22dp"
-        android:textColor="@color/actionbar_title_color" />
+        android:textColor="#000" />
 
     <ListView
         android:id="@+id/listView"

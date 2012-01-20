@@ -31,12 +31,6 @@
     <string name="menu_program">Thème</string>
     <string name="menu_candidates">Candidats sélectionés</string>
 
-    <string-array name="quizz_choices">
-        <item>Oui</item>
-        <item>Non</item>
-        <item>Heu...</item>
-    </string-array>
-
     <string name="slide_advice">Slidez horizontalement pour changer de candidat</string>
     <string name="select_one_candidate">Merci de sélectionner au moins un candidat</string>
     <string name="select_a_theme">Sélectionnez un thème</string>
@@ -53,8 +47,11 @@
    	<string name="share_proposition" formatted="false">"J'ai trouvé cette proposition sur Voxe: http://voxe.org/XXX/%s"</string>
    	<string name="retry">Réessayer</string>
    	<string name="cancel">Annuler</string>
-   	<string name="webview_error_dialog">Erreur</string>
-   	<string name="webview_error_dialog_message" formatted="false" >"La page n'a pu être chargée, pour la raison suivante : %s"</string>
+   	<string name="webview_error_message" formatted="false" >"<![CDATA[<html><body>La page n'a pu être chargée, pour la raison suivante : %s<br /><br />Réessayez en cliquant sur le bouton de rafraîchissement.</body></html>]]>"</string>
+   	
+	<string name="webview_error_dialog">Erreur</string>
+	<string name="webview_error_dialog_message" formatted="false" >"La page n'a pu être chargée, pour la raison suivante : %s"</string>
+   	
    	<string name="share_with">Partager via</string>
    	<string name="updated_data">Données mises à jour</string>
    	<string name="theme">Thème</string>

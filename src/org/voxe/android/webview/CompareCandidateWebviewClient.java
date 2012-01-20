@@ -1,7 +1,9 @@
 package org.voxe.android.webview;
 
+import org.voxe.android.R;
 import org.voxe.android.common.LogHelper;
 
+import android.content.Context;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -12,7 +14,7 @@ import com.googlecode.androidannotations.annotations.RootContext;
 public class CompareCandidateWebviewClient extends WebViewClient {
 
 	@RootContext
-	CompareCanditatesActivity activity;
+	Context context;
 	
 	private ComparisonView comparisonView;
 	
@@ -30,7 +32,7 @@ public class CompareCandidateWebviewClient extends WebViewClient {
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
 		LogHelper.log("Client received loading url: " + url);
 		if (url.contains(ShowPropositionActivity.SHOW_PROPOSITION_PATH_FRAGMENT)) {
-			ShowPropositionActivity.start(activity, url);
+			ShowPropositionActivity.start(context, url);
 			return true;
 		} else {
 			return false;
@@ -39,6 +41,7 @@ public class CompareCandidateWebviewClient extends WebViewClient {
 
 	@Override
 	public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-		activity.showLoadingErrorDialog(description);
+		String header = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
+		view.loadData(header+String.format(context.getString(R.string.webview_error_message), description), "text/html", "UTF-8");
 	}
 }
