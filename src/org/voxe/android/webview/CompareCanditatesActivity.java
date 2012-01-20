@@ -36,8 +36,8 @@ import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.UiThread;
+import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.annotations.res.StringRes;
 
 /**
  * TODO show hackedTagName of selected tag in top view
@@ -269,11 +269,9 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 			updatedElectionIfNeeded(election);
 		}
 	}
-	
-	@StringRes
-	String candidates, appName;
 
-	protected void comparisonPageSelected() {
+	@UiThreadDelayed(300)
+	void comparisonPageSelected() {
 		List<Candidate> selectedCandidates = selectCandidatesView.getSelectedCandidates();
 		if (selectedCandidates.size() == 0) {
 			showSelectedCandidatesPage();
