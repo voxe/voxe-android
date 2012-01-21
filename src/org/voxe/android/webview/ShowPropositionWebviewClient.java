@@ -1,6 +1,5 @@
 package org.voxe.android.webview;
 
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -14,22 +13,16 @@ public class ShowPropositionWebviewClient extends WebViewClient {
 	@ViewById
 	WebView webview;
 
-	@ViewById
-	View loadingLayout;
-	
 	@RootContext
 	ShowPropositionActivity activity;
 	
 	@Override
 	public void onPageFinished(WebView view, String url) {
-		loadingLayout.setVisibility(View.GONE);
-		webview.setVisibility(View.VISIBLE);
+		activity.loadingDone();
 	}
 
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-		loadingLayout.setVisibility(View.VISIBLE);
-		webview.setVisibility(View.GONE);
 		return false;
 	}
 

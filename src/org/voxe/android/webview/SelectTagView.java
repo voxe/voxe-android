@@ -45,6 +45,7 @@ public class SelectTagView extends FrameLayout {
 	public SelectTagView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		sharedPreferences = context.getSharedPreferences("select_tag", Context.MODE_PRIVATE);
+		// TODO plus d'espace entre image et titre dans fenetre sélection tag.
 	}
 
 	@AfterViews

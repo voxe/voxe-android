@@ -1,8 +1,5 @@
 package org.voxe.android.webview;
 
-import static android.content.Intent.ACTION_SEND;
-import static android.content.Intent.EXTRA_TEXT;
-
 import org.voxe.android.R;
 import org.voxe.android.TheVoxeApplication;
 import org.voxe.android.actionbar.ActionBarActivity;
@@ -82,6 +79,8 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	private String failingUrl;
 
+	private String webviewURL;
+
 	@AfterViews
 	void prepareWebview() {
 		WebSettings settings = webview.getSettings();
@@ -89,9 +88,10 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		webview.setWebViewClient(webviewClient);
 
-		String webviewURL = String.format(WEBVIEW_URL_FORMAT, propositionId);
+		webviewURL = String.format(WEBVIEW_URL_FORMAT, propositionId);
 
 		webview.loadUrl(webviewURL);
+		getActionBarHelper().setRefreshActionItemState(true);
 	}
 
 	@Override
@@ -105,21 +105,13 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	@OptionsItem
 	public void homeSelected() {
-//		SelectCandidatesActivity_.intent(this).flags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP).start();
-//		if (!UIUtils.isHoneycomb()) {
-//			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
-//		}
 		finish();
 	}
-
+	
 	@OptionsItem
-	void menuShareSelected() {
-		Intent sharingIntent = new Intent(ACTION_SEND);
-		sharingIntent.setType("text/plain");
-
-		String message = String.format(getString(R.string.share_proposition), propositionId);
-		sharingIntent.putExtra(EXTRA_TEXT, message);
-		startActivity(Intent.createChooser(sharingIntent, "Partager via"));
+	public void menuRefreshSelected() {
+		webview.loadUrl(webviewURL);
+		getActionBarHelper().setRefreshActionItemState(true);
 	}
 
 	@Override
@@ -191,6 +183,10 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	protected void onResume() {
 		super.onResume();
 		analytics.onResume();
+	}
+
+	public void loadingDone() {
+		getActionBarHelper().setRefreshActionItemState(false);
 	}
 
 }
