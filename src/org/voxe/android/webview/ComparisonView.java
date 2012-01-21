@@ -15,6 +15,7 @@ import org.voxe.android.model.Tag;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -237,6 +238,14 @@ public class ComparisonView extends RelativeLayout {
 	public void updateSelectedTag(Tag selectedTag) {
 		selectedTagName.setText(selectedTag.getHackedTagName());
 		selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
+	}
+
+	public void onSaveInstanceState(Bundle outState) {
+		webview.saveState(outState);
+	}
+
+	public void restoreState(Bundle savedInstanceState) {
+		webview.restoreState(savedInstanceState);
 	}
 
 }

@@ -96,9 +96,8 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 				}
 			}
 		});
-
 	}
-
+	
 	@AfterViews
 	void showLoading() {
 		loadingLayout.setVisibility(View.VISIBLE);
@@ -123,6 +122,8 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 
 		selectCandidatesView.updateCandidates(election.getMainCandidates());
 		selectTagView.updateTags(election.tags);
+
+		setTitle(election.name);
 
 		showComparisonPage();
 	}
@@ -250,6 +251,18 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	@Override
 	public void updateSelectedTag(Tag selectedTag) {
 		comparisonView.updateSelectedTag(selectedTag);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		comparisonView.onSaveInstanceState(outState);
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		comparisonView.restoreState(savedInstanceState);
 	}
 
 }

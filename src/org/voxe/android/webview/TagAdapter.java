@@ -53,7 +53,6 @@ public class TagAdapter extends BaseAdapter {
 
 		TextView tagView;
 		ImageView tagIconView;
-		TextView tagChildsView;
 		if (convertView == null) {
 			convertView = View.inflate(context, R.layout.tag_list_item, null);
 			tagView = (TextView) convertView.findViewById(R.id.tag);
