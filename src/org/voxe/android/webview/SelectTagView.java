@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -91,6 +92,11 @@ public class SelectTagView extends FrameLayout {
 
 	public void setPageController(PageController pageController) {
 		this.pageController = pageController;
+	}
+	
+	@Click
+	void selectTagButtonClicked() {
+		pageController.showComparisonPage();
 	}
 
 }

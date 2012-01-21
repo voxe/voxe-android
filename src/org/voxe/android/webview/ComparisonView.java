@@ -4,7 +4,6 @@ import static android.content.Intent.ACTION_SEND;
 import static android.content.Intent.EXTRA_TEXT;
 import static com.google.common.collect.Iterables.transform;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.voxe.android.R;
