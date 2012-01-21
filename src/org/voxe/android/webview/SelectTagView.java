@@ -10,20 +10,28 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ViewById;
 
-@EViewGroup(R.layout.select_theme)
+@EViewGroup(R.layout.select_tag_content)
 public class SelectTagView extends FrameLayout {
 
 	private static final String SELECTED_TAG_ID_PREF = "selectedTagId";
 
 	@ViewById
 	ListView list;
+	
+	@ViewById
+	TextView selectedTagName;
+
+	@ViewById
+	ImageView selectedTagIcon;
 
 	private TagAdapter tagAdapter;
 
@@ -45,7 +53,7 @@ public class SelectTagView extends FrameLayout {
 	}
 
 	public void updateTags(List<Tag> tags) {
-		tagAdapter.updateThemes(tags);
+		tagAdapter.updateTags(tags);
 
 		String selectedTagId = sharedPreferences.getString(SELECTED_TAG_ID_PREF, "");
 		if (selectedTagId != "") {
@@ -57,13 +65,24 @@ public class SelectTagView extends FrameLayout {
 			}
 		}
 
+		updateSelectedTag();
+
 	}
 
 	@ItemClick
 	void listItemClicked(Tag selectedTag) {
 		this.selectedTag = selectedTag;
 		sharedPreferences.edit().putString(SELECTED_TAG_ID_PREF, selectedTag.id).commit();
+		updateSelectedTag();
 		pageController.showComparisonPage();
+	}
+
+	private void updateSelectedTag() {
+		if (selectedTag != null) {
+			selectedTagName.setText(selectedTag.getHackedTagName());
+			selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
+			pageController.updateSelectedTag(selectedTag);
+		}
 	}
 
 	public Tag getSelectedTag() {

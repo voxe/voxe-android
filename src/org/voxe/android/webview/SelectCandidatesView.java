@@ -9,10 +9,12 @@ import org.voxe.android.model.Candidate;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -23,7 +25,7 @@ import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ViewById;
 
-@EViewGroup(R.layout.select_candidates)
+@EViewGroup(R.layout.select_candidates_content)
 public class SelectCandidatesView extends FrameLayout {
 
 	private static final String SELECTED_CANDIDATE_IDS_PREF = "selectedCandidateIds";
@@ -40,6 +42,9 @@ public class SelectCandidatesView extends FrameLayout {
 	
 	@ViewById
 	ListView listView;
+	
+	@ViewById
+	TextView selectedCandidatesNumber;
 
 	private SharedPreferences sharedPreferences;
 
@@ -61,6 +66,7 @@ public class SelectCandidatesView extends FrameLayout {
 	public void updateCandidates(List<Candidate> mainCandidates) {
 		candidates = SelectedCandidate.from(mainCandidates);
 		adapter.updateCandidates(candidates, selectedCandidateIds);
+		updateSelectedCandidates();
 	}
 
 	@ItemClick
@@ -82,6 +88,21 @@ public class SelectCandidatesView extends FrameLayout {
 		View candidateView = listView.getChildAt(position - listView.getFirstVisiblePosition());
 
 		adapter.updateCheckbox(candidateView, candidate);
+		
+		updateSelectedCandidates();
+	}
+
+	private void updateSelectedCandidates() {
+		List<Candidate> selectedCandidates = getSelectedCandidates();
+		pageController.updateSelectedCandidate(selectedCandidates);
+		
+		selectedCandidatesNumber.setText("" + selectedCandidates.size());
+		
+		if( selectedCandidates.size() == 0) {
+			selectedCandidatesNumber.setTextColor(Color.RED);
+		} else {
+			selectedCandidatesNumber.setTextColor(Color.BLACK);
+		}
 	}
 
 	public List<Candidate> getSelectedCandidates() {
@@ -89,7 +110,7 @@ public class SelectCandidatesView extends FrameLayout {
 	}
 
 	@Click
-	public void compareButtonClicked() {
+	public void selectCandidatesButtonClicked() {
 		pageController.showComparisonPage();
 	}
 

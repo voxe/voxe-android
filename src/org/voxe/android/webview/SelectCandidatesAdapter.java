@@ -59,7 +59,7 @@ public class SelectCandidatesAdapter extends BaseAdapter {
 			imageView = viewHolder.imageView;
 			checkbox = viewHolder.checkbox;
 		} else {
-			ViewGroup viewGroup = (ViewGroup) View.inflate(context, R.layout.select_candidate_grid_item, null);
+			ViewGroup viewGroup = (ViewGroup) View.inflate(context, R.layout.select_candidates_list_item, null);
 			convertView = viewGroup;
 			imageView = (ImageView) viewGroup.findViewById(R.id.candidateImage);
 			checkbox = (CheckBox) viewGroup.findViewById(R.id.candidateCheckbox);

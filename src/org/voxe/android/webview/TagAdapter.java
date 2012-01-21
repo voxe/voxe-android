@@ -18,12 +18,10 @@ public class TagAdapter extends BaseAdapter {
 	private static class ViewHolder {
 		public final TextView tagView;
 		public final ImageView tagIconView;
-		public final TextView tagChildsView;
 		
-		public ViewHolder(TextView tagView, ImageView tagIconView, TextView tagChildsView) {
+		public ViewHolder(TextView tagView, ImageView tagIconView) {
 			this.tagView = tagView;
 			this.tagIconView = tagIconView;
-			this.tagChildsView = tagChildsView;
 		}
 	}
 
@@ -60,18 +58,16 @@ public class TagAdapter extends BaseAdapter {
 			convertView = View.inflate(context, R.layout.tag_list_item, null);
 			tagView = (TextView) convertView.findViewById(R.id.tag);
 			tagIconView = (ImageView) convertView.findViewById(R.id.tagIcon);
-			tagChildsView = (TextView) convertView.findViewById(R.id.tagChilds);
-			convertView.setTag(new ViewHolder(tagView, tagIconView, tagChildsView));
+			convertView.setTag(new ViewHolder(tagView, tagIconView));
 		} else {
 			ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 			tagView = viewHolder.tagView;
 			tagIconView = viewHolder.tagIconView;
-			tagChildsView = viewHolder.tagChildsView;
 		}
 
 		Tag tag = getItem(position);
 
-		String tagName = (position + 1) + ". " + tag.getHackedTagName();
+		String tagName = tag.getHackedTagName();
 		
 		tagView.setText(tagName);
 		
@@ -81,12 +77,10 @@ public class TagAdapter extends BaseAdapter {
 			tagIconView.setImageResource(Candidate.getDefaultCandidateImageId());
 		}
 		
-		tagChildsView.setText(tag.getChildTagsJoined());
-		
 		return convertView;
 	}
 
-	public void updateThemes(List<Tag> tags) {
+	public void updateTags(List<Tag> tags) {
 		this.tags = tags;
 		notifyDataSetChanged();
 	}

@@ -17,15 +17,11 @@ import org.voxe.android.model.Tag;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.common.base.Optional;
 import com.googlecode.androidannotations.annotations.AfterViews;
@@ -56,8 +52,6 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 
 	private static final int SELECT_TAG_PAGE = 2;
 
-	private static final String DESCRIPTION_DIALOG_ARG = "description";
-
 	@Inject
 	Analytics analytics;
 
@@ -81,9 +75,9 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	@AfterViews
 	void initPager() {
 
-		comparisonView = (ComparisonView) View.inflate(this, R.layout.comparison_view, null);
-		selectCandidatesView = (SelectCandidatesView) View.inflate(this, R.layout.select_candidates_view, null);
-		selectTagView = (SelectTagView) View.inflate(this, R.layout.select_tag_view, null);
+		comparisonView = (ComparisonView) View.inflate(this, R.layout.comparison, null);
+		selectCandidatesView = (SelectCandidatesView) View.inflate(this, R.layout.select_candidates, null);
+		selectTagView = (SelectTagView) View.inflate(this, R.layout.select_tag, null);
 
 		selectCandidatesView.setPageController(this);
 		selectTagView.setPageController(this);
@@ -204,9 +198,6 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	@UiThread
 	void updatedElectionIfNeeded(Election election) {
 		if (this.election != election) {
-			if (this.election != null) {
-				Toast.makeText(this, R.string.updated_data, Toast.LENGTH_SHORT).show();
-			}
 			this.election = election;
 			selectCandidatesView.updateCandidates(election.getMainCandidates());
 			selectTagView.updateTags(election.tags);
@@ -249,6 +240,16 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	@Override
 	public void showSelectTagPage() {
 		viewPager.setCurrentItem(SELECT_TAG_PAGE);
+	}
+
+	@Override
+	public void updateSelectedCandidate(List<Candidate> selectedCandidates) {
+		comparisonView.updateSelectedCandidate(selectedCandidates);
+	}
+
+	@Override
+	public void updateSelectedTag(Tag selectedTag) {
+		comparisonView.updateSelectedTag(selectedTag);
 	}
 
 }

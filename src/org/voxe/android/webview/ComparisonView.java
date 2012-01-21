@@ -14,6 +14,7 @@ import org.voxe.android.model.Tag;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -33,7 +34,7 @@ import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
-@EViewGroup(R.layout.compare)
+@EViewGroup(R.layout.comparison_content)
 public class ComparisonView extends RelativeLayout {
 
 	private static final String WEBVIEW_URL_FORMAT = "http://voxe.org/webviews/comparisons?electionId=%s&candidacyIds=%s&tagId=%s";
@@ -118,10 +119,6 @@ public class ComparisonView extends RelativeLayout {
 
 		currentLoadedUrl = webviewURL;
 		loadUrl();
-
-		selectedCandidatesNumber.setText("" + selectedCandidates.size());
-		selectedTagName.setText(selectedTag.getHackedTagName());
-		selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
 
 	}
 
@@ -226,6 +223,20 @@ public class ComparisonView extends RelativeLayout {
 
 	public void setPageController(PageController pageController) {
 		this.pageController = pageController;
+	}
+
+	public void updateSelectedCandidate(List<Candidate> selectedCandidates) {
+		selectedCandidatesNumber.setText("" + selectedCandidates.size());
+		if (selectedCandidates.size() == 0) {
+			selectedCandidatesNumber.setTextColor(Color.RED);
+		} else {
+			selectedCandidatesNumber.setTextColor(Color.BLACK);
+		}
+	}
+
+	public void updateSelectedTag(Tag selectedTag) {
+		selectedTagName.setText(selectedTag.getHackedTagName());
+		selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
 	}
 
 }

@@ -35,9 +35,9 @@
     <string name="select_one_candidate">Merci de sélectionner au moins un candidat</string>
     <string name="select_a_theme">Sélectionnez un thème</string>
     <string name="wip">On y travaille !</string>
-    <string name="loading">Chargement...</string>
+    <string name="loading">Chargement&#8230;</string>
     <string name="please_wait">Veuillez patienter</string>
-    <string name="updating">Mise à jour de l\'élection...</string>
+    <string name="updating">Mise à jour de l\'élection&#8230;</string>
     <string name="select_theme">Sélectionnez un thème</string>
     <string name="proposition_details">Détails de la proposition</string>
     <string name="about">A propos</string>
@@ -53,8 +53,8 @@
 	<string name="webview_error_dialog_message" formatted="false" >"La page n'a pu être chargée, pour la raison suivante : %s"</string>
    	
    	<string name="share_with">Partager via</string>
-   	<string name="updated_data">Données mises à jour</string>
-   	<string name="theme">Thème</string>
+   	<string name="theme">Sélectionnez un thème</string>
    	<string name="refresh">refresh</string>
+   	<string name="candidate_selection">Sélection de candidats</string>
 
 </resources>

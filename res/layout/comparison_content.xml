@@ -18,19 +18,16 @@
             android:id="@+id/selectCandidatesButton"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:background="@drawable/left_candidate_background"
+            android:background="@drawable/left_button"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="10dp"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp" >
+            android:paddingRight="10dp" >
 
             <TextView
                 android:id="@+id/selectedCandidatesNumber"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:gravity="center_vertical"
+                android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="#000"
                 android:textSize="22dp" />
@@ -50,7 +47,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/refresh_compare_background" >
+            android:background="@drawable/button" >
 
             <ImageView
                 android:id="@+id/reloadButtonImage"
@@ -74,13 +71,11 @@
             android:id="@+id/selectTagButton"
             android:layout_width="fill_parent"
             android:layout_height="48dp"
-            android:background="@drawable/right_candidate_background"
+            android:background="@drawable/right_button"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="10dp"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp" >
+            android:paddingRight="10dp">
 
             <ImageView
                 android:id="@+id/selectedTagIcon"
@@ -89,13 +84,15 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_home" />
 
-            <TextView
+            <org.voxe.android.view.ScrollingTextView
                 android:id="@+id/selectedTagName"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:ellipsize="end"
+                android:ellipsize="marquee"
                 android:gravity="center_vertical"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:text="@string/theme"
                 android:textColor="#000"
