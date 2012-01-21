@@ -43,7 +43,7 @@
     <string name="about">A propos</string>
     <string name="about_content">L\'équipe Voxe déchire sa race!</string>
     <string name="about_ok">Cool !</string>
-    <string name="share_compare" formatted="false">"J'ai comparé les candidats %s sur le thème %s grâce à Voxe! http://voxe.org/XXX"</string>
+    <string name="share_compare" formatted="false">"J'ai comparé les candidats %s sur le thème %s grâce à Voxe ! %s"</string>
    	<string name="share_proposition" formatted="false">"J'ai trouvé cette proposition sur Voxe: http://voxe.org/XXX/%s"</string>
    	<string name="retry">Réessayer</string>
    	<string name="cancel">Annuler</string>
@@ -56,5 +56,6 @@
    	<string name="theme">Sélectionnez un thème</string>
    	<string name="refresh">refresh</string>
    	<string name="candidate_selection">Sélection de candidats</string>
+   	<string name="compare_before_share">Vous devez effectuer une comparaison avant de la partager</string>
 
 </resources>

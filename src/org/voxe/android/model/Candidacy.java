@@ -11,6 +11,7 @@ public class Candidacy implements Serializable {
 
 	public String id;
 	public boolean published;
+	public String namespace;
 	public List<Candidate> candidates;
 
 	private transient Optional<Candidate> mainCanditate;
@@ -20,6 +21,7 @@ public class Candidacy implements Serializable {
 			if (candidates != null && candidates.size() > 0) {
 				Candidate candidate = candidates.get(0);
 				candidate.candidacyId = id;
+				candidate.candidacyNamespace = namespace;
 				mainCanditate = Optional.of(candidate);
 			} else {
 				mainCanditate = Optional.absent();

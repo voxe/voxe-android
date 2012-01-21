@@ -4,12 +4,14 @@ import static android.content.Intent.ACTION_SEND;
 import static android.content.Intent.EXTRA_TEXT;
 import static com.google.common.collect.Iterables.transform;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.voxe.android.R;
 import org.voxe.android.TheVoxeApplication;
 import org.voxe.android.common.LogHelper;
 import org.voxe.android.model.Candidate;
+import org.voxe.android.model.Election;
 import org.voxe.android.model.Tag;
 
 import android.content.Context;
@@ -24,9 +26,11 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Click;
@@ -37,6 +41,8 @@ import com.googlecode.androidannotations.annotations.res.StringRes;
 
 @EViewGroup(R.layout.comparison_content)
 public class ComparisonView extends RelativeLayout {
+
+	private static final Joiner CANDIDACY_JOINER = Joiner.on(',');
 
 	private static final String WEBVIEW_URL_FORMAT = "http://voxe.org/webviews/comparisons?electionId=%s&candidacyIds=%s&tagId=%s";
 
@@ -110,7 +116,8 @@ public class ComparisonView extends RelativeLayout {
 			}
 		});
 
-		String candidacyIdsJoined = Joiner.on(',').join(candidacyIds);
+		String candidacyIdsJoined = CANDIDACY_JOINER.join(candidacyIds);
+
 		String electionId = application.getElectionId();
 		String tagId = selectedTag.id;
 
@@ -160,22 +167,43 @@ public class ComparisonView extends RelativeLayout {
 		return NOT_NEW;
 	}
 
-	public void shareComparison() {
-		if (selectedCandidates != null && selectedTag != null) {
+	public void shareComparison(Election election) {
+		if (election != null && selectedCandidates != null && selectedTag != null) {
 			Intent sharingIntent = new Intent(ACTION_SEND);
 			sharingIntent.setType("text/plain");
 
-			Iterable<String> candidateNames = transform(selectedCandidates, new Function<Candidate, String>() {
+			Iterable<String> candidacyNamespaces = transform(selectedCandidates, new Function<Candidate, String>() {
+				@Override
+				public String apply(Candidate input) {
+					return input.candidacyNamespace;
+				}
+			});
+			String candidacyNamespacesJoined = CANDIDACY_JOINER.join(candidacyNamespaces);
+
+			String url = String.format("http://voxe.org/%s/%s/%s", election.namespace, candidacyNamespacesJoined, selectedTag.namespace);
+
+			List<String> candidateNames = Lists.newArrayList(transform(selectedCandidates, new Function<Candidate, String>() {
 				@Override
 				public String apply(Candidate input) {
 					return input.getName().toString();
 				}
-			});
+			}));
+			String candidateNamesJoined;
+			if (candidateNames.size() > 1) {
 
-			String candidateNamesJoined = Joiner.on(',').join(candidateNames);
-			String message = String.format(shareCompare, candidateNamesJoined, selectedTag.getHackedTagName());
+				String lastCandidateName = candidateNames.remove(candidateNames.size() - 1);
+
+				Joiner.on(", ").join(candidateNames);
+
+				candidateNamesJoined = CANDIDACY_JOINER.join(candidateNames) + " et " + lastCandidateName;
+			} else {
+				candidateNamesJoined = candidateNames.get(0);
+			}
+			String message = String.format(shareCompare, candidateNamesJoined, selectedTag.getName(), url);
 			sharingIntent.putExtra(EXTRA_TEXT, message);
 			getContext().startActivity(Intent.createChooser(sharingIntent, shareWith));
+		} else {
+			Toast.makeText(getContext(), R.string.compare_before_share, Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -236,7 +264,7 @@ public class ComparisonView extends RelativeLayout {
 	}
 
 	public void updateSelectedTag(Tag selectedTag) {
-		selectedTagName.setText(selectedTag.getHackedTagName());
+		selectedTagName.setText(selectedTag.getName());
 		selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
 	}
 

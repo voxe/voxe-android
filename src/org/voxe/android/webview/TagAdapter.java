@@ -66,7 +66,7 @@ public class TagAdapter extends BaseAdapter {
 
 		Tag tag = getItem(position);
 
-		String tagName = tag.getHackedTagName();
+		String tagName = tag.getName();
 		
 		tagView.setText(tagName);
 		

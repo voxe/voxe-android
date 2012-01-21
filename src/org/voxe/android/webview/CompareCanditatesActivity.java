@@ -152,7 +152,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 
 	@OptionsItem
 	void menuShareSelected() {
-		comparisonView.shareComparison();
+		comparisonView.shareComparison(election);
 	}
 
 	@Override

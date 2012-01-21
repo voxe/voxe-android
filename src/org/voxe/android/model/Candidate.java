@@ -15,6 +15,7 @@ public class Candidate implements Serializable, Comparable<Candidate> {
 	private transient String name;
 	
 	public String candidacyId;
+	public String candidacyNamespace;
 
 	public Photo photo;
 

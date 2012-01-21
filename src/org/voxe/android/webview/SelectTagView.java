@@ -79,7 +79,7 @@ public class SelectTagView extends FrameLayout {
 
 	private void updateSelectedTag() {
 		if (selectedTag != null) {
-			selectedTagName.setText(selectedTag.getHackedTagName());
+			selectedTagName.setText(selectedTag.getName());
 			selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
 			pageController.updateSelectedTag(selectedTag);
 		}
