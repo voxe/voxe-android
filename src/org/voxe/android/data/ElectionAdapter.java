@@ -10,6 +10,7 @@ import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.voxe.android.R;
+import org.voxe.android.common.BitmapHelper;
 import org.voxe.android.common.Config;
 import org.voxe.android.common.LogHelper;
 import org.voxe.android.model.Candidate;
@@ -108,10 +109,12 @@ public class ElectionAdapter {
 					if (optionalFile.isPresent()) {
 						File file = optionalFile.get();
 						if (file.exists()) {
-							BitmapFactory.Options opts= new BitmapFactory.Options();
+							BitmapFactory.Options opts = new BitmapFactory.Options();
 							opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 							Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
-							candidate.photo.photoBitmap = bitmap;
+							
+							Bitmap roundedCornerBitmap = BitmapHelper.getRoundedCornerBitmap(bitmap);
+							candidate.photo.photoBitmap = roundedCornerBitmap;
 						}
 					}
 				}
@@ -121,7 +124,7 @@ public class ElectionAdapter {
 					if (optionalFile.isPresent()) {
 						File file = optionalFile.get();
 						if (file.exists()) {
-							BitmapFactory.Options opts= new BitmapFactory.Options();
+							BitmapFactory.Options opts = new BitmapFactory.Options();
 							opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 							Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
 							tag.icon.bitmap = bitmap;
@@ -208,7 +211,7 @@ public class ElectionAdapter {
 			}
 		}
 	}
-	
+
 	private void savePngImage(Bitmap bitmap, String photoId) {
 		File file = getFile(photoId);
 

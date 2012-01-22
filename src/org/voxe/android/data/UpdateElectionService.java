@@ -146,7 +146,7 @@ public class UpdateElectionService extends WakefulIntentService {
 			}
 		}
 		LogHelper.logDuration("Downloaded candidate photos", startCandidatePhotos);
-		
+
 		long startTagPhotos = currentTimeMillis();
 		for (Tag tag : electionHolder.election.tags) {
 
@@ -167,7 +167,7 @@ public class UpdateElectionService extends WakefulIntentService {
 						InputStream inputStream = openConnection.getInputStream();
 
 						Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-						
+
 						tag.icon.bitmap = bitmap;
 
 						dataAdapter.saveTagImage(tag);
@@ -178,8 +178,7 @@ public class UpdateElectionService extends WakefulIntentService {
 				}
 			}
 		}
-		
-		
+
 		LogHelper.logDuration("Downloaded tag photos", startTagPhotos);
 
 		Collections.sort(electionHolder.election.tags);
