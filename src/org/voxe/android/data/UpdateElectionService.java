@@ -56,7 +56,7 @@ public class UpdateElectionService extends WakefulIntentService {
 		super(UpdateElectionService.class.getSimpleName());
 		dataAdapter = new ElectionAdapter(this);
 	}
-	
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -114,7 +114,7 @@ public class UpdateElectionService extends WakefulIntentService {
 		ElectionHolder electionHolder = response.response;
 		LogHelper.logDuration("Election download in background", start);
 
-		long startPhotos = currentTimeMillis();
+		long startCandidatePhotos = currentTimeMillis();
 		for (Candidate candidate : electionHolder.election.getMainCandidates()) {
 
 			if (dataAdapter.shouldDownloadCandidatePhoto(candidate)) {
@@ -145,7 +145,9 @@ public class UpdateElectionService extends WakefulIntentService {
 				}
 			}
 		}
+		LogHelper.logDuration("Downloaded candidate photos", startCandidatePhotos);
 		
+		long startTagPhotos = currentTimeMillis();
 		for (Tag tag : electionHolder.election.tags) {
 
 			if (dataAdapter.shouldDownloadTagPhoto(tag)) {
@@ -165,7 +167,7 @@ public class UpdateElectionService extends WakefulIntentService {
 						InputStream inputStream = openConnection.getInputStream();
 
 						Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-
+						
 						tag.icon.bitmap = bitmap;
 
 						dataAdapter.saveTagImage(tag);
@@ -178,7 +180,7 @@ public class UpdateElectionService extends WakefulIntentService {
 		}
 		
 		
-		LogHelper.logDuration("Downloaded candidate photos", startPhotos);
+		LogHelper.logDuration("Downloaded tag photos", startTagPhotos);
 
 		Collections.sort(electionHolder.election.tags);
 

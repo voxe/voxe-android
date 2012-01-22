@@ -29,29 +29,14 @@ public class Icon implements Serializable {
 	public Optional<String> getLargestIconUrl() {
 
 		if (largestIconUrl == null) {
-			
-			/*
-			 * Temp hack to filter images > 64
-			 */
-//			Iterable<Integer> filteredSizes = Iterables.filter(sizes, new Predicate<Integer>() {
-//				@Override
-//				public boolean apply(Integer input) {
-//					return input <= 64;
-//				}
-//			});
-//			
-			/*
-			 * Replacing sizes after filtering
-			 */
-//			sizes = Lists.newArrayList(filteredSizes);
-			
+
 			if (sizes.size() == 0) {
 				largestIconUrl = Optional.absent();
 			} else {
 				StringBuilder sb = new StringBuilder();
 
 				sb.append(prefix);
-				
+
 				sort(sizes);
 
 				Integer largestSize = sizes.get(sizes.size() - 1);
@@ -71,8 +56,8 @@ public class Icon implements Serializable {
 			Optional<String> largestIconUrl = getLargestIconUrl();
 			if (largestIconUrl.isPresent()) {
 				byte[] urlBytes = largestIconUrl.get().getBytes();
-				String encodedUrl = Base64.encodeToString(urlBytes, Base64.NO_WRAP);
-				uniqueId =  Optional.of(encodedUrl);
+				String encodedUrl = "tag_" + Base64.encodeToString(urlBytes, Base64.NO_WRAP);
+				uniqueId = Optional.of(encodedUrl);
 			} else {
 				uniqueId = Optional.absent();
 			}

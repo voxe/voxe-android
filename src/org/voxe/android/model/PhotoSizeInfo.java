@@ -14,7 +14,7 @@ public class PhotoSizeInfo implements Serializable {
 
 	public String getUniqueId() {
 		if (uniqueId == null) {
-			uniqueId = Base64.encodeToString(url.getBytes(), Base64.NO_WRAP);
+			uniqueId = "candidate_" + Base64.encodeToString(url.getBytes(), Base64.NO_WRAP);
 		}
 		return uniqueId;
 	}

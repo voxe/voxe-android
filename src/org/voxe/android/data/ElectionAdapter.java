@@ -10,7 +10,7 @@ import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.voxe.android.R;
-import org.voxe.android.TheVoxeApplication;
+import org.voxe.android.common.Config;
 import org.voxe.android.common.LogHelper;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.ElectionHolder;
@@ -108,7 +108,9 @@ public class ElectionAdapter {
 					if (optionalFile.isPresent()) {
 						File file = optionalFile.get();
 						if (file.exists()) {
-							Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+							BitmapFactory.Options opts= new BitmapFactory.Options();
+							opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+							Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
 							candidate.photo.photoBitmap = bitmap;
 						}
 					}
@@ -119,7 +121,9 @@ public class ElectionAdapter {
 					if (optionalFile.isPresent()) {
 						File file = optionalFile.get();
 						if (file.exists()) {
-							Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+							BitmapFactory.Options opts= new BitmapFactory.Options();
+							opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+							Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
 							tag.icon.bitmap = bitmap;
 						}
 					}
@@ -177,11 +181,11 @@ public class ElectionAdapter {
 		Bitmap photoBitmap = candidate.photo.photoBitmap;
 		if (photoBitmap != null) {
 			String photoId = getCandidatePhotoId(candidate).get();
-			saveImage(photoBitmap, photoId);
+			saveJpegImage(photoBitmap, photoId);
 		}
 	}
 
-	private void saveImage(Bitmap bitmap, String photoId) {
+	private void saveJpegImage(Bitmap bitmap, String photoId) {
 		File file = getFile(photoId);
 
 		OutputStream fOut = null;
@@ -191,7 +195,31 @@ public class ElectionAdapter {
 			copyToSdcard(file, photoId);
 
 		} catch (IOException e) {
-			LogHelper.logException("Could not save bitmap for candidate with id " + photoId + " to " + file.getAbsolutePath(), e);
+			LogHelper.logException("Could not save bitmap for image with id " + photoId + " to " + file.getAbsolutePath(), e);
+			return;
+		} finally {
+			if (fOut != null) {
+				try {
+					fOut.flush();
+					fOut.close();
+				} catch (IOException e) {
+					// Do nothing
+				}
+			}
+		}
+	}
+	
+	private void savePngImage(Bitmap bitmap, String photoId) {
+		File file = getFile(photoId);
+
+		OutputStream fOut = null;
+		try {
+			fOut = new FileOutputStream(file);
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+			copyToSdcard(file, photoId);
+
+		} catch (IOException e) {
+			LogHelper.logException("Could not save bitmap for image with id " + photoId + " to " + file.getAbsolutePath(), e);
 			return;
 		} finally {
 			if (fOut != null) {
@@ -218,9 +246,11 @@ public class ElectionAdapter {
 	}
 
 	private void copyToSdcard(File storageFile, String sdCardName) throws IOException {
-		if (TheVoxeApplication.COPY_TO_SD) {
+		if (Config.COPY_DATA_TO_SDCARD) {
 			File sdcard = Environment.getExternalStorageDirectory();
-			File moved = new File(sdcard, sdCardName);
+			File storageDirectory = new File(sdcard, "voxe");
+			storageDirectory.mkdir();
+			File moved = new File(storageDirectory, sdCardName);
 			Files.copy(storageFile, moved);
 			LogHelper.log("Move to " + moved);
 		}
@@ -264,7 +294,7 @@ public class ElectionAdapter {
 		Bitmap bitmap = tag.icon.bitmap;
 		if (bitmap != null) {
 			String imageId = getTagImageId(tag).get();
-			saveImage(bitmap, imageId);
+			savePngImage(bitmap, imageId);
 		}
 	}
 
