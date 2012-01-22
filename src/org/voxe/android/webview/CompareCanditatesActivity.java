@@ -274,7 +274,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	}
 
 	public void showProposition(String url) {
-		ShowPropositionActivity.start(this, election.namespace, url);		
+		ShowPropositionActivity.start(this, url, election.namespace);		
 	}
 
 }
