@@ -40,31 +40,6 @@
                 android:src="@drawable/candidates" />
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/reloadComparison"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/button" >
-
-            <ImageView
-                android:id="@+id/reloadButtonImage"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/refresh"
-                android:src="@drawable/ic_action_refresh" />
-
-            <ProgressBar
-                android:id="@+id/reloadingProgress"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:visibility="gone" />
-        </FrameLayout>
-
         <!-- ADT says this could be optimized to a simple TextView, using android:drawableLeft. I don't know how to let the image fit :) -->
 
         <LinearLayout
@@ -74,6 +49,7 @@
             android:background="@drawable/right_button"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
@@ -88,7 +64,7 @@
                 android:id="@+id/selectedTagName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:ellipsize="marquee"
                 android:gravity="center_vertical"
                 android:marqueeRepeatLimit="marquee_forever"

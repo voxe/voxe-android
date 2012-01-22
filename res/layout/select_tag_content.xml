@@ -51,7 +51,7 @@
                 android:id="@+id/selectedTagName"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:ellipsize="marquee"
                 android:gravity="center_vertical"
                 android:marqueeRepeatLimit="marquee_forever"

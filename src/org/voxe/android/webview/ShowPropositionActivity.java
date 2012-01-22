@@ -1,18 +1,15 @@
 package org.voxe.android.webview;
 
+import static android.content.Intent.ACTION_SEND;
+import static android.content.Intent.EXTRA_TEXT;
+
 import org.voxe.android.R;
 import org.voxe.android.TheVoxeApplication;
 import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.common.Analytics;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -26,6 +23,7 @@ import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.res.StringRes;
 
 @EActivity(R.layout.show_proposition)
 @OptionsMenu(R.menu.proposition)
@@ -34,14 +32,14 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	public static final String SHOW_PROPOSITION_PATH_FRAGMENT = "/webviews/propositions/";
 
 	private static final String WEBVIEW_URL_FORMAT = "http://voxe.org" + SHOW_PROPOSITION_PATH_FRAGMENT + "%s";
+	
+	private static final String SHARE_PROPOSITION_URL = "http://voxe.org/%s/propositions/%s";
 
 	private static final String PROPOSITION_ID_EXTRA = "propositionId";
+	
+	private static final String ELECTION_NAMESPACE_EXTRA = "electionNamespace";
 
-	private static final String FAILING_URL_ARG = "failingUrl";
-
-	private static final String DESCRIPTION_ARG = "description";
-
-	public static void start(Context context, String url) {
+	public static void start(Context context, String url, String electionNamespace) {
 
 		int fragmentIndex = url.indexOf(SHOW_PROPOSITION_PATH_FRAGMENT);
 		if (fragmentIndex != -1) {
@@ -54,6 +52,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 			Intent intent = new Intent(context, ShowPropositionActivity_.class);
 			intent.putExtra(PROPOSITION_ID_EXTRA, propositionId);
+			intent.putExtra(ELECTION_NAMESPACE_EXTRA, electionNamespace);
 			context.startActivity(intent);
 		}
 
@@ -67,17 +66,24 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	@Extra(PROPOSITION_ID_EXTRA)
 	String propositionId;
+	
+	@Extra(ELECTION_NAMESPACE_EXTRA)
+	String electionNamespace;
 
 	@ViewById
 	WebView webview;
+	
+	@StringRes
+	String shareProposition;
+	
+	@StringRes
+	String shareWith;
 
 	@Inject
 	ShowPropositionWebviewClient webviewClient;
 
 	@Inject
 	Analytics analytics;
-
-	private String failingUrl;
 
 	private String webviewURL;
 
@@ -91,6 +97,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		webviewURL = String.format(WEBVIEW_URL_FORMAT, propositionId);
 
 		webview.loadUrl(webviewURL);
+		webview.clearHistory();
 		getActionBarHelper().setRefreshActionItemState(true);
 	}
 
@@ -109,68 +116,23 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	}
 	
 	@OptionsItem
+	void menuShareSelected() {
+		
+		String sharingUrl = String.format(SHARE_PROPOSITION_URL, electionNamespace, propositionId);
+		
+		String message = String.format(shareProposition, sharingUrl);
+		
+		Intent sharingIntent = new Intent(ACTION_SEND);
+		sharingIntent.setType("text/plain");
+		sharingIntent.putExtra(EXTRA_TEXT, message);
+		startActivity(Intent.createChooser(sharingIntent, shareWith));
+	}	
+	
+	@OptionsItem
 	public void menuRefreshSelected() {
 		webview.loadUrl(webviewURL);
+		webview.clearHistory();
 		getActionBarHelper().setRefreshActionItemState(true);
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id, Bundle args) {
-		switch (id) {
-		case R.id.webview_error_dialog:
-			return createWebviewErrorDialog();
-		default:
-			return null;
-		}
-	}
-
-	@Override
-	protected void onPrepareDialog(int id, Dialog dialog, Bundle bundle) {
-		switch (id) {
-		case R.id.webview_error_dialog:
-			prepareWebviewErrorDialog((AlertDialog) dialog, bundle.getString(FAILING_URL_ARG), bundle.getString(DESCRIPTION_ARG));
-			break;
-		}
-	}
-
-	private Dialog createWebviewErrorDialog() {
-		return new AlertDialog.Builder(this) //
-				.setTitle(R.string.webview_error_dialog) //
-				.setMessage("") //
-				.setOnCancelListener(new OnCancelListener() {
-
-					@Override
-					public void onCancel(DialogInterface dialog) {
-						finish();
-					}
-				}) //
-				.setPositiveButton(R.string.retry, new OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						webview.loadUrl(failingUrl);
-					}
-				}) //
-				.setNegativeButton(R.string.cancel, new OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						finish();
-					}
-				}) //
-				.create();
-	}
-
-	private void prepareWebviewErrorDialog(AlertDialog dialog, String failingUrl, String description) {
-		this.failingUrl = failingUrl;
-		dialog.setMessage(String.format(getString(R.string.webview_error_dialog_message), description));
-	}
-
-	public void showLoadingErrorDialog(String description, String failingUrl2) {
-		Bundle bundle = new Bundle();
-		bundle.putString(FAILING_URL_ARG, failingUrl);
-		bundle.putString(DESCRIPTION_ARG, description);
-		showDialog(R.id.webview_error_dialog, bundle);
 	}
 
 	@Override

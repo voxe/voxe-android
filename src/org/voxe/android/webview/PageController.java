@@ -15,4 +15,8 @@ public interface PageController {
 	void updateSelectedCandidate(List<Candidate> selectedCandidates);
 	
 	void updateSelectedTag(Tag selectedTag);
+	
+	void startLoading();
+	
+	void endLoading();
 }

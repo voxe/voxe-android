@@ -63,12 +63,6 @@ public class ComparisonView extends RelativeLayout {
 	@StringRes
 	String shareCompare;
 
-	@ViewById
-	View reloadButtonImage;
-
-	@ViewById
-	View reloadingProgress;
-
 	@App
 	TheVoxeApplication application;
 
@@ -131,6 +125,7 @@ public class ComparisonView extends RelativeLayout {
 
 	private void loadUrl() {
 		webview.loadUrl(currentLoadedUrl);
+		webview.clearHistory();
 		startLoading();
 	}
 
@@ -168,8 +163,7 @@ public class ComparisonView extends RelativeLayout {
 
 	public void shareComparison(Election election) {
 		if (election != null && selectedCandidates != null && selectedTag != null) {
-			Intent sharingIntent = new Intent(ACTION_SEND);
-			sharingIntent.setType("text/plain");
+
 
 			Iterable<String> candidacyNamespaces = transform(selectedCandidates, new Function<Candidate, String>() {
 				@Override
@@ -199,6 +193,8 @@ public class ComparisonView extends RelativeLayout {
 				candidateNamesJoined = candidateNames.get(0);
 			}
 			String message = String.format(shareCompare, candidateNamesJoined, selectedTag.getName(), url);
+			Intent sharingIntent = new Intent(ACTION_SEND);
+			sharingIntent.setType("text/plain");
 			sharingIntent.putExtra(EXTRA_TEXT, message);
 			getContext().startActivity(Intent.createChooser(sharingIntent, shareWith));
 		} else {
@@ -221,19 +217,16 @@ public class ComparisonView extends RelativeLayout {
 	public void endLoading(String url) {
 		if (url.equals(currentLoadedUrl)) {
 			loading = false;
-			reloadButtonImage.setVisibility(VISIBLE);
-			reloadingProgress.setVisibility(GONE);
+			pageController.endLoading();
 		}
 	}
 
 	public void startLoading() {
 		loading = true;
-		reloadButtonImage.setVisibility(GONE);
-		reloadingProgress.setVisibility(VISIBLE);
+		pageController.startLoading();
 	}
 
-	@Click
-	void reloadComparisonClicked() {
+	public void reloadComparison() {
 		if (!loading && currentLoadedUrl != null) {
 			loadUrl();
 		}

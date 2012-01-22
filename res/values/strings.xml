@@ -44,7 +44,7 @@
     <string name="about_content">L\'équipe Voxe déchire sa race!</string>
     <string name="about_ok">Cool !</string>
     <string name="share_compare" formatted="false">"J'ai comparé les candidats %s sur le thème %s grâce à Voxe ! %s"</string>
-   	<string name="share_proposition" formatted="false">"J'ai trouvé cette proposition sur Voxe: http://voxe.org/XXX/%s"</string>
+   	<string name="share_proposition" formatted="false">"J'ai trouvé cette proposition sur Voxe : %s"</string>
    	<string name="retry">Réessayer</string>
    	<string name="cancel">Annuler</string>
    	<string name="webview_error_message" formatted="false" >"<![CDATA[<html><body>La page n'a pu être chargée, pour la raison suivante : %s<br /><br />Réessayez en cliquant sur le bouton de rafraîchissement.</body></html>]]>"</string>

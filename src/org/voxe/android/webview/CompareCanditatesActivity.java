@@ -35,13 +35,6 @@ import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
 
-/**
- * TODO show hackedTagName of selected tag in top view
- * 
- * TODO Show Error directly on top of webview instead of a dialog. Only a
- * "reload" button.
- * 
- */
 @EActivity(R.layout.compare_pager)
 @OptionsMenu(R.menu.compare)
 public class CompareCanditatesActivity extends ActionBarActivity implements UpdateElectionListener, PageController {
@@ -154,6 +147,11 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	void menuShareSelected() {
 		comparisonView.shareComparison(election);
 	}
+	
+	@OptionsItem
+	public void menuRefreshSelected() {
+		comparisonView.reloadComparison();
+	}
 
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
@@ -263,6 +261,20 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		comparisonView.restoreState(savedInstanceState);
+	}
+
+	@Override
+	public void startLoading() {
+		getActionBarHelper().setRefreshActionItemState(true);		
+	}
+
+	@Override
+	public void endLoading() {
+		getActionBarHelper().setRefreshActionItemState(false);		
+	}
+
+	public void showProposition(String url) {
+		ShowPropositionActivity.start(this, election.namespace, url);		
 	}
 
 }
