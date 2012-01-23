@@ -65,6 +65,8 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 
 	private Election election;
 
+	private int savedCurrentItem;
+
 	@AfterViews
 	void initPager() {
 
@@ -118,9 +120,9 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 
 		setTitle(election.name);
 
-		showComparisonPage();
+		viewPager.setCurrentItem(savedCurrentItem) ;
 	}
-
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		boolean handled = false;
@@ -255,12 +257,15 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		comparisonView.onSaveInstanceState(outState);
+		int currentItem = viewPager.getCurrentItem();
+		outState.putInt("currentPagerItem", currentItem);
 	}
 	
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		comparisonView.restoreState(savedInstanceState);
+		savedCurrentItem = savedInstanceState.getInt("currentPagerItem", COMPARISON_PAGE);
 	}
 
 	@Override

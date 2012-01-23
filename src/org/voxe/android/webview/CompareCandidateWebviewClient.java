@@ -14,9 +14,9 @@ public class CompareCandidateWebviewClient extends WebViewClient {
 
 	@RootContext
 	CompareCanditatesActivity activity;
-	
+
 	private ComparisonView comparisonView;
-	
+
 	public void bind(ComparisonView comparisonView) {
 		this.comparisonView = comparisonView;
 	}
@@ -24,7 +24,9 @@ public class CompareCandidateWebviewClient extends WebViewClient {
 	@Override
 	public void onPageFinished(WebView view, String url) {
 		LogHelper.log("Finished loading url: " + url);
-		comparisonView.endLoading(url);
+		if (url.startsWith("http")) {
+			comparisonView.endLoading(url);
+		}
 	}
 
 	@Override
@@ -41,6 +43,6 @@ public class CompareCandidateWebviewClient extends WebViewClient {
 	@Override
 	public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 		String header = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
-		view.loadData(header+String.format(activity.getString(R.string.webview_error_message), description), "text/html", "UTF-8");
+		view.loadData(header + String.format(activity.getString(R.string.webview_error_message), description), "text/html", "UTF-8");
 	}
 }

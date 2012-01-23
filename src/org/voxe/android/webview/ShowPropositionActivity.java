@@ -10,6 +10,7 @@ import org.voxe.android.common.Analytics;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -172,6 +173,18 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	public void loadingDone(String url) {
 		webview.clearHistory();
 		getActionBarHelper().setRefreshActionItemState(false);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		webview.saveState(outState);
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		webview.restoreState(savedInstanceState);
 	}
 
 }
