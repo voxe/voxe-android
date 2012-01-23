@@ -41,7 +41,7 @@
     <string name="select_theme">Sélectionnez un thème</string>
     <string name="proposition_details">Détails de la proposition</string>
     <string name="about">A propos</string>
-    <string name="about_content" formatted="false" >"<![CDATA[L\'équipe <b>Voxe</b> déchire sa race !<br /><br />Pour en savoir plus, direction <a href="http://voxe.org">Voxe.org</a>.<br /><br />N'hésitez pas à nous aider en donnant une (<em>bonne</em>) note sur l'Android Market, et en partageant l'application avec vos amis.]]>"</string>
+    <string name="about_content" formatted="false" >"<![CDATA[L'équipe <b>Voxe</b> a besoin de toi !<br /><br />N'hésites pas à nous aider en donnant une (bonne) note sur l'<b>Android Market</b>, et en <b>partageant</b> l'application avec tes amis.<br /><br />Pour en savoir plus : <a href="http://voxe.org">Voxe.org</a>.]]>"</string>
     <string name="about_ok">Cool !</string>
     <string name="share_compare" formatted="false">"Compare les candidats %s sur le thème %s avec Voxe ! %s"</string>
    	<string name="share_proposition" formatted="false">"Regarde cette proposition pour les élections sur Voxe.org : %s"</string>
@@ -60,6 +60,6 @@
    	<string name="compare_before_share">Vous devez effectuer une comparaison avant de la partager</string>
    	<string name="rate_android_market">Android Market</string>
    	<string name="share_voxe">Partager Voxe</string>
-   	<string name="share_voxe_content">Tu connais Voxe.org? Pratique pour les élections à venir. Ya même des applications mobile : http://voxe.org/apps</string>
+   	<string name="share_voxe_content">Tu connais Voxe.org ? Génial pour comparer les candidats d'une élection ! Et c'est dispo sur mobile : http://voxe.org/apps</string>
 
 </resources>
