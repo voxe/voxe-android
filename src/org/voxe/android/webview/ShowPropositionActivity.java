@@ -22,6 +22,7 @@ import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
+import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
@@ -81,6 +82,11 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	@Inject
 	ShowPropositionWebviewClient webviewClient;
+	
+	@StringRes
+	String propositionWebviewLoadingMessage;
+	
+	private String webviewLoadingData;
 
 	@Inject
 	Analytics analytics;
@@ -95,10 +101,28 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		webview.setWebViewClient(webviewClient);
 
 		webviewURL = String.format(WEBVIEW_URL_FORMAT, propositionId);
+		
+		webviewLoadingData = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><body>" + propositionWebviewLoadingMessage + "</body></html>";
 
+		loadUrl();
+	}
+	
+	
+	public void loadUrl() {
+		webview.loadData(webviewLoadingData, "text/html", "UTF-8");
+		loadUrlDelayed();
+		startLoading();
+	}
+	
+	@UiThreadDelayed(0)
+	void startLoading() {
+		getActionBarHelper().setRefreshActionItemState(true);
+	}
+	
+	@UiThreadDelayed(100)
+	void loadUrlDelayed() {
 		webview.loadUrl(webviewURL);
 		webview.clearHistory();
-		getActionBarHelper().setRefreshActionItemState(true);
 	}
 
 	@Override
@@ -130,9 +154,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	
 	@OptionsItem
 	public void menuRefreshSelected() {
-		webview.loadUrl(webviewURL);
-		webview.clearHistory();
-		getActionBarHelper().setRefreshActionItemState(true);
+		loadUrl();
 	}
 
 	@Override
@@ -147,7 +169,8 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		analytics.onResume();
 	}
 
-	public void loadingDone() {
+	public void loadingDone(String url) {
+		webview.clearHistory();
 		getActionBarHelper().setRefreshActionItemState(false);
 	}
 

@@ -10,13 +10,15 @@ import com.googlecode.androidannotations.annotations.RootContext;
 
 @Enhanced
 public class ShowPropositionWebviewClient extends WebViewClient {
-	
+
 	@RootContext
 	ShowPropositionActivity activity;
-	
+
 	@Override
 	public void onPageFinished(WebView view, String url) {
-		activity.loadingDone();
+		if (url.startsWith("http")) {
+			activity.loadingDone(url);
+		}
 	}
 
 	@Override
@@ -27,6 +29,6 @@ public class ShowPropositionWebviewClient extends WebViewClient {
 	@Override
 	public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 		String header = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
-		view.loadData(header+String.format(activity.getString(R.string.webview_error_message), description), "text/html", "UTF-8");
+		view.loadData(header + String.format(activity.getString(R.string.webview_error_message), description), "text/html", "UTF-8");
 	}
 }

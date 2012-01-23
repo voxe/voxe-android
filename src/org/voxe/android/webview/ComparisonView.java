@@ -65,7 +65,7 @@ public class ComparisonView extends RelativeLayout {
 	String shareCompare;
 
 	@StringRes
-	String webviewLoadingMessage;
+	String comparisonWebviewLoadingMessage;
 
 	@App
 	TheVoxeApplication application;
@@ -94,7 +94,7 @@ public class ComparisonView extends RelativeLayout {
 		settings.setJavaScriptEnabled(false);
 		webview.setWebViewClient(webviewClient);
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-		webviewLoadingData = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><body>" + webviewLoadingMessage + "</body></html>";
+		webviewLoadingData = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><body>" + comparisonWebviewLoadingMessage + "</body></html>";
 	}
 
 	/**
@@ -233,6 +233,7 @@ public class ComparisonView extends RelativeLayout {
 	public void endLoading(String url) {
 		if (url.equals(currentLoadedUrl)) {
 			loading = false;
+			webview.clearHistory();
 			pageController.endLoading();
 		}
 	}
