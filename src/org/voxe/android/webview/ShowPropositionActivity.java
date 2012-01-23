@@ -1,8 +1,5 @@
 package org.voxe.android.webview;
 
-import static android.content.Intent.ACTION_SEND;
-import static android.content.Intent.EXTRA_TEXT;
-
 import org.voxe.android.R;
 import org.voxe.android.TheVoxeApplication;
 import org.voxe.android.actionbar.ActionBarActivity;
@@ -65,6 +62,9 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	@ViewById
 	View loadingLayout;
+	
+	@Inject
+	ShareManager shareManager;
 
 	@Extra(PROPOSITION_ID_EXTRA)
 	String propositionId;
@@ -78,9 +78,6 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	@StringRes
 	String shareProposition;
 	
-	@StringRes
-	String shareWith;
-
 	@Inject
 	ShowPropositionWebviewClient webviewClient;
 	
@@ -147,10 +144,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		
 		String message = String.format(shareProposition, sharingUrl);
 		
-		Intent sharingIntent = new Intent(ACTION_SEND);
-		sharingIntent.setType("text/plain");
-		sharingIntent.putExtra(EXTRA_TEXT, message);
-		startActivity(Intent.createChooser(sharingIntent, shareWith));
+		shareManager.share(message);
 	}	
 	
 	@OptionsItem

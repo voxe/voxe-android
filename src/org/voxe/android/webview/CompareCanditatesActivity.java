@@ -17,11 +17,18 @@ import org.voxe.android.model.Tag;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.common.base.Optional;
 import com.googlecode.androidannotations.annotations.AfterViews;
@@ -34,6 +41,7 @@ import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.res.HtmlRes;
 
 @EActivity(R.layout.compare_pager)
 @OptionsMenu(R.menu.compare)
@@ -56,6 +64,12 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 
 	@App
 	TheVoxeApplication application;
+
+	@HtmlRes
+	Spanned aboutContent;
+	
+	@Inject
+	ShareManager shareManager;
 
 	ComparisonView comparisonView;
 
@@ -92,7 +106,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 			}
 		});
 	}
-	
+
 	@AfterViews
 	void showLoading() {
 		loadingLayout.setVisibility(View.VISIBLE);
@@ -120,9 +134,9 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 
 		setTitle(election.name);
 
-		viewPager.setCurrentItem(savedCurrentItem) ;
+		viewPager.setCurrentItem(savedCurrentItem);
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		boolean handled = false;
@@ -149,7 +163,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	void menuShareSelected() {
 		comparisonView.shareComparison(election);
 	}
-	
+
 	@OptionsItem
 	public void menuRefreshSelected() {
 		comparisonView.reloadComparison();
@@ -166,10 +180,27 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	}
 
 	private Dialog createAboutDialog() {
+		TextView textView = (TextView) View.inflate(this, R.layout.about_dialog_text, null);
+		textView.setText(aboutContent);
+		textView.setMovementMethod(LinkMovementMethod.getInstance());
+		textView.setLinkTextColor(Color.RED);
 		return new AlertDialog.Builder(this) //
 				.setTitle(R.string.about) //
-				.setMessage(R.string.about_content) //
-				.setPositiveButton(R.string.about_ok, null) //
+				.setView(textView) //
+				.setPositiveButton(R.string.rate_android_market, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.voxe.android")));
+					}
+				}) //
+				.setNeutralButton(R.string.share_voxe, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						shareManager.share(getString(R.string.share_voxe_content));
+					}
+				}) //
 				.create();
 	}
 
@@ -252,7 +283,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	public void updateSelectedTag(Tag selectedTag) {
 		comparisonView.updateSelectedTag(selectedTag);
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -260,7 +291,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 		int currentItem = viewPager.getCurrentItem();
 		outState.putInt("currentPagerItem", currentItem);
 	}
-	
+
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
@@ -270,16 +301,16 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 
 	@Override
 	public void startLoading() {
-		getActionBarHelper().setRefreshActionItemState(true);		
+		getActionBarHelper().setRefreshActionItemState(true);
 	}
 
 	@Override
 	public void endLoading() {
-		getActionBarHelper().setRefreshActionItemState(false);		
+		getActionBarHelper().setRefreshActionItemState(false);
 	}
 
 	public void showProposition(String url) {
-		ShowPropositionActivity.start(this, url, election.namespace);		
+		ShowPropositionActivity.start(this, url, election.namespace);
 	}
 
 }

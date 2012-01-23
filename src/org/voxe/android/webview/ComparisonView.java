@@ -1,7 +1,5 @@
 package org.voxe.android.webview;
 
-import static android.content.Intent.ACTION_SEND;
-import static android.content.Intent.EXTRA_TEXT;
 import static com.google.common.collect.Iterables.transform;
 
 import java.util.List;
@@ -14,7 +12,6 @@ import org.voxe.android.model.Election;
 import org.voxe.android.model.Tag;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -59,10 +56,10 @@ public class ComparisonView extends RelativeLayout {
 	CompareCandidateWebviewClient webviewClient;
 
 	@StringRes
-	String shareWith;
-
-	@StringRes
 	String shareCompare;
+	
+	@Inject
+	ShareManager shareManager;
 
 	@StringRes
 	String comparisonWebviewLoadingMessage;
@@ -190,10 +187,7 @@ public class ComparisonView extends RelativeLayout {
 
 			String candidateNamesJoined = joinCandidatesNames();
 			String message = String.format(shareCompare, candidateNamesJoined, selectedTag.getName(), url);
-			Intent sharingIntent = new Intent(ACTION_SEND);
-			sharingIntent.setType("text/plain");
-			sharingIntent.putExtra(EXTRA_TEXT, message);
-			getContext().startActivity(Intent.createChooser(sharingIntent, shareWith));
+			shareManager.share(message);
 		} else {
 			Toast.makeText(getContext(), R.string.compare_before_share, Toast.LENGTH_SHORT).show();
 		}
