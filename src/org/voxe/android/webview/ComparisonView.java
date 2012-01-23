@@ -35,6 +35,7 @@ import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Inject;
+import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
@@ -63,6 +64,9 @@ public class ComparisonView extends RelativeLayout {
 	@StringRes
 	String shareCompare;
 
+	@StringRes
+	String webviewLoadingMessage;
+
 	@App
 	TheVoxeApplication application;
 
@@ -76,6 +80,8 @@ public class ComparisonView extends RelativeLayout {
 
 	boolean loading = false;
 
+	private String webviewLoadingData;
+
 	public ComparisonView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
@@ -88,6 +94,7 @@ public class ComparisonView extends RelativeLayout {
 		settings.setJavaScriptEnabled(false);
 		webview.setWebViewClient(webviewClient);
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+		webviewLoadingData = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><body>" + webviewLoadingMessage + "</body></html>";
 	}
 
 	/**
@@ -124,9 +131,16 @@ public class ComparisonView extends RelativeLayout {
 	}
 
 	private void loadUrl() {
+		String candidateNamesJoined = joinCandidatesNames();
+		webview.loadData(String.format(webviewLoadingData, candidateNamesJoined, selectedTag.getName()), "text/html", "UTF-8");
+		loadUrlDelayed();
+		startLoading();
+	}
+	
+	@UiThreadDelayed(100)
+	void loadUrlDelayed() {
 		webview.loadUrl(currentLoadedUrl);
 		webview.clearHistory();
-		startLoading();
 	}
 
 	private boolean notNewComparison(List<Candidate> selectedCandidates, Tag selectedTag) {
@@ -164,7 +178,6 @@ public class ComparisonView extends RelativeLayout {
 	public void shareComparison(Election election) {
 		if (election != null && selectedCandidates != null && selectedTag != null) {
 
-
 			Iterable<String> candidacyNamespaces = transform(selectedCandidates, new Function<Candidate, String>() {
 				@Override
 				public String apply(Candidate input) {
@@ -175,23 +188,7 @@ public class ComparisonView extends RelativeLayout {
 
 			String url = String.format("http://voxe.org/%s/%s/%s", election.namespace, candidacyNamespacesJoined, selectedTag.namespace);
 
-			List<String> candidateNames = Lists.newArrayList(transform(selectedCandidates, new Function<Candidate, String>() {
-				@Override
-				public String apply(Candidate input) {
-					return input.getName().toString();
-				}
-			}));
-			String candidateNamesJoined;
-			if (candidateNames.size() > 1) {
-
-				String lastCandidateName = candidateNames.remove(candidateNames.size() - 1);
-
-				Joiner.on(", ").join(candidateNames);
-
-				candidateNamesJoined = CANDIDACY_JOINER.join(candidateNames) + " et " + lastCandidateName;
-			} else {
-				candidateNamesJoined = candidateNames.get(0);
-			}
+			String candidateNamesJoined = joinCandidatesNames();
 			String message = String.format(shareCompare, candidateNamesJoined, selectedTag.getName(), url);
 			Intent sharingIntent = new Intent(ACTION_SEND);
 			sharingIntent.setType("text/plain");
@@ -200,6 +197,25 @@ public class ComparisonView extends RelativeLayout {
 		} else {
 			Toast.makeText(getContext(), R.string.compare_before_share, Toast.LENGTH_SHORT).show();
 		}
+	}
+
+	private String joinCandidatesNames() {
+		List<String> candidateNames = Lists.newArrayList(transform(selectedCandidates, new Function<Candidate, String>() {
+			@Override
+			public String apply(Candidate input) {
+				return input.getName().toString();
+			}
+		}));
+		String candidateNamesJoined;
+		if (candidateNames.size() > 1) {
+
+			String lastCandidateName = candidateNames.remove(candidateNames.size() - 1);
+
+			candidateNamesJoined = Joiner.on(", ").join(candidateNames) + " et " + lastCandidateName;
+		} else {
+			candidateNamesJoined = candidateNames.get(0);
+		}
+		return candidateNamesJoined;
 	}
 
 	/**

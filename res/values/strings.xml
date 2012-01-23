@@ -48,7 +48,7 @@
    	<string name="retry">Réessayer</string>
    	<string name="cancel">Annuler</string>
    	<string name="webview_error_message" formatted="false" >"<![CDATA[<html><body>La page n'a pu être chargée, pour la raison suivante : %s<br /><br />Réessayez en cliquant sur le bouton de rafraîchissement.</body></html>]]>"</string>
-   	
+   	<string name="webview_loading_message" formatted="false" >"<![CDATA[La comparaison des propositions de <b>%s</b> sur le thème <b>%s</b> est en cours de chargement.<br /><br />Merci de patienter.]]>"</string>
 	<string name="webview_error_dialog">Erreur</string>
 	<string name="webview_error_dialog_message" formatted="false" >"La page n'a pu être chargée, pour la raison suivante : %s"</string>
    	
