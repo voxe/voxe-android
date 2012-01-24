@@ -57,7 +57,7 @@ public class ComparisonView extends RelativeLayout {
 
 	@StringRes
 	String shareCompare;
-	
+
 	@Inject
 	ShareManager shareManager;
 
@@ -130,11 +130,13 @@ public class ComparisonView extends RelativeLayout {
 	private void loadUrl() {
 		String candidateNamesJoined = joinCandidatesNames();
 		webview.loadData(String.format(webviewLoadingData, candidateNamesJoined, selectedTag.getName()), "text/html", "UTF-8");
+
 		loadUrlDelayed();
+
 		startLoading();
 	}
-	
-	@UiThreadDelayed(100)
+
+	@UiThreadDelayed(500)
 	void loadUrlDelayed() {
 		webview.loadUrl(currentLoadedUrl);
 		webview.clearHistory();

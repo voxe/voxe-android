@@ -31,11 +31,11 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	public static final String SHOW_PROPOSITION_PATH_FRAGMENT = "/webviews/propositions/";
 
 	private static final String WEBVIEW_URL_FORMAT = "http://voxe.org" + SHOW_PROPOSITION_PATH_FRAGMENT + "%s";
-	
+
 	private static final String SHARE_PROPOSITION_URL = "http://voxe.org/%s/propositions/%s";
 
 	private static final String PROPOSITION_ID_EXTRA = "propositionId";
-	
+
 	private static final String ELECTION_NAMESPACE_EXTRA = "electionNamespace";
 
 	public static void startFromUrl(Context context, String url, String electionNamespace) {
@@ -50,44 +50,44 @@ public class ShowPropositionActivity extends ActionBarActivity {
 			start(context, propositionId, electionNamespace);
 		}
 	}
-	
+
 	public static void start(Context context, String propositionId, String electionNamespace) {
-		
+
 		// TODO Capptain log
-		
+
 		Intent intent = new Intent(context, ShowPropositionActivity_.class);
 		intent.putExtra(PROPOSITION_ID_EXTRA, propositionId);
 		intent.putExtra(ELECTION_NAMESPACE_EXTRA, electionNamespace);
 		context.startActivity(intent);
 	}
-	
+
 	@App
 	TheVoxeApplication application;
 
 	@ViewById
 	View loadingLayout;
-	
+
 	@Inject
 	ShareManager shareManager;
 
 	@Extra(PROPOSITION_ID_EXTRA)
 	String propositionId;
-	
+
 	@Extra(ELECTION_NAMESPACE_EXTRA)
 	String electionNamespace;
 
 	@ViewById
 	WebView webview;
-	
+
 	@StringRes
 	String shareProposition;
-	
+
 	@Inject
 	ShowPropositionWebviewClient webviewClient;
-	
+
 	@StringRes
 	String propositionWebviewLoadingMessage;
-	
+
 	private String webviewLoadingData;
 
 	@Inject
@@ -103,25 +103,24 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		webview.setWebViewClient(webviewClient);
 
 		webviewURL = String.format(WEBVIEW_URL_FORMAT, propositionId);
-		
+
 		webviewLoadingData = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><body>" + propositionWebviewLoadingMessage + "</body></html>";
 
 		loadUrl();
 	}
-	
-	
+
 	public void loadUrl() {
 		webview.loadData(webviewLoadingData, "text/html", "UTF-8");
 		loadUrlDelayed();
 		startLoading();
 	}
-	
+
 	@UiThreadDelayed(0)
 	void startLoading() {
 		getActionBarHelper().setRefreshActionItemState(true);
 	}
-	
-	@UiThreadDelayed(100)
+
+	@UiThreadDelayed(500)
 	void loadUrlDelayed() {
 		webview.loadUrl(webviewURL);
 		webview.clearHistory();
@@ -140,17 +139,17 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	public void homeSelected() {
 		finish();
 	}
-	
+
 	@OptionsItem
 	void menuShareSelected() {
-		
+
 		String sharingUrl = String.format(SHARE_PROPOSITION_URL, electionNamespace, propositionId);
-		
+
 		String message = String.format(shareProposition, sharingUrl);
-		
+
 		shareManager.share(message);
-	}	
-	
+	}
+
 	@OptionsItem
 	public void menuRefreshSelected() {
 		loadUrl();
@@ -172,13 +171,13 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		webview.clearHistory();
 		getActionBarHelper().setRefreshActionItemState(false);
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		webview.saveState(outState);
 	}
-	
+
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
