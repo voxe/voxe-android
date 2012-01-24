@@ -94,7 +94,7 @@ public class SelectCandidatesAdapter extends BaseAdapter {
 		
 		for(SelectedCandidate newSelectedCandidate : candidates) {
 			String newCandidateId = newSelectedCandidate.getCandidate().id;
-			if (selectedCandidateIds.contains(newCandidateId)) {
+			if (newSelectedCandidate.isSelected() != selectedCandidateIds.contains(newCandidateId)) {
 				newSelectedCandidate.toggleSelected();
 			}
 		}

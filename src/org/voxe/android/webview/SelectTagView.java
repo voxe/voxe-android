@@ -27,7 +27,7 @@ public class SelectTagView extends FrameLayout {
 
 	@ViewById
 	ListView list;
-	
+
 	@ViewById
 	TextView selectedTagName;
 
@@ -66,19 +66,17 @@ public class SelectTagView extends FrameLayout {
 			}
 		}
 
-		updateSelectedTag();
+		showSelectedTag();
 
 	}
 
 	@ItemClick
 	void listItemClicked(Tag selectedTag) {
-		this.selectedTag = selectedTag;
-		sharedPreferences.edit().putString(SELECTED_TAG_ID_PREF, selectedTag.id).commit();
-		updateSelectedTag();
+		updateSelectedTag(selectedTag);
 		pageController.showComparisonPage();
 	}
 
-	private void updateSelectedTag() {
+	private void showSelectedTag() {
 		if (selectedTag != null) {
 			selectedTagName.setText(selectedTag.getName());
 			selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
@@ -93,10 +91,16 @@ public class SelectTagView extends FrameLayout {
 	public void setPageController(PageController pageController) {
 		this.pageController = pageController;
 	}
-	
+
 	@Click
 	void selectTagButtonClicked() {
 		pageController.showComparisonPage();
+	}
+
+	public void updateSelectedTag(Tag selectedTag) {
+		this.selectedTag = selectedTag;
+		sharedPreferences.edit().putString(SELECTED_TAG_ID_PREF, selectedTag.id).commit();
+		showSelectedTag();
 	}
 
 }

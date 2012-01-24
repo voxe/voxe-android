@@ -65,6 +65,10 @@ public class SelectCandidatesView extends FrameLayout {
 
 	public void updateCandidates(List<Candidate> mainCandidates) {
 		candidates = SelectedCandidate.from(mainCandidates);
+		updateAdapterAndView();
+	}
+
+	private void updateAdapterAndView() {
 		adapter.updateCandidates(candidates, selectedCandidateIds);
 		updateSelectedCandidates();
 	}
@@ -80,9 +84,7 @@ public class SelectCandidatesView extends FrameLayout {
 			selectedCandidateIds.remove(candidateId);
 		}
 		
-		
-		String selectedCandidateIdsAsString = SELECTED_CANDIDATE_IDS_JOINER.join(selectedCandidateIds);
-		sharedPreferences.edit().putString(SELECTED_CANDIDATE_IDS_PREF, selectedCandidateIdsAsString).commit();
+		saveSelectedCandidateIds();
 
 		int position = candidates.indexOf(candidate);
 		View candidateView = listView.getChildAt(position - listView.getFirstVisiblePosition());
@@ -90,6 +92,11 @@ public class SelectCandidatesView extends FrameLayout {
 		adapter.updateCheckbox(candidateView, candidate);
 		
 		updateSelectedCandidates();
+	}
+
+	private void saveSelectedCandidateIds() {
+		String selectedCandidateIdsAsString = SELECTED_CANDIDATE_IDS_JOINER.join(selectedCandidateIds);
+		sharedPreferences.edit().putString(SELECTED_CANDIDATE_IDS_PREF, selectedCandidateIdsAsString).commit();
 	}
 
 	private void updateSelectedCandidates() {
@@ -117,4 +124,11 @@ public class SelectCandidatesView extends FrameLayout {
 	public void setPageController(PageController pageController) {
 		this.pageController = pageController;
 	}
+
+	public void updateSelectedCandidates(Set<String> selectedCandidateIds) {
+		this.selectedCandidateIds = selectedCandidateIds;
+		saveSelectedCandidateIds();
+		updateAdapterAndView();
+	}
+	
 }

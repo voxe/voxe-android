@@ -38,7 +38,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	
 	private static final String ELECTION_NAMESPACE_EXTRA = "electionNamespace";
 
-	public static void start(Context context, String url, String electionNamespace) {
+	public static void startFromUrl(Context context, String url, String electionNamespace) {
 
 		int fragmentIndex = url.indexOf(SHOW_PROPOSITION_PATH_FRAGMENT);
 		if (fragmentIndex != -1) {
@@ -47,16 +47,20 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 			String propositionId = url.substring(propositionIdIndex);
 
-			// TODO Capptain log
-
-			Intent intent = new Intent(context, ShowPropositionActivity_.class);
-			intent.putExtra(PROPOSITION_ID_EXTRA, propositionId);
-			intent.putExtra(ELECTION_NAMESPACE_EXTRA, electionNamespace);
-			context.startActivity(intent);
+			start(context, propositionId, electionNamespace);
 		}
-
 	}
-
+	
+	public static void start(Context context, String propositionId, String electionNamespace) {
+		
+		// TODO Capptain log
+		
+		Intent intent = new Intent(context, ShowPropositionActivity_.class);
+		intent.putExtra(PROPOSITION_ID_EXTRA, propositionId);
+		intent.putExtra(ELECTION_NAMESPACE_EXTRA, electionNamespace);
+		context.startActivity(intent);
+	}
+	
 	@App
 	TheVoxeApplication application;
 

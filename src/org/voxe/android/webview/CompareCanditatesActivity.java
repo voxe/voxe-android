@@ -1,7 +1,10 @@
 package org.voxe.android.webview;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.voxe.android.R;
 import org.voxe.android.TheVoxeApplication;
@@ -31,6 +34,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Sets;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Background;
@@ -67,7 +72,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 
 	@HtmlRes
 	Spanned aboutContent;
-	
+
 	@Inject
 	ShareManager shareManager;
 
@@ -80,6 +85,8 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	private Election election;
 
 	private int savedCurrentItem;
+
+	private boolean newIntent;
 
 	@AfterViews
 	void initPager() {
@@ -129,12 +136,82 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 		loadingLayout.setVisibility(View.GONE);
 		viewPager.setVisibility(View.VISIBLE);
 
-		selectCandidatesView.updateCandidates(election.getMainCandidates());
+		List<Candidate> mainCandidates = election.getMainCandidates();
+		selectCandidatesView.updateCandidates(mainCandidates);
 		selectTagView.updateTags(election.tags);
 
 		setTitle(election.name);
 
 		viewPager.setCurrentItem(savedCurrentItem);
+
+		handleUriIntent();
+	}
+
+	private void handleUriIntent() {
+		List<Candidate> mainCandidates = election.getMainCandidates();
+		Intent intent = getIntent();
+		if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+			Uri data = intent.getData();
+			List<String> pathSegments = data.getPathSegments();
+			boolean handled = false;
+			if (pathSegments.size() == 3) {
+				String electionNamespace = pathSegments.get(0).toLowerCase();
+				if (electionNamespace.equals(election.namespace)) {
+					String candidacyNamespaces = pathSegments.get(1).toLowerCase();
+					if (candidacyNamespaces.equals("propositions")) {
+						String propositionId = pathSegments.get(2).toLowerCase();
+						ShowPropositionActivity.start(this, propositionId, election.namespace);
+						handled = true;
+					} else {
+
+						Map<String, String> candidateIdByCandidacyNamespace = new HashMap<String, String>();
+						for (Candidate candidate : mainCandidates) {
+							candidateIdByCandidacyNamespace.put(candidate.candidacyNamespace, candidate.id);
+						}
+
+						Iterable<String> candidacyNamespacesSplitted = Splitter.on(',').split(candidacyNamespaces);
+						Set<String> selectedCandidateIds = Sets.newHashSet();
+						for (String candidacyNamespace : candidacyNamespacesSplitted) {
+							if (candidateIdByCandidacyNamespace.containsKey(candidacyNamespace)) {
+								selectedCandidateIds.add(candidateIdByCandidacyNamespace.get(candidacyNamespace));
+							}
+						}
+
+						if (selectedCandidateIds.size() > 0) {
+							String tagNamespace = pathSegments.get(2).toLowerCase();
+
+							Tag selectedTag = null;
+							for (Tag tag : election.tags) {
+								if (tag.namespace.equals(tagNamespace)) {
+									selectedTag = tag;
+									break;
+								}
+							}
+
+							if (selectedTag != null) {
+								selectCandidatesView.updateSelectedCandidates(selectedCandidateIds);
+								selectTagView.updateSelectedTag(selectedTag);
+
+								showComparisonPage();
+								handled = true;
+							}
+						}
+
+					}
+				}
+			}
+
+			if (!handled) {
+				Uri updatedUri = data.buildUpon().authority("www.voxe.org").build();
+				startActivity(new Intent(Intent.ACTION_VIEW, updatedUri));
+			}
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+		newIntent = true;
 	}
 
 	@Override
@@ -217,6 +294,11 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 		analytics.onResume();
 		application.setUpdateElectionListener(this);
 		checkElectionChangedInBackground();
+
+		if (newIntent) {
+			newIntent = false;
+			handleUriIntent();
+		}
 	}
 
 	@Background
@@ -310,7 +392,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	}
 
 	public void showProposition(String url) {
-		ShowPropositionActivity.start(this, url, election.namespace);
+		ShowPropositionActivity.startFromUrl(this, url, election.namespace);
 	}
 
 }
