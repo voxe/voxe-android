@@ -5,7 +5,7 @@ import static com.google.common.collect.Iterables.transform;
 import java.util.List;
 
 import org.voxe.android.R;
-import org.voxe.android.TheVoxeApplication;
+import org.voxe.android.VoxeApplication;
 import org.voxe.android.common.LogHelper;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
@@ -65,7 +65,7 @@ public class ComparisonView extends RelativeLayout {
 	String comparisonWebviewLoadingMessage;
 
 	@App
-	TheVoxeApplication application;
+	VoxeApplication application;
 
 	private PageController pageController;
 

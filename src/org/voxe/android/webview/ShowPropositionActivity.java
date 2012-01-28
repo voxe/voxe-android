@@ -1,7 +1,7 @@
 package org.voxe.android.webview;
 
 import org.voxe.android.R;
-import org.voxe.android.TheVoxeApplication;
+import org.voxe.android.VoxeApplication;
 import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.common.Analytics;
 
@@ -62,7 +62,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	}
 
 	@App
-	TheVoxeApplication application;
+	VoxeApplication application;
 
 	@ViewById
 	View loadingLayout;

@@ -7,8 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.voxe.android.R;
-import org.voxe.android.TheVoxeApplication;
-import org.voxe.android.TheVoxeApplication.UpdateElectionListener;
+import org.voxe.android.VoxeApplication;
 import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.common.AbstractOnPageChangeListener;
 import org.voxe.android.common.Analytics;
@@ -50,7 +49,7 @@ import com.googlecode.androidannotations.annotations.res.HtmlRes;
 
 @EActivity(R.layout.compare_pager)
 @OptionsMenu(R.menu.compare)
-public class CompareCanditatesActivity extends ActionBarActivity implements UpdateElectionListener, PageController {
+public class CompareCanditatesActivity extends ActionBarActivity implements PageController {
 
 	private static final int SELECT_CANDIDATES_PAGE = 0;
 
@@ -68,7 +67,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	View loadingLayout;
 
 	@App
-	TheVoxeApplication application;
+	VoxeApplication application;
 
 	@HtmlRes
 	Spanned aboutContent;
@@ -150,7 +149,7 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	private void handleUriIntent() {
 		List<Candidate> mainCandidates = election.getMainCandidates();
 		Intent intent = getIntent();
-		if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+		if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
 			Uri data = intent.getData();
 			List<String> pathSegments = data.getPathSegments();
 			boolean handled = false;
@@ -285,44 +284,16 @@ public class CompareCanditatesActivity extends ActionBarActivity implements Upda
 	protected void onPause() {
 		super.onPause();
 		analytics.onPause();
-		application.setUpdateElectionListener(null);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		analytics.onResume();
-		application.setUpdateElectionListener(this);
-		checkElectionChangedInBackground();
 
 		if (newIntent) {
 			newIntent = false;
 			handleUriIntent();
-		}
-	}
-
-	@Background
-	void checkElectionChangedInBackground() {
-		Optional<ElectionHolder> electionHolder = application.getElectionHolder();
-		if (electionHolder.isPresent()) {
-			updatedElectionIfNeeded(electionHolder.get().election);
-		}
-	}
-
-	@UiThread
-	void updatedElectionIfNeeded(Election election) {
-		if (this.election != election) {
-			this.election = election;
-			selectCandidatesView.updateCandidates(election.getMainCandidates());
-			selectTagView.updateTags(election.tags);
-		}
-	}
-
-	@Override
-	public void onElectionUpdate(Optional<ElectionHolder> electionHolder) {
-		if (electionHolder.isPresent()) {
-			Election election = electionHolder.get().election;
-			updatedElectionIfNeeded(election);
 		}
 	}
 

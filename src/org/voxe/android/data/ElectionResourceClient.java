@@ -6,7 +6,7 @@ import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.annotations.rest.Rest;
 
 @Rest("http://voxe.org/api/v1")
-public interface ElectionClient {
+public interface ElectionResourceClient {
 	
 	@Get("/elections/{electionId}")
 	ElectionResponse getElection(String electionId);
