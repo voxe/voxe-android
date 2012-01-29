@@ -17,7 +17,7 @@
 <resources>
 
     <string name="app_name">Voxe.org</string>
-    <string name="candidates">Candidats</string>
+    <string name="candidates">Sélectionnez deux candidats</string>
     <string name="candidate">Candidat</string>
     <string name="select_compare">Sélectionnez des candidats</string>
     <string name="menu_refresh">Rafraîchir</string>
@@ -44,5 +44,6 @@
    	<string name="rate_android_market">Android Market</string>
    	<string name="share_voxe">Partager Voxe</string>
    	<string name="share_voxe_content">"Tu connais Voxe.org ? Génial pour comparer les candidats d'une élection ! Et c'est dispo sur mobile : http://voxe.org/apps"</string>
+   	<string name="select_tag">Sélectionnez un thème</string>
 
 </resources>

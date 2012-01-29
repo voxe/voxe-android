@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.voxe.android.R;
 import org.voxe.android.model.Tag;
+import org.voxe.android.tag.SelectTagAdapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -34,7 +35,7 @@ public class SelectTagView extends FrameLayout {
 	@ViewById
 	ImageView selectedTagIcon;
 
-	private TagAdapter tagAdapter;
+	private SelectTagAdapter tagAdapter;
 
 	private PageController pageController;
 
@@ -49,7 +50,7 @@ public class SelectTagView extends FrameLayout {
 
 	@AfterViews
 	void initAdapter() {
-		tagAdapter = new TagAdapter(getContext(), new ArrayList<Tag>());
+		tagAdapter = new SelectTagAdapter(getContext(), new ArrayList<Tag>());
 		list.setAdapter(tagAdapter);
 	}
 

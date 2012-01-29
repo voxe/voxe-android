@@ -1,4 +1,4 @@
-package org.voxe.android.webview;
+package org.voxe.android.candidates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.voxe.android.R;
 import org.voxe.android.model.Candidate;
+import org.voxe.android.webview.SelectedCandidate;
 
 import android.content.Context;
 import android.view.View;

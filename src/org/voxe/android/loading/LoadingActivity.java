@@ -3,12 +3,12 @@ package org.voxe.android.loading;
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
 import org.voxe.android.actionbar.ActionBarActivity;
+import org.voxe.android.candidates.SelectCandidatesActivity_;
 import org.voxe.android.data.DownloadListener;
 import org.voxe.android.data.DownloadProgress;
 import org.voxe.android.data.ElectionDownloadTask;
 import org.voxe.android.data.ElectionLoadTask;
 import org.voxe.android.data.LoadListener;
-import org.voxe.android.webview.CompareCanditatesActivity_;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -143,7 +143,7 @@ public class LoadingActivity extends ActionBarActivity implements LoadListener, 
 	}
 
 	private void startNextActivityAndFinish() {
-		CompareCanditatesActivity_.intent(this).start();
+		SelectCandidatesActivity_.intent(this).start();
 		finish();
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.voxe.android.R;
+import org.voxe.android.candidates.SelectCandidatesAdapter;
 import org.voxe.android.model.Candidate;
 
 import android.content.Context;

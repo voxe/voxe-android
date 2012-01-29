@@ -1,4 +1,4 @@
-package org.voxe.android.webview;
+package org.voxe.android.tag;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TagAdapter extends BaseAdapter {
+public class SelectTagAdapter extends BaseAdapter {
 	
 	private static class ViewHolder {
 		public final TextView tagView;
@@ -28,7 +28,7 @@ public class TagAdapter extends BaseAdapter {
 	private final Context context;
 	private List<Tag> tags;
 
-	public TagAdapter(Context context, List<Tag> tags) {
+	public SelectTagAdapter(Context context, List<Tag> tags) {
 		this.context = context;
 		this.tags = tags;
 	}

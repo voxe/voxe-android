@@ -20,6 +20,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import org.voxe.android.VoxeApplication;
+import org.voxe.android.common.BitmapHelper;
 import org.voxe.android.common.LogHelper;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.ElectionHolder;
@@ -180,6 +181,11 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 			electionHolder.lastUpdateTimestamp = currentTimeMillis();
 
 			electionDAO.save(electionHolder);
+			
+			
+			for (Candidate candidate : electionHolder.election.getMainCandidates()) {
+				candidate.photo.photoBitmap = BitmapHelper.getRoundedCornerBitmap(candidate.photo.photoBitmap);
+			}
 
 			publishProgress(DownloadProgress.create(100, 100, "Election updated"));
 			return TaskResult.fromResult(electionHolder);
