@@ -72,12 +72,7 @@ public class SelectCandidatesAdapter extends BaseAdapter {
 		CharSequence name = candidate.getName();
 		checkbox.setText(name);
 		
-		if (candidate.photo != null && candidate.photo.photoBitmap != null) {
-			imageView.setImageBitmap(candidate.photo.photoBitmap);
-		} else {
-			imageView.setImageResource(Candidate.getDefaultCandidateImageId());
-		}
-
+		candidate.insertPhoto(imageView);
 		
 		checkbox.setChecked(selectedCandidate.isSelected());
 

@@ -1,5 +1,29 @@
-<WebView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/webview"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_alignParentTop="true" />
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/compare_background"
+        android:orientation="horizontal"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp" >
+
+        <TextView
+            android:id="@+id/electionNameTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:textColor="#000"
+            android:textSize="18dp" />
+    </LinearLayout>
+
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+</LinearLayout>

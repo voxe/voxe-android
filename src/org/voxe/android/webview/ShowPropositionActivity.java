@@ -1,18 +1,26 @@
 package org.voxe.android.webview;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
 import org.voxe.android.actionbar.ActionBarActivity;
+import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
+import org.voxe.android.loading.LoadingActivity_;
+import org.voxe.android.model.Election;
+import org.voxe.android.model.ElectionHolder;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.TextView;
 
+import com.google.common.base.Optional;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -52,9 +60,6 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	}
 
 	public static void start(Context context, String propositionId, String electionNamespace) {
-
-		// TODO Capptain log
-
 		Intent intent = new Intent(context, ShowPropositionActivity_.class);
 		intent.putExtra(PROPOSITION_ID_EXTRA, propositionId);
 		intent.putExtra(ELECTION_NAMESPACE_EXTRA, electionNamespace);
@@ -63,6 +68,9 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	@App
 	VoxeApplication application;
+
+	@ViewById
+	TextView electionNameTextView;
 
 	@ViewById
 	View loadingLayout;
@@ -93,10 +101,33 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	@Inject
 	Analytics analytics;
 
+	@Inject
+	AboutDialogHelper aboutDialogHelper;
+
 	private String webviewURL;
+
+	private Election election;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		Optional<ElectionHolder> optionalElectionHolder = application.getElectionHolder();
+		if (optionalElectionHolder.isPresent()) {
+			ElectionHolder electionHolder = optionalElectionHolder.get();
+			election = electionHolder.election;
+		} else {
+			LoadingActivity_.intent(this).flags(FLAG_ACTIVITY_CLEAR_TOP).start();
+			finish();
+		}
+	}
 
 	@AfterViews
 	void prepareWebview() {
+		if (isFinishing()) {
+			return;
+		}
+
 		WebSettings settings = webview.getSettings();
 		settings.setJavaScriptEnabled(true);
 		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -106,12 +137,13 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 		webviewLoadingData = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><body>" + propositionWebviewLoadingMessage + "</body></html>";
 
+		electionNameTextView.setText(election.name);
+
 		loadUrl();
 	}
 
 	public void loadUrl() {
 		webview.loadData(webviewLoadingData, "text/html", "UTF-8");
-		loadUrlDelayed();
 		startLoading();
 	}
 
@@ -120,24 +152,19 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		getActionBarHelper().setRefreshActionItemState(true);
 	}
 
-	@UiThreadDelayed(500)
-	void loadUrlDelayed() {
-		webview.loadUrl(webviewURL);
-		webview.clearHistory();
+	@OptionsItem
+	public void homeSelected() {
+		showDialog(R.id.about_dialog);
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if ((keyCode == KeyEvent.KEYCODE_BACK) && webview.canGoBack()) {
-			webview.goBack();
-			return true;
+	protected Dialog onCreateDialog(int id, Bundle args) {
+		switch (id) {
+		case R.id.about_dialog:
+			return aboutDialogHelper.createAboutDialog();
+		default:
+			return null;
 		}
-		return super.onKeyDown(keyCode, event);
-	}
-
-	@OptionsItem
-	public void homeSelected() {
-		finish();
 	}
 
 	@OptionsItem
@@ -168,8 +195,12 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	}
 
 	public void loadingDone(String url) {
-		webview.clearHistory();
-		getActionBarHelper().setRefreshActionItemState(false);
+
+		if (!url.equals(webviewURL)) {
+			webview.loadUrl(webviewURL);
+		} else {
+			getActionBarHelper().setRefreshActionItemState(false);
+		}
 	}
 
 	@Override

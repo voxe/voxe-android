@@ -1,6 +1,8 @@
-package org.voxe.android.webview;
+package org.voxe.android.comparison;
 
 import org.voxe.android.R;
+import org.voxe.android.common.LogHelper;
+import org.voxe.android.webview.ShowPropositionActivity;
 
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -9,19 +11,26 @@ import com.googlecode.androidannotations.annotations.Enhanced;
 import com.googlecode.androidannotations.annotations.RootContext;
 
 @Enhanced
-public class ShowPropositionWebviewClient extends WebViewClient {
+public class ComparisonWebviewClient extends WebViewClient {
 
 	@RootContext
-	ShowPropositionActivity activity;
+	ComparisonActivity activity;
 
 	@Override
 	public void onPageFinished(WebView view, String url) {
-		activity.loadingDone(url);
+		LogHelper.log("Finished loading url: " + url);
+		activity.endLoading(url);
 	}
 
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-		return false;
+		LogHelper.log("Client received loading url: " + url);
+		if (url.contains(ShowPropositionActivity.SHOW_PROPOSITION_PATH_FRAGMENT)) {
+			activity.showProposition(url);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override

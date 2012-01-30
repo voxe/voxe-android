@@ -3,6 +3,7 @@ package org.voxe.android.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.base.Optional;
 
@@ -31,6 +32,29 @@ public class Election {
 			Collections.sort(mainCandidates);
 		}
 		return mainCandidates;
+	}
+
+	public Tag tagFromId(String tagId) {
+		if (tagId != "") {
+			for (Tag tag : tags) {
+				if (tag.id.equals(tagId)) {
+					return tag;
+				}
+			}
+		}
+		return null;
+	}
+
+	public List<Candidate> selectedCandidatesByCandidateIds(Set<String> candidateIds) {
+		List<Candidate> selectedCandidates = new ArrayList<Candidate>();
+
+		for (Candidate candidate : getMainCandidates()) {
+			if (candidateIds.contains(candidate.id)) {
+				selectedCandidates.add(candidate);
+			}
+		}
+
+		return selectedCandidates;
 	}
 
 }
