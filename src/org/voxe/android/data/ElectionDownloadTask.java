@@ -19,6 +19,7 @@ import org.codehaus.jackson.map.SerializationConfig;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
 import org.voxe.android.common.BitmapHelper;
 import org.voxe.android.common.LogHelper;
@@ -66,7 +67,7 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 	protected TaskResult<ElectionHolder> doInBackground(Void... params) {
 		try {
 
-			publishProgress(DownloadProgress.create(0, 20, "Downloading election data"));
+			publishProgress(DownloadProgress.create(0, 20, application.getString(R.string.downloading_election_data)));
 
 			log("Starting download & update of election in background");
 			long start = currentTimeMillis();
@@ -88,7 +89,7 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 			ElectionDAO electionDAO = new ElectionDAO(application);
 
 			{
-				publishProgress(DownloadProgress.create(20, 50, "Downloading candidate photos"));
+				publishProgress(DownloadProgress.create(20, 50, application.getString(R.string.downloading_candidate_photos)));
 
 				long startDownloadingCandidatePhotos = currentTimeMillis();
 				List<Candidate> mainCandidates = electionHolder.election.getMainCandidates();
@@ -130,7 +131,7 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 			}
 
 			{
-				publishProgress(DownloadProgress.create(50, 80, "Downloading tag images"));
+				publishProgress(DownloadProgress.create(50, 80, application.getString(R.string.downloading_tag_images)));
 				long startDownloadingTagPhotos = currentTimeMillis();
 				float progressPerDownload = 30 / electionHolder.election.tags.size();
 				int i = 0;
@@ -169,7 +170,7 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 				LogHelper.logDuration("Downloaded tag photos", startDownloadingTagPhotos);
 			}
 
-			publishProgress(DownloadProgress.create(80, 100, "Preparing and saving data"));
+			publishProgress(DownloadProgress.create(80, 100, application.getString(R.string.preparing_and_saving_data)));
 
 			Collections.sort(electionHolder.election.tags);
 
@@ -187,7 +188,7 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 				candidate.photo.photoBitmap = BitmapHelper.getRoundedCornerBitmap(candidate.photo.photoBitmap);
 			}
 
-			publishProgress(DownloadProgress.create(100, 100, "Election updated"));
+			publishProgress(DownloadProgress.create(100, 100, application.getString(R.string.election_updated)));
 			return TaskResult.fromResult(electionHolder);
 		} catch (Exception e) {
 			LogHelper.logException("Could not download and update the election data", e);

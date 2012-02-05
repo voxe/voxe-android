@@ -2,7 +2,7 @@ package org.voxe.android.comparison;
 
 import org.voxe.android.R;
 import org.voxe.android.common.LogHelper;
-import org.voxe.android.webview.ShowPropositionActivity;
+import org.voxe.android.proposition.ShowPropositionActivity;
 
 import android.webkit.WebView;
 import android.webkit.WebViewClient;

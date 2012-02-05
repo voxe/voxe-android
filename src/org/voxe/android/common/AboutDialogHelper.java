@@ -3,7 +3,6 @@ package org.voxe.android.common;
 import static android.content.Intent.ACTION_VIEW;
 
 import org.voxe.android.R;
-import org.voxe.android.webview.ShareManager;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

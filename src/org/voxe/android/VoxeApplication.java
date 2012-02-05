@@ -9,7 +9,9 @@ import com.ubikod.capptain.android.sdk.CapptainAgentUtils;
 
 public class VoxeApplication extends Application {
 
-	private static final String ELECTION_ID_2007 = "4ef479f8bc60fb0004000001";
+	// private static final String ELECTION_ID_2007 =
+	// "4ef479f8bc60fb0004000001";
+	private static final String ELECTION_ID_2012 = "4f16fe2299c7a10001000012";
 
 	private Optional<ElectionHolder> optionalElectionHolder = Optional.absent();
 
@@ -33,6 +35,6 @@ public class VoxeApplication extends Application {
 	}
 
 	public String getElectionId() {
-		return ELECTION_ID_2007;
+		return ELECTION_ID_2012;
 	}
 }

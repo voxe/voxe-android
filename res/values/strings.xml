@@ -46,5 +46,10 @@
    	<string name="share_voxe_content">"Tu connais Voxe.org ? Génial pour comparer les candidats d'une élection ! Et c'est dispo sur mobile : http://voxe.org/apps"</string>
    	<string name="select_tag">Sélectionnez un thème</string>
    	<string name="vs">VS</string>
+   	<string name="downloading_election_data">Téléchargement des données de l'élection</string>
+   	<string name="downloading_candidate_photos">Téléchargement des photos des candidats</string>
+   	<string name="downloading_tag_images">Téléchargement des images des thèmes</string>
+   	<string name="preparing_and_saving_data">Préparation et sauvegarde des données</string>
+   	<string name="election_updated">Élection mise à jour</string>
 
 </resources>

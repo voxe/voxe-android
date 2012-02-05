@@ -1,4 +1,4 @@
-package org.voxe.android.webview;
+package org.voxe.android.proposition;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
@@ -7,6 +7,7 @@ import org.voxe.android.VoxeApplication;
 import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
+import org.voxe.android.common.ShareManager;
 import org.voxe.android.loading.LoadingActivity_;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionHolder;

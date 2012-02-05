@@ -16,8 +16,6 @@
 
 <resources>
 
-    <item name="program_item_dialog" type="id"/>
-    <item name="select_candidates_dialog" type="id"/>
     <item name="about_dialog" type="id"/>
 
 </resources>

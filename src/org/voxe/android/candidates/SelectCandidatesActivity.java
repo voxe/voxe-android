@@ -15,7 +15,6 @@ import org.voxe.android.loading.LoadingActivity_;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionHolder;
 import org.voxe.android.tag.SelectTagActivity_;
-import org.voxe.android.webview.SelectedCandidate;
 
 import android.app.Dialog;
 import android.content.Intent;

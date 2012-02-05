@@ -1,4 +1,4 @@
-package org.voxe.android.webview;
+package org.voxe.android.common;
 
 import static android.content.Intent.ACTION_SEND;
 import static android.content.Intent.EXTRA_TEXT;

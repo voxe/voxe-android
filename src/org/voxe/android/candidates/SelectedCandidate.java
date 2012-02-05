@@ -1,4 +1,4 @@
-package org.voxe.android.webview;
+package org.voxe.android.candidates;
 
 import java.io.Serializable;
 import java.util.ArrayList;

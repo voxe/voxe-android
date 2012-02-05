@@ -14,14 +14,14 @@ import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
 import org.voxe.android.common.ComparisonPref_;
 import org.voxe.android.common.LogHelper;
+import org.voxe.android.common.ShareManager;
 import org.voxe.android.loading.LoadingActivity_;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionHolder;
 import org.voxe.android.model.Tag;
+import org.voxe.android.proposition.ShowPropositionActivity;
 import org.voxe.android.tag.SelectTagActivity;
-import org.voxe.android.webview.ShareManager;
-import org.voxe.android.webview.ShowPropositionActivity;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -47,7 +47,7 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
-@EActivity(R.layout.comparison_webview)
+@EActivity(R.layout.comparison)
 @OptionsMenu(R.menu.compare)
 public class ComparisonActivity extends ActionBarActivity {
 
