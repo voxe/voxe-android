@@ -29,8 +29,8 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Sets;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -58,10 +58,10 @@ public class SelectCandidatesActivity extends ActionBarActivity {
 	@Pref
 	ComparisonPref_ comparisonPref;
 
-	@Inject
+	@Bean
 	Analytics analytics;
 
-	@Inject
+	@Bean
 	AboutDialogHelper aboutDialogHelper;
 
 	private Election election;

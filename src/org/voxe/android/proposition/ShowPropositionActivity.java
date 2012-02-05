@@ -24,9 +24,9 @@ import android.widget.TextView;
 import com.google.common.base.Optional;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
-import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
@@ -73,10 +73,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	@ViewById
 	TextView electionNameTextView;
 
-	@ViewById
-	View loadingLayout;
-
-	@Inject
+	@Bean
 	ShareManager shareManager;
 
 	@Extra(PROPOSITION_ID_EXTRA)
@@ -91,7 +88,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 	@StringRes
 	String shareProposition;
 
-	@Inject
+	@Bean
 	ShowPropositionWebviewClient webviewClient;
 
 	@StringRes
@@ -99,10 +96,10 @@ public class ShowPropositionActivity extends ActionBarActivity {
 
 	private String webviewLoadingData;
 
-	@Inject
+	@Bean
 	Analytics analytics;
 
-	@Inject
+	@Bean
 	AboutDialogHelper aboutDialogHelper;
 
 	private String webviewURL;

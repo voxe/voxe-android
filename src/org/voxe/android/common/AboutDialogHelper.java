@@ -16,13 +16,13 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
-import com.googlecode.androidannotations.annotations.Inject;
+import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.annotations.res.HtmlRes;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
-@Enhanced
+@EBean
 public class AboutDialogHelper {
 	
 	private static final Uri VOXE_MARKET_URI = Uri.parse("market://details?id=org.voxe.android");
@@ -33,7 +33,7 @@ public class AboutDialogHelper {
 	@HtmlRes
 	Spanned aboutContent;
 	
-	@Inject
+	@Bean
 	ShareManager shareManager;
 	
 	@StringRes

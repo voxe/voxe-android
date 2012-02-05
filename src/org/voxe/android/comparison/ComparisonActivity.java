@@ -37,9 +37,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
@@ -58,13 +58,13 @@ public class ComparisonActivity extends ActionBarActivity {
 	@Pref
 	ComparisonPref_ comparisonPref;
 
-	@Inject
+	@Bean
 	AboutDialogHelper aboutDialogHelper;
 
 	@App
 	VoxeApplication application;
 
-	@Inject
+	@Bean
 	Analytics analytics;
 
 	@ViewById
@@ -76,13 +76,13 @@ public class ComparisonActivity extends ActionBarActivity {
 	@ViewById
 	ImageView selectedTagIcon;
 
-	@Inject
+	@Bean
 	ComparisonWebviewClient webviewClient;
 
 	@StringRes
 	String shareCompare;
 
-	@Inject
+	@Bean
 	ShareManager shareManager;
 
 	@StringRes

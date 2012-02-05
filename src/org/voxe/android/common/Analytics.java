@@ -6,14 +6,16 @@ import org.voxe.android.model.Election;
 import org.voxe.android.model.Tag;
 
 import android.app.Activity;
+import android.os.Bundle;
 
+import com.google.common.collect.Iterables;
 import com.googlecode.androidannotations.annotations.AfterInject;
-import com.googlecode.androidannotations.annotations.Enhanced;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.ubikod.capptain.android.sdk.CapptainAgent;
 import com.ubikod.capptain.android.sdk.CapptainAgentUtils;
 
-@Enhanced
+@EBean
 public class Analytics {
 
 	@RootContext
@@ -35,23 +37,35 @@ public class Analytics {
 	}
 
 	public void tagSelected(Election election, Tag selectedTag) {
-		
+		Bundle bundle = new Bundle();
+		bundle.putString("election", election.namespace);
+		bundle.putString("selectedTag", selectedTag.namespace);
+		CapptainAgent.getInstance(activity).sendSessionEvent("tagSelected", bundle);
 	}
 
 	public void backToCandidatesFromTag(Election election) {
-		
+		Bundle bundle = new Bundle();
+		bundle.putString("election", election.namespace);
+		CapptainAgent.getInstance(activity).sendSessionEvent("backToCandidatesFromTag", bundle);
 	}
 
 	public void twoCandidatesSelected(Election election, Set<String> selectedCandidateIds) {
-		
+		Bundle bundle = new Bundle();
+		bundle.putStringArray("selectedCandidateIds", Iterables.toArray(selectedCandidateIds, String.class));
+		bundle.putString("election", election.namespace);
+		CapptainAgent.getInstance(activity).sendSessionEvent("twoCandidatesSelected", bundle);
 	}
 
 	public void backToCandidatesFromComparison(Election election) {
-		
+		Bundle bundle = new Bundle();
+		bundle.putString("election", election.namespace);
+		CapptainAgent.getInstance(activity).sendSessionEvent("backToCandidatesFromComparison", bundle);
 	}
 
 	public void backToTagFromComparison(Election election) {
-		
+		Bundle bundle = new Bundle();
+		bundle.putString("election", election.namespace);
+		CapptainAgent.getInstance(activity).sendSessionEvent("backToTagFromComparison", bundle);
 	}
 
 }

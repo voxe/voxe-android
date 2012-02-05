@@ -5,11 +5,11 @@ import static android.content.Intent.EXTRA_TEXT;
 import android.content.Context;
 import android.content.Intent;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
-@Enhanced
+@EBean
 public class ShareManager {
 	
 	@RootContext

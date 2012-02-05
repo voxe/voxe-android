@@ -5,10 +5,10 @@ import org.voxe.android.R;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.RootContext;
 
-@Enhanced
+@EBean
 public class ShowPropositionWebviewClient extends WebViewClient {
 
 	@RootContext
