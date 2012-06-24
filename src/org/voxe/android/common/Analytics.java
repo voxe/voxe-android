@@ -20,7 +20,7 @@ public class Analytics {
 
 	@RootContext
 	Activity activity;
-	
+
 	String activityNameOnCapptain;
 
 	@AfterInject
@@ -66,6 +66,12 @@ public class Analytics {
 		Bundle bundle = new Bundle();
 		bundle.putString("election", election.namespace);
 		CapptainAgent.getInstance(activity).sendSessionEvent("backToTagFromComparison", bundle);
+	}
+
+	public void electionSelected(Election selectedElection) {
+		Bundle bundle = new Bundle();
+		bundle.putString("selectedElection", selectedElection.namespace);
+		CapptainAgent.getInstance(activity).sendSessionEvent("electionSelected", bundle);
 	}
 
 }

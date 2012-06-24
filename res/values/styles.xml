@@ -44,6 +44,15 @@
 
     <dimen name="button_corner_radius">7dp</dimen>
     <dimen name="button_stroke_width">1dp</dimen>
+
     <color name="button_stroke_color">#838383</color>
+
+    <style name="ProgressBar">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+    </style>
 
 </resources>

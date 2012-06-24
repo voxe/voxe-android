@@ -25,20 +25,19 @@
         android:id="@+id/candidateImage"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_home" />
+        android:scaleType="fitCenter" />
 
     <CheckBox
         android:id="@+id/candidateCheckbox"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
         android:clickable="false"
         android:focusable="false"
         android:maxLines="2"
-        android:layout_marginLeft="10dip"
+        android:paddingLeft="50dp"
         android:text="François Hollande"
         android:textAppearance="?android:attr/textAppearanceLargeInverse"
-        android:paddingLeft="50dp"
         android:textColor="@android:color/black" />
 
 </LinearLayout>

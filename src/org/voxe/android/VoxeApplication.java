@@ -24,7 +24,7 @@ public class VoxeApplication extends Application {
 	 *            should not be null
 	 */
 	public synchronized void setElectionHolder(ElectionsHolder electionHolder) {
-		optionalElectionHolder = Optional.of(electionHolder);
+		optionalElectionHolder = Optional.fromNullable(electionHolder);
 	}
 
 	public synchronized Optional<ElectionsHolder> getElectionHolder() {

@@ -8,16 +8,13 @@ import java.util.List;
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
 import org.voxe.android.adapter.SelectTagAdapter;
-import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionsHolder;
 import org.voxe.android.model.Tag;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -33,9 +30,6 @@ import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.ViewById;
 
-/**
- * TODO show selected candidates
- */
 @EActivity(R.layout.select_tag_list)
 public class SelectTagActivity extends SherlockActivity {
 
@@ -48,9 +42,6 @@ public class SelectTagActivity extends SherlockActivity {
 	SelectTagAdapter tagAdapter;
 
 	private Election election;
-
-	@Bean
-	AboutDialogHelper aboutDialogHelper;
 
 	@Bean
 	Analytics analytics;
@@ -74,6 +65,8 @@ public class SelectTagActivity extends SherlockActivity {
 	void initLayout() {
 		Optional<ElectionsHolder> optionalElectionHolder = application.getElectionHolder();
 		if (optionalElectionHolder.isPresent()) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setHomeButtonEnabled(true);
 			ElectionsHolder electionHolder = optionalElectionHolder.get();
 			election = electionHolder.elections.get(electionIndex);
 
@@ -108,21 +101,6 @@ public class SelectTagActivity extends SherlockActivity {
 		startActivityForResult(intent, 1);
 	}
 
-	@OptionsItem
-	public void homeSelected() {
-		showDialog(R.id.about_dialog);
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id, Bundle args) {
-		switch (id) {
-		case R.id.about_dialog:
-			return aboutDialogHelper.createAboutDialog();
-		default:
-			return null;
-		}
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == BACK_TO_SELECT_CANDIDATES) {
@@ -134,6 +112,15 @@ public class SelectTagActivity extends SherlockActivity {
 	void selectCandidatesButtonClicked() {
 		analytics.backToCandidatesFromTag(election);
 		setResult(RESULT_CANCELED);
+		finish();
+	}
+
+	@OptionsItem
+	void homeSelected() {
+		SelectElectionActivity_ //
+				.intent(this) //
+				.flags(FLAG_ACTIVITY_CLEAR_TOP) //
+				.start();
 		finish();
 	}
 

@@ -1,5 +1,6 @@
 package org.voxe.android.activity;
 
+import static android.content.Intent.ACTION_SEND;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static com.google.common.collect.Iterables.transform;
 
@@ -8,17 +9,14 @@ import java.util.List;
 
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
-import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
 import org.voxe.android.common.ComparisonWebviewClient;
-import org.voxe.android.common.ShareManager;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionsHolder;
 import org.voxe.android.model.Tag;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -29,7 +27,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.actionbarsherlock.widget.ShareActionProvider;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -53,9 +54,6 @@ public class ComparisonActivity extends SherlockActivity {
 
 	private static final String WEBVIEW_URL_FORMAT = "http://voxe.org/webviews/comparisons?electionId=%s&candidacyIds=%s&tagId=%s";
 
-	@Bean
-	AboutDialogHelper aboutDialogHelper;
-
 	@App
 	VoxeApplication application;
 
@@ -76,9 +74,6 @@ public class ComparisonActivity extends SherlockActivity {
 
 	@StringRes
 	String shareCompare;
-
-	@Bean
-	ShareManager shareManager;
 
 	@StringRes
 	String comparisonWebviewLoadingMessage;
@@ -119,6 +114,8 @@ public class ComparisonActivity extends SherlockActivity {
 	void initLayout() {
 		Optional<ElectionsHolder> optionalElectionHolder = application.getElectionHolder();
 		if (optionalElectionHolder.isPresent()) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setHomeButtonEnabled(true);
 			ElectionsHolder electionHolder = optionalElectionHolder.get();
 			election = electionHolder.elections.get(electionIndex);
 
@@ -189,18 +186,12 @@ public class ComparisonActivity extends SherlockActivity {
 	}
 
 	@OptionsItem
-	public void homeSelected() {
-		showDialog(R.id.about_dialog);
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id, Bundle args) {
-		switch (id) {
-		case R.id.about_dialog:
-			return aboutDialogHelper.createAboutDialog();
-		default:
-			return null;
-		}
+	void homeSelected() {
+		SelectElectionActivity_ //
+				.intent(this) //
+				.flags(FLAG_ACTIVITY_CLEAR_TOP) //
+				.start();
+		finish();
 	}
 
 	@Override
@@ -215,8 +206,12 @@ public class ComparisonActivity extends SherlockActivity {
 		analytics.onResume();
 	}
 
-	@OptionsItem
-	void menuShareSelected() {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		/*
+		 * Sharing the comparison
+		 */
 
 		Iterable<String> candidacyNamespaces = transform(selectedCandidates, new Function<Candidate, String>() {
 			@Override
@@ -230,7 +225,18 @@ public class ComparisonActivity extends SherlockActivity {
 
 		String candidateNamesJoined = joinCandidatesNames();
 		String message = String.format(shareCompare, candidateNamesJoined, selectedTag.getName(), url);
-		shareManager.share(message);
+
+		MenuItem actionItem = menu.findItem(R.id.menu_share);
+		ShareActionProvider actionProvider = (ShareActionProvider) actionItem.getActionProvider();
+		actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
+
+		Intent shareIntent = new Intent(ACTION_SEND);
+		shareIntent.setType("text/plain");
+		shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+		actionProvider.setShareIntent(shareIntent);
+
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	public void startLoading() {

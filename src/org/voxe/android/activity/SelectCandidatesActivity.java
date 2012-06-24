@@ -7,15 +7,12 @@ import java.util.HashSet;
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
 import org.voxe.android.adapter.SelectCandidatesAdapter;
-import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionsHolder;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,9 +44,6 @@ public class SelectCandidatesActivity extends SherlockActivity {
 	@Bean
 	Analytics analytics;
 
-	@Bean
-	AboutDialogHelper aboutDialogHelper;
-
 	private Election election;
 
 	@Bean
@@ -65,6 +59,8 @@ public class SelectCandidatesActivity extends SherlockActivity {
 	void init() {
 		Optional<ElectionsHolder> optionalElectionHolder = application.getElectionHolder();
 		if (optionalElectionHolder.isPresent()) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setHomeButtonEnabled(true);
 			ElectionsHolder electionHolder = optionalElectionHolder.get();
 			election = electionHolder.elections.get(electionIndex);
 
@@ -120,18 +116,12 @@ public class SelectCandidatesActivity extends SherlockActivity {
 	}
 
 	@OptionsItem
-	public void homeSelected() {
-		showDialog(R.id.about_dialog);
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id, Bundle args) {
-		switch (id) {
-		case R.id.about_dialog:
-			return aboutDialogHelper.createAboutDialog();
-		default:
-			return null;
-		}
+	void homeSelected() {
+		SelectElectionActivity_ //
+				.intent(this) //
+				.flags(FLAG_ACTIVITY_CLEAR_TOP) //
+				.start();
+		finish();
 	}
 
 	@Override

@@ -126,6 +126,11 @@ public class ElectionDAO {
 		}
 	}
 
+	public void clearData() {
+		File storageFile = getStorageFile();
+		storageFile.delete();
+	}
+
 	public boolean shouldDownloadCandidatePhoto(Photo photo) {
 		Optional<File> optionalFile = getCandidatePhotoFile(photo);
 

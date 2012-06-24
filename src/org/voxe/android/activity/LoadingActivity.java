@@ -18,6 +18,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.res.HtmlRes;
 
 @EActivity(R.layout.loading)
 public class LoadingActivity extends SherlockActivity implements LoadListener, DownloadListener {
@@ -38,6 +39,9 @@ public class LoadingActivity extends SherlockActivity implements LoadListener, D
 		}
 	}
 
+	@HtmlRes
+	CharSequence voxeOrgTitle;
+
 	@App
 	VoxeApplication application;
 
@@ -54,6 +58,8 @@ public class LoadingActivity extends SherlockActivity implements LoadListener, D
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		setTitle(voxeOrgTitle);
 
 		NonConfigurationInstance instance = (NonConfigurationInstance) getLastNonConfigurationInstance();
 
@@ -130,9 +136,8 @@ public class LoadingActivity extends SherlockActivity implements LoadListener, D
 	}
 
 	private void startNextActivityAndFinish() {
-		SelectCandidatesActivity_ //
+		SelectElectionActivity_ //
 				.intent(this) //
-				.electionIndex(1) //
 				.start();
 		finish();
 	}
