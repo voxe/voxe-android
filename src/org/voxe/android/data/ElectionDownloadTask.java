@@ -125,7 +125,7 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 						}
 					}
 					i++;
-					publishProgress(DownloadProgress.create(20 + ((int) (i * progressPerDownload)), 50));
+					publishProgress(DownloadProgress.create(20 + (int) (i * progressPerDownload), 50));
 				}
 				LogHelper.logDuration("Downloaded candidate photos", startDownloadingCandidatePhotos);
 			}
@@ -165,7 +165,7 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 						}
 					}
 					i++;
-					publishProgress(DownloadProgress.create(50 + ((int) (i * progressPerDownload)), 80));
+					publishProgress(DownloadProgress.create(50 + (int) (i * progressPerDownload), 80));
 				}
 				LogHelper.logDuration("Downloaded tag photos", startDownloadingTagPhotos);
 			}
@@ -182,8 +182,7 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 			electionHolder.lastUpdateTimestamp = currentTimeMillis();
 
 			electionDAO.save(electionHolder);
-			
-			
+
 			for (Candidate candidate : electionHolder.election.getMainCandidates()) {
 				candidate.photo.photoBitmap = BitmapHelper.getRoundedCornerBitmap(candidate.photo.photoBitmap);
 			}
@@ -213,7 +212,11 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 			}
 		}
 
-		return new ElectionResourceClient_(restTemplate);
+		ElectionResourceClient restClient = new ElectionResourceClient_();
+
+		restClient.setRestTemplate(restTemplate);
+
+		return restClient;
 	}
 
 	@Override

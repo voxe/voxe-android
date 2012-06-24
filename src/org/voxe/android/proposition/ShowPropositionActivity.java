@@ -4,7 +4,6 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
-import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
 import org.voxe.android.common.ShareManager;
@@ -21,6 +20,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.google.common.base.Optional;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
@@ -29,13 +29,13 @@ import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
-import com.googlecode.androidannotations.annotations.UiThreadDelayed;
+import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
 @EActivity(R.layout.show_proposition)
 @OptionsMenu(R.menu.proposition)
-public class ShowPropositionActivity extends ActionBarActivity {
+public class ShowPropositionActivity extends SherlockActivity {
 
 	public static final String SHOW_PROPOSITION_PATH_FRAGMENT = "/webviews/propositions/";
 
@@ -145,9 +145,9 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		startLoading();
 	}
 
-	@UiThreadDelayed(0)
+	@UiThread(delay = 1)
 	void startLoading() {
-		getActionBarHelper().setRefreshActionItemState(true);
+		// getActionBarHelper().setRefreshActionItemState(true);
 	}
 
 	@OptionsItem
@@ -197,7 +197,7 @@ public class ShowPropositionActivity extends ActionBarActivity {
 		if (!url.equals(webviewURL)) {
 			webview.loadUrl(webviewURL);
 		} else {
-			getActionBarHelper().setRefreshActionItemState(false);
+			// getActionBarHelper().setRefreshActionItemState(false);
 		}
 	}
 

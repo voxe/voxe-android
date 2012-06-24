@@ -2,7 +2,6 @@ package org.voxe.android.loading;
 
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
-import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.candidates.SelectCandidatesActivity_;
 import org.voxe.android.data.DownloadListener;
 import org.voxe.android.data.DownloadProgress;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -26,7 +26,7 @@ import com.googlecode.androidannotations.annotations.ViewById;
  * TODO handle open url intents
  */
 @EActivity(R.layout.loading)
-public class LoadingActivity extends ActionBarActivity implements LoadListener, DownloadListener {
+public class LoadingActivity extends SherlockActivity implements LoadListener, DownloadListener {
 
 	private enum Step {
 		LOADING_DATA, DOWNLOADING_DATA, RETRY, DONE;
@@ -213,66 +213,70 @@ public class LoadingActivity extends ActionBarActivity implements LoadListener, 
 		downloadingProgressBar.setSecondaryProgress(progress.nextProgress);
 		downloadingText.setText(progress.progressMessage);
 	}
-	
-//	private void handleUriIntent() {
-//		List<Candidate> mainCandidates = election.getMainCandidates();
-//		Intent intent = getIntent();
-//		if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
-//			Uri data = intent.getData();
-//			List<String> pathSegments = data.getPathSegments();
-//			boolean handled = false;
-//			if (pathSegments.size() == 3) {
-//				String electionNamespace = pathSegments.get(0).toLowerCase();
-//				if (electionNamespace.equals(election.namespace)) {
-//					String candidacyNamespaces = pathSegments.get(1).toLowerCase();
-//					if (candidacyNamespaces.equals("propositions")) {
-//						String propositionId = pathSegments.get(2).toLowerCase();
-//						ShowPropositionActivity.start(this, propositionId, election.namespace);
-//						handled = true;
-//					} else {
-//
-//						Map<String, String> candidateIdByCandidacyNamespace = new HashMap<String, String>();
-//						for (Candidate candidate : mainCandidates) {
-//							candidateIdByCandidacyNamespace.put(candidate.candidacyNamespace, candidate.id);
-//						}
-//
-//						Iterable<String> candidacyNamespacesSplitted = Splitter.on(',').split(candidacyNamespaces);
-//						Set<String> selectedCandidateIds = Sets.newHashSet();
-//						for (String candidacyNamespace : candidacyNamespacesSplitted) {
-//							if (candidateIdByCandidacyNamespace.containsKey(candidacyNamespace)) {
-//								selectedCandidateIds.add(candidateIdByCandidacyNamespace.get(candidacyNamespace));
-//							}
-//						}
-//
-//						if (selectedCandidateIds.size() > 0) {
-//							String tagNamespace = pathSegments.get(2).toLowerCase();
-//
-//							Tag selectedTag = null;
-//							for (Tag tag : election.tags) {
-//								if (tag.namespace.equals(tagNamespace)) {
-//									selectedTag = tag;
-//									break;
-//								}
-//							}
-//
-//							if (selectedTag != null) {
-//								selectCandidatesView.updateSelectedCandidates(selectedCandidateIds);
-//								selectTagView.updateSelectedTag(selectedTag);
-//
-//								showComparisonPage();
-//								handled = true;
-//							}
-//						}
-//
-//					}
-//				}
-//			}
-//
-//			if (!handled) {
-//				Uri updatedUri = data.buildUpon().authority("www.voxe.org").build();
-//				startActivity(new Intent(Intent.ACTION_VIEW, updatedUri));
-//			}
-//		}
-//	}
+
+	// private void handleUriIntent() {
+	// List<Candidate> mainCandidates = election.getMainCandidates();
+	// Intent intent = getIntent();
+	// if (intent.getAction() != null &&
+	// intent.getAction().equals(Intent.ACTION_VIEW)) {
+	// Uri data = intent.getData();
+	// List<String> pathSegments = data.getPathSegments();
+	// boolean handled = false;
+	// if (pathSegments.size() == 3) {
+	// String electionNamespace = pathSegments.get(0).toLowerCase();
+	// if (electionNamespace.equals(election.namespace)) {
+	// String candidacyNamespaces = pathSegments.get(1).toLowerCase();
+	// if (candidacyNamespaces.equals("propositions")) {
+	// String propositionId = pathSegments.get(2).toLowerCase();
+	// ShowPropositionActivity.start(this, propositionId, election.namespace);
+	// handled = true;
+	// } else {
+	//
+	// Map<String, String> candidateIdByCandidacyNamespace = new HashMap<String,
+	// String>();
+	// for (Candidate candidate : mainCandidates) {
+	// candidateIdByCandidacyNamespace.put(candidate.candidacyNamespace,
+	// candidate.id);
+	// }
+	//
+	// Iterable<String> candidacyNamespacesSplitted =
+	// Splitter.on(',').split(candidacyNamespaces);
+	// Set<String> selectedCandidateIds = Sets.newHashSet();
+	// for (String candidacyNamespace : candidacyNamespacesSplitted) {
+	// if (candidateIdByCandidacyNamespace.containsKey(candidacyNamespace)) {
+	// selectedCandidateIds.add(candidateIdByCandidacyNamespace.get(candidacyNamespace));
+	// }
+	// }
+	//
+	// if (selectedCandidateIds.size() > 0) {
+	// String tagNamespace = pathSegments.get(2).toLowerCase();
+	//
+	// Tag selectedTag = null;
+	// for (Tag tag : election.tags) {
+	// if (tag.namespace.equals(tagNamespace)) {
+	// selectedTag = tag;
+	// break;
+	// }
+	// }
+	//
+	// if (selectedTag != null) {
+	// selectCandidatesView.updateSelectedCandidates(selectedCandidateIds);
+	// selectTagView.updateSelectedTag(selectedTag);
+	//
+	// showComparisonPage();
+	// handled = true;
+	// }
+	// }
+	//
+	// }
+	// }
+	// }
+	//
+	// if (!handled) {
+	// Uri updatedUri = data.buildUpon().authority("www.voxe.org").build();
+	// startActivity(new Intent(Intent.ACTION_VIEW, updatedUri));
+	// }
+	// }
+	// }
 
 }

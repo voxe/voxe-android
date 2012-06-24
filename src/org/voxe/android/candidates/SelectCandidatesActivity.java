@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
-import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
 import org.voxe.android.common.ComparisonPref_;
@@ -23,6 +22,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
@@ -37,15 +37,15 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
 @EActivity(R.layout.select_candidates_list)
-public class SelectCandidatesActivity extends ActionBarActivity {
-	
+public class SelectCandidatesActivity extends SherlockActivity {
+
 	private static final Splitter SELECTED_CANDIDATE_IDS_SPLITTER = Splitter.on(',').omitEmptyStrings();
 	private static final Joiner SELECTED_CANDIDATE_IDS_JOINER = Joiner.on(',');
 
 	public static Set<String> splitCandidateIds(String selectedCandidateIds) {
 		return Sets.newHashSet(SELECTED_CANDIDATE_IDS_SPLITTER.split(selectedCandidateIds));
 	}
-	
+
 	@App
 	VoxeApplication application;
 
@@ -113,6 +113,7 @@ public class SelectCandidatesActivity extends ActionBarActivity {
 		startActivityForResult(intent, 1);
 	}
 
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		selectedCandidateIds.clear();
 		saveSelectedCandidateIds();
@@ -139,7 +140,7 @@ public class SelectCandidatesActivity extends ActionBarActivity {
 
 		if (selectedCandidateIds.size() == 2) {
 			analytics.twoCandidatesSelected(election, selectedCandidateIds);
-			
+
 			startSelectTagActivity();
 		}
 	}

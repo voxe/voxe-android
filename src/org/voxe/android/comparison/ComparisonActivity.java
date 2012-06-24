@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
-import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.candidates.SelectCandidatesActivity;
 import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
@@ -23,6 +22,7 @@ import org.voxe.android.model.Tag;
 import org.voxe.android.proposition.ShowPropositionActivity;
 import org.voxe.android.tag.SelectTagActivity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
@@ -31,6 +31,7 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -42,14 +43,14 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
-import com.googlecode.androidannotations.annotations.UiThreadDelayed;
+import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
 @EActivity(R.layout.comparison)
 @OptionsMenu(R.menu.compare)
-public class ComparisonActivity extends ActionBarActivity {
+public class ComparisonActivity extends SherlockActivity {
 
 	private static final Joiner CANDIDACY_JOINER = Joiner.on(',');
 
@@ -182,11 +183,10 @@ public class ComparisonActivity extends ActionBarActivity {
 		showLoading();
 	}
 
-	@UiThreadDelayed(0)
+	@UiThread(delay = 1)
 	void showLoading() {
-		getActionBarHelper().setRefreshActionItemState(true);
+		// getActionBarHelper().setRefreshActionItemState(true);
 	}
-
 
 	private String joinCandidatesNames() {
 		List<String> candidateNames = Lists.newArrayList(transform(selectedCandidates, new Function<Candidate, String>() {
@@ -274,7 +274,7 @@ public class ComparisonActivity extends ActionBarActivity {
 	public void endLoading(String url) {
 		if (url.equals(currentLoadedUrl)) {
 			loading = false;
-			getActionBarHelper().setRefreshActionItemState(false);
+			// getActionBarHelper().setRefreshActionItemState(false);
 		} else {
 			webview.loadUrl(currentLoadedUrl);
 		}
@@ -294,7 +294,7 @@ public class ComparisonActivity extends ActionBarActivity {
 	@Click
 	void selectTagButtonClicked() {
 		analytics.backToTagFromComparison(election);
-		setResult(SelectTagActivity.RESULT_CANCELED);
+		setResult(Activity.RESULT_CANCELED);
 		finish();
 	}
 

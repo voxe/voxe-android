@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
-import org.voxe.android.actionbar.ActionBarActivity;
 import org.voxe.android.candidates.SelectCandidatesActivity;
 import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
@@ -26,6 +25,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.google.common.base.Optional;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
@@ -41,7 +41,7 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
  * TODO show selected candidates
  */
 @EActivity(R.layout.select_tag_list)
-public class SelectTagActivity extends ActionBarActivity {
+public class SelectTagActivity extends SherlockActivity {
 
 	public static final int BACK_TO_SELECT_CANDIDATES = 1;
 
@@ -63,13 +63,13 @@ public class SelectTagActivity extends ActionBarActivity {
 
 	@App
 	VoxeApplication application;
-	
+
 	@ViewById
 	ImageView candidate1ImageView;
-	
+
 	@ViewById
 	ImageView candidate2ImageView;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,19 +109,19 @@ public class SelectTagActivity extends ActionBarActivity {
 		tagAdapter = new SelectTagAdapter(this, new ArrayList<Tag>());
 		list.setAdapter(tagAdapter);
 		tagAdapter.updateTags(election.tags);
-		
+
 		String selectedCandidateIdsAsString = comparisonPref.selectedCandidateIds().get();
-		
+
 		Set<String> selectedCandidateIds = SelectCandidatesActivity.splitCandidateIds(selectedCandidateIdsAsString);
-		
+
 		List<Candidate> selectedCandidates = election.selectedCandidatesByCandidateIds(selectedCandidateIds);
-		
+
 		Candidate candidate1 = selectedCandidates.get(0);
 		candidate1.insertPhoto(candidate1ImageView);
-		
+
 		Candidate candidate2 = selectedCandidates.get(1);
 		candidate2.insertPhoto(candidate2ImageView);
-		
+
 	}
 
 	@ItemClick
@@ -146,6 +146,7 @@ public class SelectTagActivity extends ActionBarActivity {
 		}
 	}
 
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		comparisonPref.selectedTagId().remove();
 		if (resultCode == BACK_TO_SELECT_CANDIDATES) {
