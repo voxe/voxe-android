@@ -1,11 +1,11 @@
 package org.voxe.android.data;
 
-import org.voxe.android.model.ElectionHolder;
+import org.voxe.android.model.ElectionsHolder;
 
 public class ElectionResponse {
 	
 	public ResponseMeta meta;
 	
-	public ElectionHolder response;
+	public ElectionsHolder response;
 
 }

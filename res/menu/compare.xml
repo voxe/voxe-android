@@ -22,10 +22,4 @@
         android:showAsAction="always"
         android:title="@string/menu_share"/>
     
-    <item
-        android:id="@+id/menu_refresh"
-        android:icon="@drawable/ic_action_refresh"
-        android:showAsAction="always"
-        android:title="@string/menu_refresh"/>    
-
 </menu>

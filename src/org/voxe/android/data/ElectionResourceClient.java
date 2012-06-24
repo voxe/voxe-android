@@ -7,12 +7,12 @@ import com.googlecode.androidannotations.annotations.rest.Rest;
 
 @Rest("http://voxe.org/api/v1")
 public interface ElectionResourceClient {
-	
-	@Get("/elections/{electionId}")
-	ElectionResponse getElection(String electionId);
-	
+
+	@Get("/elections/search")
+	ElectionResponse getElections();
+
 	RestTemplate getRestTemplate();
 
 	void setRestTemplate(RestTemplate restTemplate);
-	
+
 }

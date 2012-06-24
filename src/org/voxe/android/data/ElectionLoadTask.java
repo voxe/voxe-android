@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import org.voxe.android.VoxeApplication;
 import org.voxe.android.common.LogHelper;
-import org.voxe.android.model.ElectionHolder;
+import org.voxe.android.model.ElectionsHolder;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -19,11 +19,11 @@ import com.google.common.base.Optional;
  *            onResume() method and {@link #unbindActivity()} in its onPause()
  *            method.
  */
-public class ElectionLoadTask<T extends Activity & LoadListener> extends AsyncTask<Void, Void, Optional<ElectionHolder>> {
+public class ElectionLoadTask<T extends Activity & LoadListener> extends AsyncTask<Void, Void, Optional<ElectionsHolder>> {
 
 	private Optional<T> optionalActivity;
 
-	private Optional<ElectionHolder> result;
+	private Optional<ElectionsHolder> result;
 
 	private final VoxeApplication application;
 
@@ -38,10 +38,10 @@ public class ElectionLoadTask<T extends Activity & LoadListener> extends AsyncTa
 	}
 
 	@Override
-	protected Optional<ElectionHolder> doInBackground(Void... params) {
+	protected Optional<ElectionsHolder> doInBackground(Void... params) {
 		try {
 			
-			Optional<ElectionHolder> inMemoryData = application.getElectionHolder();
+			Optional<ElectionsHolder> inMemoryData = application.getElectionHolder();
 			
 			if (inMemoryData.isPresent()) {
 				return inMemoryData; 
@@ -49,7 +49,7 @@ public class ElectionLoadTask<T extends Activity & LoadListener> extends AsyncTa
 			
 			ElectionDAO electionDAO = new ElectionDAO(application);
 
-			Optional<ElectionHolder> localData = electionDAO.load();
+			Optional<ElectionsHolder> localData = electionDAO.load();
 			
 			if (localData.isPresent()) {
 				application.setElectionHolder(localData.get());
@@ -101,7 +101,7 @@ public class ElectionLoadTask<T extends Activity & LoadListener> extends AsyncTa
 	}
 
 	@Override
-	protected void onPostExecute(Optional<ElectionHolder> result) {
+	protected void onPostExecute(Optional<ElectionsHolder> result) {
 		if (isCancelled()) {
 			return;
 		}

@@ -1,6 +1,6 @@
 package org.voxe.android;
 
-import org.voxe.android.model.ElectionHolder;
+import org.voxe.android.model.ElectionsHolder;
 
 import android.app.Application;
 
@@ -9,32 +9,25 @@ import com.ubikod.capptain.android.sdk.CapptainAgentUtils;
 
 public class VoxeApplication extends Application {
 
-	// private static final String ELECTION_ID_2007 =
-	// "4ef479f8bc60fb0004000001";
-	private static final String ELECTION_ID_2012 = "4f16fe2299c7a10001000012";
-
-	private Optional<ElectionHolder> optionalElectionHolder = Optional.absent();
+	private Optional<ElectionsHolder> optionalElectionHolder = Optional.absent();
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		if (CapptainAgentUtils.isInDedicatedCapptainProcess(this))
+		if (CapptainAgentUtils.isInDedicatedCapptainProcess(this)) {
 			return;
+		}
 	}
 
 	/**
 	 * @param electionHolder
 	 *            should not be null
 	 */
-	public synchronized void setElectionHolder(ElectionHolder electionHolder) {
+	public synchronized void setElectionHolder(ElectionsHolder electionHolder) {
 		optionalElectionHolder = Optional.of(electionHolder);
 	}
 
-	public synchronized Optional<ElectionHolder> getElectionHolder() {
+	public synchronized Optional<ElectionsHolder> getElectionHolder() {
 		return optionalElectionHolder;
-	}
-
-	public String getElectionId() {
-		return ELECTION_ID_2012;
 	}
 }

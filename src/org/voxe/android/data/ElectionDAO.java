@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -11,7 +13,10 @@ import org.codehaus.jackson.map.SerializationConfig;
 import org.voxe.android.common.BitmapHelper;
 import org.voxe.android.common.LogHelper;
 import org.voxe.android.model.Candidate;
-import org.voxe.android.model.ElectionHolder;
+import org.voxe.android.model.Election;
+import org.voxe.android.model.ElectionsHolder;
+import org.voxe.android.model.Icon;
+import org.voxe.android.model.Photo;
 import org.voxe.android.model.PhotoSizeInfo;
 import org.voxe.android.model.Tag;
 
@@ -23,7 +28,7 @@ import com.google.common.base.Optional;
 
 public class ElectionDAO {
 
-	private static final String DATA_FILENAME = "elections.json";
+	private static final String DATA_FILENAME = "elections-2.json";
 
 	private final ObjectMapper mapper = new ObjectMapper();
 
@@ -37,7 +42,7 @@ public class ElectionDAO {
 		mapper.configure(SerializationConfig.Feature.AUTO_DETECT_GETTERS, false);
 	}
 
-	public Optional<ElectionHolder> load() {
+	public Optional<ElectionsHolder> load() {
 
 		File storageFile = getStorageFile();
 
@@ -47,43 +52,71 @@ public class ElectionDAO {
 
 		try {
 			long start = System.currentTimeMillis();
-			ElectionHolder electionHolder = mapper.readValue(storageFile, ElectionHolder.class);
+			ElectionsHolder electionHolder = mapper.readValue(storageFile, ElectionsHolder.class);
 			electionHolder.lastUpdateTimestamp = 0;
 			LogHelper.logDuration("Loaded election data", start);
 
-			if (electionHolder.election.candidacies != null) {
-				long startPhotos = System.currentTimeMillis();
+			for (Election election : electionHolder.elections) {
 
-				for (Candidate candidate : electionHolder.election.getMainCandidates()) {
-					Optional<File> optionalFile = getCandidatePhotoFile(candidate);
+				if (election.candidacies != null) {
+					long startPhotos = System.currentTimeMillis();
 
-					if (optionalFile.isPresent()) {
-						File file = optionalFile.get();
-						if (file.exists()) {
-							BitmapFactory.Options opts = new BitmapFactory.Options();
-							opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-							Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
+					Map<String, Photo> loadedPhotos = new HashMap<String, Photo>();
 
-							Bitmap roundedCornerBitmap = BitmapHelper.getRoundedCornerBitmap(bitmap);
-							candidate.photo.photoBitmap = roundedCornerBitmap;
+					for (Candidate candidate : election.getMainCandidates()) {
+						Optional<File> optionalFile = getCandidatePhotoFile(candidate.photo);
+
+						if (optionalFile.isPresent()) {
+
+							String uniqueId = candidate.photo.sizes.getLargestSize().get().getUniqueId();
+
+							if (loadedPhotos.containsKey(uniqueId)) {
+								Photo cachedPhoto = loadedPhotos.get(uniqueId);
+								candidate.photo = cachedPhoto;
+							} else {
+
+								File file = optionalFile.get();
+								if (file.exists()) {
+									BitmapFactory.Options opts = new BitmapFactory.Options();
+									opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+									Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
+
+									Bitmap roundedCornerBitmap = BitmapHelper.getRoundedCornerBitmap(bitmap);
+									candidate.photo.photoBitmap = roundedCornerBitmap;
+
+									loadedPhotos.put(uniqueId, candidate.photo);
+								}
+							}
 						}
 					}
-				}
 
-				for (Tag tag : electionHolder.election.tags) {
-					Optional<File> optionalFile = getTagImageFile(tag);
-					if (optionalFile.isPresent()) {
-						File file = optionalFile.get();
-						if (file.exists()) {
-							BitmapFactory.Options opts = new BitmapFactory.Options();
-							opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-							Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
-							tag.icon.bitmap = bitmap;
+					Map<String, Icon> loadedIcons = new HashMap<String, Icon>();
+
+					for (Tag tag : election.tags) {
+						Optional<File> optionalFile = getTagImageFile(tag.icon);
+						if (optionalFile.isPresent()) {
+							String uniqueId = tag.icon.getUniqueId().get();
+
+							if (loadedIcons.containsKey(uniqueId)) {
+								Icon cachedIcon = loadedIcons.get(uniqueId);
+								tag.icon = cachedIcon;
+							} else {
+
+								File file = optionalFile.get();
+								if (file.exists()) {
+									BitmapFactory.Options opts = new BitmapFactory.Options();
+									opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+									Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
+									tag.icon.bitmap = bitmap;
+
+									loadedIcons.put(uniqueId, tag.icon);
+								}
+							}
 						}
 					}
-				}
 
-				LogHelper.logDuration("Loaded photos", startPhotos);
+					LogHelper.logDuration("Loaded photos", startPhotos);
+				}
 			}
 
 			return Optional.of(electionHolder);
@@ -93,18 +126,14 @@ public class ElectionDAO {
 		}
 	}
 
-	public boolean shouldDownloadCandidatePhoto(Candidate candidate) {
-		Optional<File> optionalFile = getCandidatePhotoFile(candidate);
+	public boolean shouldDownloadCandidatePhoto(Photo photo) {
+		Optional<File> optionalFile = getCandidatePhotoFile(photo);
 
-		if (optionalFile.isPresent()) {
-			return !optionalFile.get().exists();
-		} else {
-			return false;
-		}
+		return optionalFile.isPresent();
 	}
 
-	private Optional<File> getCandidatePhotoFile(Candidate candidate) {
-		Optional<String> optionalPhotoId = getCandidatePhotoId(candidate);
+	private Optional<File> getCandidatePhotoFile(Photo photo) {
+		Optional<String> optionalPhotoId = getCandidatePhotoId(photo);
 
 		return getPhotoFileFromId(optionalPhotoId);
 	}
@@ -119,9 +148,9 @@ public class ElectionDAO {
 		}
 	}
 
-	private Optional<String> getCandidatePhotoId(Candidate candidate) {
-		if (candidate.photo != null) {
-			Optional<PhotoSizeInfo> largestSize = candidate.photo.sizes.getLargestSize();
+	private Optional<String> getCandidatePhotoId(Photo photo) {
+		if (photo != null) {
+			Optional<PhotoSizeInfo> largestSize = photo.sizes.getLargestSize();
 			if (largestSize.isPresent()) {
 				PhotoSizeInfo photoSizeInfo = largestSize.get();
 				String photoId = photoSizeInfo.getUniqueId();
@@ -131,15 +160,16 @@ public class ElectionDAO {
 		return Optional.absent();
 	}
 
-	public void saveCandidatePhoto(Candidate candidate) {
-		Bitmap photoBitmap = candidate.photo.photoBitmap;
+	public void saveCandidatePhoto(Photo photo) {
+		Bitmap photoBitmap = photo.photoBitmap;
 		if (photoBitmap != null) {
-			String photoId = getCandidatePhotoId(candidate).get();
+			String photoId = getCandidatePhotoId(photo).get();
 			saveJpegImage(photoBitmap, photoId);
 		}
 	}
 
 	private void saveJpegImage(Bitmap bitmap, String photoId) {
+		LogHelper.log("Saving JPEG file: " + photoId);
 		File file = getFile(photoId);
 
 		OutputStream fOut = null;
@@ -162,6 +192,7 @@ public class ElectionDAO {
 	}
 
 	private void savePngImage(Bitmap bitmap, String photoId) {
+		LogHelper.log("Saving PNG file: " + photoId);
 		File file = getFile(photoId);
 
 		OutputStream fOut = null;
@@ -183,7 +214,7 @@ public class ElectionDAO {
 		}
 	}
 
-	public void save(ElectionHolder electionHolder) {
+	public void save(ElectionsHolder electionHolder) {
 		File storageFile = getStorageFile();
 		try {
 			long start = System.currentTimeMillis();
@@ -203,35 +234,31 @@ public class ElectionDAO {
 		return fileAbsolutePath;
 	}
 
-	public boolean shouldDownloadTagPhoto(Tag tag) {
-		Optional<File> optionalFile = getTagImageFile(tag);
+	public boolean shouldDownloadTagPhoto(Icon icon) {
+		Optional<File> optionalFile = getTagImageFile(icon);
 
-		if (optionalFile.isPresent()) {
-			return !optionalFile.get().exists();
-		} else {
-			return false;
-		}
+		return optionalFile.isPresent();
 	}
 
-	private Optional<File> getTagImageFile(Tag tag) {
-		Optional<String> optionalImageId = getTagImageId(tag);
+	private Optional<File> getTagImageFile(Icon icon) {
+		Optional<String> optionalImageId = getTagImageId(icon);
 
 		return getPhotoFileFromId(optionalImageId);
 	}
 
-	private Optional<String> getTagImageId(Tag tag) {
-		if (tag.icon != null) {
-			Optional<String> uniqueId = tag.icon.getUniqueId();
+	private Optional<String> getTagImageId(Icon icon) {
+		if (icon != null) {
+			Optional<String> uniqueId = icon.getUniqueId();
 			return uniqueId;
 		} else {
 			return Optional.absent();
 		}
 	}
 
-	public void saveTagImage(Tag tag) {
-		Bitmap bitmap = tag.icon.bitmap;
+	public void saveTagImage(Icon icon) {
+		Bitmap bitmap = icon.bitmap;
 		if (bitmap != null) {
-			String imageId = getTagImageId(tag).get();
+			String imageId = getTagImageId(icon).get();
 			savePngImage(bitmap, imageId);
 		}
 	}

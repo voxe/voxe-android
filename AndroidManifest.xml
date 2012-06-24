@@ -23,14 +23,14 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.Styled" >
         <activity
-            android:name="org.voxe.android.tag.SelectTagActivity_"
+            android:name="org.voxe.android.activity.SelectTagActivity_"
             android:label="@string/select_tag" />
         <activity
-            android:name="org.voxe.android.candidates.SelectCandidatesActivity_"
+            android:name="org.voxe.android.activity.SelectCandidatesActivity_"
             android:label="@string/candidates" />
-        <activity android:name="org.voxe.android.comparison.ComparisonActivity_" />
+        <activity android:name="org.voxe.android.activity.ComparisonActivity_" />
         <activity
-            android:name="org.voxe.android.loading.LoadingActivity_"
+            android:name="org.voxe.android.activity.LoadingActivity_"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,13 +38,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
-            android:name="org.voxe.android.proposition.ShowPropositionActivity_"
-            android:label="@string/proposition_details" />
-
-        <service
-            android:name="org.voxe.android.data.UpdateElectionService_"
-            android:exported="false" />
+            android:name="org.voxe.android.activity.LoadingErrorActivity_"
+            android:label="@string/loading_error"
+            android:theme="@style/Theme.Sherlock.Light.Dialog" />
 
         <meta-data
             android:name="capptain:reportLocation"

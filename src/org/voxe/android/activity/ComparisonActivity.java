@@ -1,30 +1,27 @@
-package org.voxe.android.comparison;
+package org.voxe.android.activity;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static com.google.common.collect.Iterables.transform;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
-import org.voxe.android.candidates.SelectCandidatesActivity;
 import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
-import org.voxe.android.common.ComparisonPref_;
-import org.voxe.android.common.LogHelper;
+import org.voxe.android.common.ComparisonWebviewClient;
 import org.voxe.android.common.ShareManager;
-import org.voxe.android.loading.LoadingActivity_;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
-import org.voxe.android.model.ElectionHolder;
+import org.voxe.android.model.ElectionsHolder;
 import org.voxe.android.model.Tag;
-import org.voxe.android.proposition.ShowPropositionActivity;
-import org.voxe.android.tag.SelectTagActivity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -32,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Window;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -41,12 +39,11 @@ import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
-import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringRes;
-import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
 @EActivity(R.layout.comparison)
 @OptionsMenu(R.menu.compare)
@@ -55,9 +52,6 @@ public class ComparisonActivity extends SherlockActivity {
 	private static final Joiner CANDIDACY_JOINER = Joiner.on(',');
 
 	private static final String WEBVIEW_URL_FORMAT = "http://voxe.org/webviews/comparisons?electionId=%s&candidacyIds=%s&tagId=%s";
-
-	@Pref
-	ComparisonPref_ comparisonPref;
 
 	@Bean
 	AboutDialogHelper aboutDialogHelper;
@@ -95,97 +89,84 @@ public class ComparisonActivity extends SherlockActivity {
 	@ViewById
 	ImageView candidate2ImageView;
 
+	@ViewById
+	TextView loading;
+
 	private Election election;
-
-	private String currentLoadedUrl;
-
-	boolean loading = false;
-
-	private String webviewLoadingData;
 
 	private List<Candidate> selectedCandidates;
 
 	private Tag selectedTag;
 
+	@Extra
+	HashSet<String> selectedCandidateIds;
+
+	@Extra
+	int electionIndex;
+
+	@Extra
+	String selectedTagId;
+
+	private String webviewURL;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+	}
 
-		Optional<ElectionHolder> optionalElectionHolder = application.getElectionHolder();
+	@AfterViews
+	void initLayout() {
+		Optional<ElectionsHolder> optionalElectionHolder = application.getElectionHolder();
 		if (optionalElectionHolder.isPresent()) {
-			ElectionHolder electionHolder = optionalElectionHolder.get();
-			election = electionHolder.election;
+			ElectionsHolder electionHolder = optionalElectionHolder.get();
+			election = electionHolder.elections.get(electionIndex);
+
+			setTitle(election.name);
+
+			WebSettings settings = webview.getSettings();
+			// change to true when bug fixed
+			settings.setJavaScriptEnabled(false);
+			webview.setWebViewClient(webviewClient);
+			webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+
+			selectedCandidates = election.selectedCandidatesByCandidateIds(selectedCandidateIds);
+
+			selectedTag = election.tagFromId(selectedTagId);
+
+			Candidate candidate1 = selectedCandidates.get(0);
+			candidate1.insertPhoto(candidate1ImageView);
+
+			Candidate candidate2 = selectedCandidates.get(1);
+			candidate2.insertPhoto(candidate2ImageView);
+
+			selectedTagName.setText(selectedTag.getName());
+			selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
+
+			Iterable<String> candidacyIds = transform(selectedCandidates, new Function<Candidate, String>() {
+				@Override
+				public String apply(Candidate input) {
+					return input.candidacyId;
+				}
+			});
+
+			String candidacyIdsJoined = CANDIDACY_JOINER.join(candidacyIds);
+
+			webviewURL = String.format(WEBVIEW_URL_FORMAT, election.id, candidacyIdsJoined, selectedTag.id);
+
+			String loadingMessageFormat = getString(R.string.comparison_webview_loading_message);
+			String loadingMessageString = String.format(loadingMessageFormat, joinCandidatesNames(), selectedTag.name);
+			CharSequence loadingMessageHtml = Html.fromHtml(loadingMessageString);
+
+			loading.setText(loadingMessageHtml);
+
+			webview.loadUrl(webviewURL);
 
 		} else {
 			LoadingActivity_.intent(this).flags(FLAG_ACTIVITY_CLEAR_TOP).start();
 			finish();
 		}
-	}
 
-	@AfterViews
-	void initLayout() {
-		if (isFinishing()) {
-			return;
-		}
-
-		setTitle(election.name);
-
-		WebSettings settings = webview.getSettings();
-		// change to true when bug fixed
-		settings.setJavaScriptEnabled(false);
-		webview.setWebViewClient(webviewClient);
-		webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-		webviewLoadingData = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><body>" + comparisonWebviewLoadingMessage + "</body></html>";
-
-		String selectedCandidateIdsAsString = comparisonPref.selectedCandidateIds().get();
-		String selectedTagId = comparisonPref.selectedTagId().get();
-
-		Set<String> selectedCandidateIds = SelectCandidatesActivity.splitCandidateIds(selectedCandidateIdsAsString);
-
-		selectedCandidates = election.selectedCandidatesByCandidateIds(selectedCandidateIds);
-
-		selectedTag = election.tagFromId(selectedTagId);
-
-		Candidate candidate1 = selectedCandidates.get(0);
-		candidate1.insertPhoto(candidate1ImageView);
-
-		Candidate candidate2 = selectedCandidates.get(1);
-		candidate2.insertPhoto(candidate2ImageView);
-
-		selectedTagName.setText(selectedTag.getName());
-		selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
-
-		Iterable<String> candidacyIds = transform(selectedCandidates, new Function<Candidate, String>() {
-			@Override
-			public String apply(Candidate input) {
-				return input.candidacyId;
-			}
-		});
-
-		String candidacyIdsJoined = CANDIDACY_JOINER.join(candidacyIds);
-
-		String electionId = application.getElectionId();
-
-		String webviewURL = String.format(WEBVIEW_URL_FORMAT, electionId, candidacyIdsJoined, selectedTag.id);
-
-		LogHelper.log("Loading url " + webviewURL);
-
-		currentLoadedUrl = webviewURL;
-		loadUrl();
-
-	}
-
-	private void loadUrl() {
-		String candidateNamesJoined = joinCandidatesNames();
-		webview.loadData(String.format(webviewLoadingData, candidateNamesJoined, selectedTag.getName()), "text/html", "UTF-8");
-
-		loading = true;
-		showLoading();
-	}
-
-	@UiThread(delay = 1)
-	void showLoading() {
-		// getActionBarHelper().setRefreshActionItemState(true);
 	}
 
 	private String joinCandidatesNames() {
@@ -252,36 +233,14 @@ public class ComparisonActivity extends SherlockActivity {
 		shareManager.share(message);
 	}
 
-	@OptionsItem
-	public void menuRefreshSelected() {
-		if (!loading && currentLoadedUrl != null) {
-			loadUrl();
-		}
+	public void startLoading() {
+		loading.setVisibility(View.VISIBLE);
+		setSupportProgressBarIndeterminateVisibility(true);
 	}
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		webview.saveState(outState);
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		webview.restoreState(savedInstanceState);
-	}
-
-	public void endLoading(String url) {
-		if (url.equals(currentLoadedUrl)) {
-			loading = false;
-			// getActionBarHelper().setRefreshActionItemState(false);
-		} else {
-			webview.loadUrl(currentLoadedUrl);
-		}
-	}
-
-	public void showProposition(String url) {
-		ShowPropositionActivity.startFromUrl(this, url, election.namespace);
+	public void endLoading() {
+		loading.setVisibility(View.GONE);
+		setSupportProgressBarIndeterminateVisibility(false);
 	}
 
 	@Click
@@ -296,6 +255,30 @@ public class ComparisonActivity extends SherlockActivity {
 		analytics.backToTagFromComparison(election);
 		setResult(Activity.RESULT_CANCELED);
 		finish();
+	}
+
+	public void loadingError(String description) {
+
+		String message = String.format(getString(R.string.webview_error_message), description);
+
+		Intent intent = LoadingErrorActivity_ //
+				.intent(this) //
+				.description(message) //
+				.get();
+
+		startActivityForResult(intent, R.id.loading_error_request);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == R.id.loading_error_request) {
+			if (resultCode == RESULT_OK) {
+				webview.reload();
+			} else {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		}
 	}
 
 }

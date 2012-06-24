@@ -1,4 +1,4 @@
-package org.voxe.android.tag;
+package org.voxe.android.adapter;
 
 import java.util.List;
 
@@ -13,23 +13,18 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SelectTagAdapter extends BaseAdapter {
-	
-	private static class ViewHolder {
-		public final TextView tagView;
-		public final ImageView tagIconView;
-		
-		public ViewHolder(TextView tagView, ImageView tagIconView) {
-			this.tagView = tagView;
-			this.tagIconView = tagIconView;
-		}
-	}
+import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.RootContext;
 
-	private final Context context;
+@EBean
+public class SelectTagAdapter extends BaseAdapter {
+
+	@RootContext
+	Context context;
+
 	private List<Tag> tags;
 
-	public SelectTagAdapter(Context context, List<Tag> tags) {
-		this.context = context;
+	public void init(List<Tag> tags) {
 		this.tags = tags;
 	}
 
@@ -57,31 +52,26 @@ public class SelectTagAdapter extends BaseAdapter {
 			convertView = View.inflate(context, R.layout.tag_list_item, null);
 			tagView = (TextView) convertView.findViewById(R.id.tag);
 			tagIconView = (ImageView) convertView.findViewById(R.id.tagIcon);
-			convertView.setTag(new ViewHolder(tagView, tagIconView));
+			convertView.setTag(R.id.tag, tagView);
+			convertView.setTag(R.id.tagIcon, tagIconView);
 		} else {
-			ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-			tagView = viewHolder.tagView;
-			tagIconView = viewHolder.tagIconView;
+			tagView = (TextView) convertView.getTag(R.id.tag);
+			tagIconView = (ImageView) convertView.getTag(R.id.tagIcon);
 		}
 
 		Tag tag = getItem(position);
 
 		String tagName = tag.getName();
-		
+
 		tagView.setText(tagName);
-		
+
 		if (tag.icon != null && tag.icon.bitmap != null) {
 			tagIconView.setImageBitmap(tag.icon.bitmap);
 		} else {
 			tagIconView.setImageResource(Candidate.getDefaultCandidateImageId());
 		}
-		
-		return convertView;
-	}
 
-	public void updateTags(List<Tag> tags) {
-		this.tags = tags;
-		notifyDataSetChanged();
+		return convertView;
 	}
 
 }

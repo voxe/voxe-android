@@ -1,9 +1,8 @@
-package org.voxe.android.comparison;
+package org.voxe.android.common;
 
-import org.voxe.android.R;
-import org.voxe.android.common.LogHelper;
-import org.voxe.android.proposition.ShowPropositionActivity;
+import org.voxe.android.activity.ComparisonActivity;
 
+import android.graphics.Bitmap;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -19,23 +18,23 @@ public class ComparisonWebviewClient extends WebViewClient {
 	@Override
 	public void onPageFinished(WebView view, String url) {
 		LogHelper.log("Finished loading url: " + url);
-		activity.endLoading(url);
+		activity.endLoading();
+	}
+
+	@Override
+	public void onPageStarted(WebView view, String url, Bitmap favicon) {
+		LogHelper.log("Started loading url: " + url);
+		activity.startLoading();
 	}
 
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
 		LogHelper.log("Client received loading url: " + url);
-		if (url.contains(ShowPropositionActivity.SHOW_PROPOSITION_PATH_FRAGMENT)) {
-			activity.showProposition(url);
-			return true;
-		} else {
-			return false;
-		}
+		return false;
 	}
 
 	@Override
 	public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-		String header = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
-		view.loadData(header + String.format(activity.getString(R.string.webview_error_message), description), "text/html", "UTF-8");
+		activity.loadingError(description);
 	}
 }

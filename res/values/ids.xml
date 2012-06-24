@@ -17,5 +17,7 @@
 <resources>
 
     <item name="about_dialog" type="id"/>
+    
+    <item name="loading_error_request" type="id"/>
 
 </resources>

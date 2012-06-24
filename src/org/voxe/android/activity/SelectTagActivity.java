@@ -1,22 +1,18 @@
-package org.voxe.android.tag;
+package org.voxe.android.activity;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
-import org.voxe.android.candidates.SelectCandidatesActivity;
+import org.voxe.android.adapter.SelectTagAdapter;
 import org.voxe.android.common.AboutDialogHelper;
 import org.voxe.android.common.Analytics;
-import org.voxe.android.common.ComparisonPref_;
-import org.voxe.android.comparison.ComparisonActivity_;
-import org.voxe.android.loading.LoadingActivity_;
 import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
-import org.voxe.android.model.ElectionHolder;
+import org.voxe.android.model.ElectionsHolder;
 import org.voxe.android.model.Tag;
 
 import android.app.Dialog;
@@ -32,10 +28,10 @@ import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
 /**
  * TODO show selected candidates
@@ -45,13 +41,11 @@ public class SelectTagActivity extends SherlockActivity {
 
 	public static final int BACK_TO_SELECT_CANDIDATES = 1;
 
-	@Pref
-	ComparisonPref_ comparisonPref;
-
 	@ViewById
 	ListView list;
 
-	private SelectTagAdapter tagAdapter;
+	@Bean
+	SelectTagAdapter tagAdapter;
 
 	private Election election;
 
@@ -70,65 +64,48 @@ public class SelectTagActivity extends SherlockActivity {
 	@ViewById
 	ImageView candidate2ImageView;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	@Extra
+	HashSet<String> selectedCandidateIds;
 
-		Optional<ElectionHolder> optionalElectionHolder = application.getElectionHolder();
+	@Extra
+	int electionIndex;
+
+	@AfterViews
+	void initLayout() {
+		Optional<ElectionsHolder> optionalElectionHolder = application.getElectionHolder();
 		if (optionalElectionHolder.isPresent()) {
-			ElectionHolder electionHolder = optionalElectionHolder.get();
-			election = electionHolder.election;
+			ElectionsHolder electionHolder = optionalElectionHolder.get();
+			election = electionHolder.elections.get(electionIndex);
 
-			if (hasSelectedTag()) {
-				startComparisonActivity();
-			}
+			tagAdapter.init(election.tags);
+			list.setAdapter(tagAdapter);
 
+			List<Candidate> selectedCandidates = election.selectedCandidatesByCandidateIds(selectedCandidateIds);
+
+			Candidate candidate1 = selectedCandidates.get(0);
+			candidate1.insertPhoto(candidate1ImageView);
+
+			Candidate candidate2 = selectedCandidates.get(1);
+			candidate2.insertPhoto(candidate2ImageView);
 		} else {
-			LoadingActivity_.intent(this).flags(FLAG_ACTIVITY_CLEAR_TOP).start();
+			LoadingActivity_ //
+					.intent(this) //
+					.flags(FLAG_ACTIVITY_CLEAR_TOP) //
+					.start();
 			finish();
 		}
 	}
 
-	private boolean hasSelectedTag() {
-		String selectedTagId = comparisonPref.selectedTagId().get();
-		Tag selectedTag = election.tagFromId(selectedTagId);
-		return selectedTag != null;
-	}
-
-	private void startComparisonActivity() {
-		Intent intent = ComparisonActivity_.intent(this).get();
-		startActivityForResult(intent, 1);
-	}
-
-	@AfterViews
-	void initLayout() {
-		if (isFinishing()) {
-			return;
-		}
-
-		tagAdapter = new SelectTagAdapter(this, new ArrayList<Tag>());
-		list.setAdapter(tagAdapter);
-		tagAdapter.updateTags(election.tags);
-
-		String selectedCandidateIdsAsString = comparisonPref.selectedCandidateIds().get();
-
-		Set<String> selectedCandidateIds = SelectCandidatesActivity.splitCandidateIds(selectedCandidateIdsAsString);
-
-		List<Candidate> selectedCandidates = election.selectedCandidatesByCandidateIds(selectedCandidateIds);
-
-		Candidate candidate1 = selectedCandidates.get(0);
-		candidate1.insertPhoto(candidate1ImageView);
-
-		Candidate candidate2 = selectedCandidates.get(1);
-		candidate2.insertPhoto(candidate2ImageView);
-
-	}
-
 	@ItemClick
 	void listItemClicked(Tag selectedTag) {
-		comparisonPref.selectedTagId().put(selectedTag.id);
 		analytics.tagSelected(election, selectedTag);
-		startComparisonActivity();
+		Intent intent = ComparisonActivity_ //
+				.intent(this) //
+				.electionIndex(electionIndex) //
+				.selectedCandidateIds(selectedCandidateIds) //
+				.selectedTagId(selectedTag.id) //
+				.get();
+		startActivityForResult(intent, 1);
 	}
 
 	@OptionsItem
@@ -148,7 +125,6 @@ public class SelectTagActivity extends SherlockActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		comparisonPref.selectedTagId().remove();
 		if (resultCode == BACK_TO_SELECT_CANDIDATES) {
 			selectCandidatesButtonClicked();
 		}

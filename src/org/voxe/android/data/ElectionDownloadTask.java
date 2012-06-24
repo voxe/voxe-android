@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -24,7 +27,10 @@ import org.voxe.android.VoxeApplication;
 import org.voxe.android.common.BitmapHelper;
 import org.voxe.android.common.LogHelper;
 import org.voxe.android.model.Candidate;
-import org.voxe.android.model.ElectionHolder;
+import org.voxe.android.model.Election;
+import org.voxe.android.model.ElectionsHolder;
+import org.voxe.android.model.Icon;
+import org.voxe.android.model.Photo;
 import org.voxe.android.model.PhotoSizeInfo;
 import org.voxe.android.model.Tag;
 
@@ -44,11 +50,11 @@ import com.ubikod.capptain.android.sdk.CapptainAgent;
  *            onResume() method and {@link #unbindActivity()} in its onPause()
  *            method.
  */
-public class ElectionDownloadTask<T extends Activity & DownloadListener> extends AsyncTask<Void, DownloadProgress, TaskResult<ElectionHolder>> {
+public class ElectionDownloadTask<T extends Activity & DownloadListener> extends AsyncTask<Void, DownloadProgress, TaskResult<ElectionsHolder>> {
 
 	private Optional<T> optionalActivity;
 
-	private TaskResult<ElectionHolder> result;
+	private TaskResult<ElectionsHolder> result;
 
 	private DownloadProgress currentProgress = DownloadProgress.create(0, 0, "");
 
@@ -64,7 +70,7 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 	}
 
 	@Override
-	protected TaskResult<ElectionHolder> doInBackground(Void... params) {
+	protected TaskResult<ElectionsHolder> doInBackground(Void... params) {
 		try {
 
 			publishProgress(DownloadProgress.create(0, 20, application.getString(R.string.downloading_election_data)));
@@ -72,55 +78,73 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 			log("Starting download & update of election in background");
 			long start = currentTimeMillis();
 
-			String electionId = application.getElectionId();
-
 			ElectionResourceClient electionClient = buildElectionResourceClient();
 
 			long downloadStart = currentTimeMillis();
-			ElectionResponse response = electionClient.getElection(electionId);
+			ElectionResponse response = electionClient.getElections();
 			logDuration("Election download in background", downloadStart);
 
 			if (!response.meta.isOk()) {
 				throw new RuntimeException("Response code not OK: " + response.meta.code);
 			}
 
-			ElectionHolder electionHolder = response.response;
+			ElectionsHolder electionHolder = response.response;
 
 			ElectionDAO electionDAO = new ElectionDAO(application);
+
+			List<Candidate> mainCandidates = new ArrayList<Candidate>();
+			for (Election election : electionHolder.elections) {
+				mainCandidates.addAll(election.getMainCandidates());
+			}
 
 			{
 				publishProgress(DownloadProgress.create(20, 50, application.getString(R.string.downloading_candidate_photos)));
 
 				long startDownloadingCandidatePhotos = currentTimeMillis();
-				List<Candidate> mainCandidates = electionHolder.election.getMainCandidates();
-				float progressPerDownload = 30 / mainCandidates.size();
+
+				Map<String, Photo> loadedPhotos = new HashMap<String, Photo>();
+
+				float progressPerDownload = 30f / mainCandidates.size();
 				int i = 0;
 				for (Candidate candidate : mainCandidates) {
 
-					if (electionDAO.shouldDownloadCandidatePhoto(candidate)) {
+					Photo photo = candidate.photo;
 
-						Optional<PhotoSizeInfo> largestSize = candidate.photo.sizes.getLargestSize();
+					if (electionDAO.shouldDownloadCandidatePhoto(photo)) {
 
-						if (largestSize.isPresent()) {
+						String uniqueId = photo.sizes.getLargestSize().get().getUniqueId();
 
-							String urlString = largestSize.get().url;
+						if (loadedPhotos.containsKey(uniqueId)) {
+							Photo cachedPhoto = loadedPhotos.get(uniqueId);
+							candidate.photo = cachedPhoto;
+						} else {
 
-							URL url;
-							try {
-								url = new URL(urlString);
+							Optional<PhotoSizeInfo> largestSize = candidate.photo.sizes.getLargestSize();
 
-								URLConnection openConnection = url.openConnection();
+							if (largestSize.isPresent()) {
 
-								InputStream inputStream = openConnection.getInputStream();
+								String urlString = largestSize.get().url;
 
-								Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+								URL url;
+								try {
+									LogHelper.log("Loading photo: " + urlString + " for canditate " + candidate.getName());
+									url = new URL(urlString);
 
-								candidate.photo.photoBitmap = bitmap;
+									URLConnection openConnection = url.openConnection();
 
-								electionDAO.saveCandidatePhoto(candidate);
+									InputStream inputStream = openConnection.getInputStream();
 
-							} catch (IOException e) {
-								LogHelper.logException("Could not download photo at url " + urlString, e);
+									Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+									candidate.photo.photoBitmap = bitmap;
+
+									electionDAO.saveCandidatePhoto(photo);
+
+									loadedPhotos.put(uniqueId, photo);
+
+								} catch (IOException e) {
+									LogHelper.logException("Could not download candidate photo at url " + urlString, e);
+								}
 							}
 						}
 					}
@@ -133,35 +157,56 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 			{
 				publishProgress(DownloadProgress.create(50, 80, application.getString(R.string.downloading_tag_images)));
 				long startDownloadingTagPhotos = currentTimeMillis();
-				float progressPerDownload = 30 / electionHolder.election.tags.size();
+
+				List<Tag> tags = new ArrayList<Tag>();
+				for (Election election : electionHolder.elections) {
+					tags.addAll(election.tags);
+				}
+
+				Map<String, Icon> loadedIcons = new HashMap<String, Icon>();
+
+				float progressPerDownload = 30f / tags.size();
 				int i = 0;
-				for (Tag tag : electionHolder.election.tags) {
+				for (Tag tag : tags) {
 
-					if (electionDAO.shouldDownloadTagPhoto(tag)) {
+					Icon icon = tag.icon;
 
-						Optional<String> largestIconUrl = tag.icon.getLargestIconUrl();
+					if (electionDAO.shouldDownloadTagPhoto(icon)) {
 
-						if (largestIconUrl.isPresent()) {
+						String uniqueId = icon.getUniqueId().get();
 
-							String urlString = largestIconUrl.get();
+						if (loadedIcons.containsKey(uniqueId)) {
+							Icon cachedIcon = loadedIcons.get(uniqueId);
+							tag.icon = cachedIcon;
+						} else {
+							Optional<String> largestIconUrl = icon.getLargestIconUrl();
 
-							URL url;
-							try {
-								url = new URL(urlString);
+							if (largestIconUrl.isPresent()) {
 
-								URLConnection openConnection = url.openConnection();
+								String urlString = largestIconUrl.get();
 
-								InputStream inputStream = openConnection.getInputStream();
+								URL url;
+								try {
+									LogHelper.log("Loading icon: " + urlString + " for tag " + tag.name);
+									url = new URL(urlString);
 
-								Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+									URLConnection openConnection = url.openConnection();
 
-								tag.icon.bitmap = bitmap;
+									InputStream inputStream = openConnection.getInputStream();
 
-								electionDAO.saveTagImage(tag);
+									Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
-							} catch (IOException e) {
-								LogHelper.logException("Could not download photo at url " + urlString, e);
+									icon.bitmap = bitmap;
+
+									electionDAO.saveTagImage(icon);
+
+									loadedIcons.put(uniqueId, icon);
+
+								} catch (IOException e) {
+									LogHelper.logException("Could not download tag image at url " + urlString, e);
+								}
 							}
+
 						}
 					}
 					i++;
@@ -172,7 +217,9 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 
 			publishProgress(DownloadProgress.create(80, 100, application.getString(R.string.preparing_and_saving_data)));
 
-			Collections.sort(electionHolder.election.tags);
+			for (Election election : electionHolder.elections) {
+				Collections.sort(election.tags);
+			}
 
 			LogHelper.logDuration("Whole download in background", start);
 			Bundle bundle = new Bundle();
@@ -183,8 +230,10 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 
 			electionDAO.save(electionHolder);
 
-			for (Candidate candidate : electionHolder.election.getMainCandidates()) {
-				candidate.photo.photoBitmap = BitmapHelper.getRoundedCornerBitmap(candidate.photo.photoBitmap);
+			for (Candidate candidate : mainCandidates) {
+				if (candidate.photo.photoBitmap != null) {
+					candidate.photo.photoBitmap = BitmapHelper.getRoundedCornerBitmap(candidate.photo.photoBitmap);
+				}
 			}
 
 			publishProgress(DownloadProgress.create(100, 100, application.getString(R.string.election_updated)));
@@ -275,7 +324,7 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 	}
 
 	@Override
-	protected void onPostExecute(TaskResult<ElectionHolder> result) {
+	protected void onPostExecute(TaskResult<ElectionsHolder> result) {
 		if (isCancelled()) {
 			return;
 		}
@@ -299,7 +348,7 @@ public class ElectionDownloadTask<T extends Activity & DownloadListener> extends
 		if (result.isException()) {
 			activity.onDownloadError();
 		} else {
-			ElectionHolder electionHolder = result.asResult();
+			ElectionsHolder electionHolder = result.asResult();
 			application.setElectionHolder(electionHolder);
 			activity.onElectionDownloaded();
 		}

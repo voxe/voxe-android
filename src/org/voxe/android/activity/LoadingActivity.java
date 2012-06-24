@@ -1,17 +1,14 @@
-package org.voxe.android.loading;
+package org.voxe.android.activity;
 
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
-import org.voxe.android.candidates.SelectCandidatesActivity_;
 import org.voxe.android.data.DownloadListener;
 import org.voxe.android.data.DownloadProgress;
 import org.voxe.android.data.ElectionDownloadTask;
 import org.voxe.android.data.ElectionLoadTask;
 import org.voxe.android.data.LoadListener;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -22,9 +19,6 @@ import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
 
-/**
- * TODO handle open url intents
- */
 @EActivity(R.layout.loading)
 public class LoadingActivity extends SherlockActivity implements LoadListener, DownloadListener {
 
@@ -44,20 +38,18 @@ public class LoadingActivity extends SherlockActivity implements LoadListener, D
 		}
 	}
 
+	@App
+	VoxeApplication application;
+
 	@ViewById
 	ProgressBar downloadingProgressBar;
 
 	@ViewById
 	TextView downloadingText;
 
-	@App
-	VoxeApplication application;
-
 	private ElectionLoadTask<LoadingActivity> electionLoadTask;
 	private ElectionDownloadTask<LoadingActivity> electionDownloadTask;
 	private Step step;
-
-	private Dialog retryDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +87,6 @@ public class LoadingActivity extends SherlockActivity implements LoadListener, D
 		} else if (step == Step.DOWNLOADING_DATA) {
 			showDownloadingInfo();
 			electionDownloadTask.bindActivity(this);
-		} else if (step == Step.RETRY) {
-			showRetryDialog();
 		}
 	}
 
@@ -119,8 +109,6 @@ public class LoadingActivity extends SherlockActivity implements LoadListener, D
 			electionLoadTask.unbindActivity();
 		} else if (step == Step.DOWNLOADING_DATA) {
 			electionDownloadTask.unbindActivity();
-		} else if (step == Step.RETRY) {
-			hideRetryDialog();
 		}
 	}
 
@@ -132,7 +120,6 @@ public class LoadingActivity extends SherlockActivity implements LoadListener, D
 		} else if (step == Step.DOWNLOADING_DATA) {
 			electionDownloadTask.destroy();
 		}
-
 	}
 
 	@Override
@@ -143,7 +130,10 @@ public class LoadingActivity extends SherlockActivity implements LoadListener, D
 	}
 
 	private void startNextActivityAndFinish() {
-		SelectCandidatesActivity_.intent(this).start();
+		SelectCandidatesActivity_ //
+				.intent(this) //
+				.electionIndex(1) //
+				.start();
 		finish();
 	}
 
@@ -167,44 +157,24 @@ public class LoadingActivity extends SherlockActivity implements LoadListener, D
 	public void onDownloadError() {
 		step = Step.RETRY;
 		electionDownloadTask = null;
-		showRetryDialog();
+
+		Intent intent = LoadingErrorActivity_ //
+				.intent(this) //
+				.description(getString(R.string.election_download_error)) //
+				.get();
+
+		startActivityForResult(intent, R.id.loading_error_request);
 	}
 
-	private void showRetryDialog() {
-		if (retryDialog == null) {
-			// create new retry dialog
-			retryDialog = new AlertDialog.Builder(this) //
-					.setTitle("Erreur de téléchargement") //
-					.setMessage("Les données n'ont pu être téléchargées") //
-					.setCancelable(true) //
-					.setPositiveButton("Réessayer", new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							onNoData();
-						}
-					}) //
-					.setNegativeButton("Quitter", new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							finish();
-						}
-					}) //
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-						@Override
-						public void onCancel(DialogInterface dialog) {
-							finish();
-						}
-					}) //
-					.create();
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == R.id.loading_error_request) {
+			if (resultCode == RESULT_OK) {
+				onNoData();
+			} else {
+				finish();
+			}
 		}
-		retryDialog.show();
-	}
-
-	private void hideRetryDialog() {
-		retryDialog.hide();
 	}
 
 	@Override
@@ -213,70 +183,5 @@ public class LoadingActivity extends SherlockActivity implements LoadListener, D
 		downloadingProgressBar.setSecondaryProgress(progress.nextProgress);
 		downloadingText.setText(progress.progressMessage);
 	}
-
-	// private void handleUriIntent() {
-	// List<Candidate> mainCandidates = election.getMainCandidates();
-	// Intent intent = getIntent();
-	// if (intent.getAction() != null &&
-	// intent.getAction().equals(Intent.ACTION_VIEW)) {
-	// Uri data = intent.getData();
-	// List<String> pathSegments = data.getPathSegments();
-	// boolean handled = false;
-	// if (pathSegments.size() == 3) {
-	// String electionNamespace = pathSegments.get(0).toLowerCase();
-	// if (electionNamespace.equals(election.namespace)) {
-	// String candidacyNamespaces = pathSegments.get(1).toLowerCase();
-	// if (candidacyNamespaces.equals("propositions")) {
-	// String propositionId = pathSegments.get(2).toLowerCase();
-	// ShowPropositionActivity.start(this, propositionId, election.namespace);
-	// handled = true;
-	// } else {
-	//
-	// Map<String, String> candidateIdByCandidacyNamespace = new HashMap<String,
-	// String>();
-	// for (Candidate candidate : mainCandidates) {
-	// candidateIdByCandidacyNamespace.put(candidate.candidacyNamespace,
-	// candidate.id);
-	// }
-	//
-	// Iterable<String> candidacyNamespacesSplitted =
-	// Splitter.on(',').split(candidacyNamespaces);
-	// Set<String> selectedCandidateIds = Sets.newHashSet();
-	// for (String candidacyNamespace : candidacyNamespacesSplitted) {
-	// if (candidateIdByCandidacyNamespace.containsKey(candidacyNamespace)) {
-	// selectedCandidateIds.add(candidateIdByCandidacyNamespace.get(candidacyNamespace));
-	// }
-	// }
-	//
-	// if (selectedCandidateIds.size() > 0) {
-	// String tagNamespace = pathSegments.get(2).toLowerCase();
-	//
-	// Tag selectedTag = null;
-	// for (Tag tag : election.tags) {
-	// if (tag.namespace.equals(tagNamespace)) {
-	// selectedTag = tag;
-	// break;
-	// }
-	// }
-	//
-	// if (selectedTag != null) {
-	// selectCandidatesView.updateSelectedCandidates(selectedCandidateIds);
-	// selectTagView.updateSelectedTag(selectedTag);
-	//
-	// showComparisonPage();
-	// handled = true;
-	// }
-	// }
-	//
-	// }
-	// }
-	// }
-	//
-	// if (!handled) {
-	// Uri updatedUri = data.buildUpon().authority("www.voxe.org").build();
-	// startActivity(new Intent(Intent.ACTION_VIEW, updatedUri));
-	// }
-	// }
-	// }
 
 }
