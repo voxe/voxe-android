@@ -223,6 +223,9 @@ public class ComparisonActivity extends SherlockActivity {
 		String message = String.format(shareCompare, candidateNamesJoined, selectedTag.getName(), url);
 
 		MenuItem actionItem = menu.findItem(R.id.menu_share);
+
+		actionItem.setVisible(loading.getVisibility() != View.VISIBLE);
+
 		ShareActionProvider actionProvider = (ShareActionProvider) actionItem.getActionProvider();
 		actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
 
@@ -238,11 +241,13 @@ public class ComparisonActivity extends SherlockActivity {
 	public void startLoading() {
 		loading.setVisibility(View.VISIBLE);
 		setSupportProgressBarIndeterminateVisibility(true);
+		invalidateOptionsMenu();
 	}
 
 	public void endLoading() {
 		loading.setVisibility(View.GONE);
 		setSupportProgressBarIndeterminateVisibility(false);
+		invalidateOptionsMenu();
 	}
 
 	public void loadingError(String description) {

@@ -96,4 +96,16 @@ public class SelectElectionActivity extends SherlockActivity {
 
 		startActivityForResult(intent, 1);
 	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		analytics.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		analytics.onResume();
+	}
 }
