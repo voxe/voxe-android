@@ -15,6 +15,8 @@ import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionsHolder;
 import org.voxe.android.model.Tag;
+import org.voxe.android.view.ComparisonBar;
+import org.voxe.android.view.ComparisonBar_;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,6 +28,7 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -38,7 +41,6 @@ import com.google.common.collect.Lists;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.OptionsItem;
@@ -62,12 +64,6 @@ public class ComparisonActivity extends SherlockActivity {
 
 	@ViewById
 	WebView webview;
-
-	@ViewById
-	TextView selectedTagName;
-
-	@ViewById
-	ImageView selectedTagIcon;
 
 	@Bean
 	ComparisonWebviewClient webviewClient;
@@ -131,15 +127,6 @@ public class ComparisonActivity extends SherlockActivity {
 
 			selectedTag = election.tagFromId(selectedTagId);
 
-			Candidate candidate1 = selectedCandidates.get(0);
-			candidate1.insertPhoto(candidate1ImageView);
-
-			Candidate candidate2 = selectedCandidates.get(1);
-			candidate2.insertPhoto(candidate2ImageView);
-
-			selectedTagName.setText(selectedTag.getName());
-			selectedTagIcon.setImageBitmap(selectedTag.icon.bitmap);
-
 			Iterable<String> candidacyIds = transform(selectedCandidates, new Function<Candidate, String>() {
 				@Override
 				public String apply(Candidate input) {
@@ -158,6 +145,15 @@ public class ComparisonActivity extends SherlockActivity {
 			loading.setText(loadingMessageHtml);
 
 			webview.loadUrl(webviewURL);
+
+			ComparisonBar customTitle = ComparisonBar_.build(this);
+
+			customTitle.init(election, selectedTag, selectedCandidateIds);
+
+			ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayShowTitleEnabled(false);
+			actionBar.setCustomView(customTitle);
+			actionBar.setDisplayShowCustomEnabled(true);
 
 		} else {
 			LoadingActivity_.intent(this).flags(FLAG_ACTIVITY_CLEAR_TOP).start();
@@ -249,20 +245,6 @@ public class ComparisonActivity extends SherlockActivity {
 		setSupportProgressBarIndeterminateVisibility(false);
 	}
 
-	@Click
-	void selectCandidatesButtonClicked() {
-		analytics.backToCandidatesFromComparison(election);
-		setResult(SelectTagActivity.BACK_TO_SELECT_CANDIDATES);
-		finish();
-	}
-
-	@Click
-	void selectTagButtonClicked() {
-		analytics.backToTagFromComparison(election);
-		setResult(Activity.RESULT_CANCELED);
-		finish();
-	}
-
 	public void loadingError(String description) {
 
 		String message = String.format(getString(R.string.webview_error_message), description);
@@ -284,6 +266,27 @@ public class ComparisonActivity extends SherlockActivity {
 				setResult(RESULT_CANCELED);
 				finish();
 			}
+		}
+	}
+
+	public void selectCandidates() {
+		analytics.backToCandidatesFromComparison(election);
+		setResult(SelectTagActivity.BACK_TO_SELECT_CANDIDATES);
+		finish();
+	}
+
+	public void selectTag() {
+		analytics.backToTagFromComparison(election);
+		setResult(Activity.RESULT_CANCELED);
+		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (webview.canGoBack()) {
+			webview.goBack();
+		} else {
+			super.onBackPressed();
 		}
 	}
 

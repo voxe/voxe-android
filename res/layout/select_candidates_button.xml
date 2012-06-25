@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/selectCandidatesButton"
+    android:layout_width="wrap_content"
+    android:layout_height="36dp"
+    android:padding="5dp"
+    android:layout_gravity="center_vertical"
+    android:background="@drawable/bar_button"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/candidate1ImageView"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:shadowColor="#44000000"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="@string/vs"
+        android:textColor="#ffffff"
+        android:textSize="22dp" />
+
+    <ImageView
+        android:id="@+id/candidate2ImageView"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:scaleType="fitCenter" />
+
+</LinearLayout>

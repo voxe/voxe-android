@@ -55,4 +55,14 @@
         <item name="android:maxHeight">16dip</item>
     </style>
 
+    <style name="ListItemTitle">
+        <item name="android:maxLines">2</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1.5</item>
+        <item name="android:shadowColor">#44000000</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
 </resources>

@@ -3,27 +3,26 @@ package org.voxe.android.activity;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 import java.util.HashSet;
-import java.util.List;
 
 import org.voxe.android.R;
 import org.voxe.android.VoxeApplication;
 import org.voxe.android.adapter.SelectTagAdapter;
 import org.voxe.android.common.Analytics;
-import org.voxe.android.model.Candidate;
 import org.voxe.android.model.Election;
 import org.voxe.android.model.ElectionsHolder;
 import org.voxe.android.model.Tag;
+import org.voxe.android.view.SelectCandidatesButton;
+import org.voxe.android.view.SelectCandidatesButton_;
 
 import android.content.Intent;
-import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.google.common.base.Optional;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.ItemClick;
@@ -49,12 +48,6 @@ public class SelectTagActivity extends SherlockActivity {
 	@App
 	VoxeApplication application;
 
-	@ViewById
-	ImageView candidate1ImageView;
-
-	@ViewById
-	ImageView candidate2ImageView;
-
 	@Extra
 	HashSet<String> selectedCandidateIds;
 
@@ -73,13 +66,15 @@ public class SelectTagActivity extends SherlockActivity {
 			tagAdapter.init(election.tags);
 			list.setAdapter(tagAdapter);
 
-			List<Candidate> selectedCandidates = election.selectedCandidatesByCandidateIds(selectedCandidateIds);
+			SelectCandidatesButton customTitle = SelectCandidatesButton_.build(this);
 
-			Candidate candidate1 = selectedCandidates.get(0);
-			candidate1.insertPhoto(candidate1ImageView);
+			customTitle.init(election, selectedCandidateIds);
 
-			Candidate candidate2 = selectedCandidates.get(1);
-			candidate2.insertPhoto(candidate2ImageView);
+			ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayShowTitleEnabled(false);
+			actionBar.setCustomView(customTitle);
+			actionBar.setDisplayShowCustomEnabled(true);
+
 		} else {
 			LoadingActivity_ //
 					.intent(this) //
@@ -104,12 +99,11 @@ public class SelectTagActivity extends SherlockActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == BACK_TO_SELECT_CANDIDATES) {
-			selectCandidatesButtonClicked();
+			selectCandidates();
 		}
 	}
 
-	@Click
-	void selectCandidatesButtonClicked() {
+	public void selectCandidates() {
 		analytics.backToCandidatesFromTag(election);
 		setResult(RESULT_CANCELED);
 		finish();

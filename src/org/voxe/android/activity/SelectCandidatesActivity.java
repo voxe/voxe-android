@@ -15,7 +15,6 @@ import org.voxe.android.model.ElectionsHolder;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.google.common.base.Optional;
@@ -37,9 +36,6 @@ public class SelectCandidatesActivity extends SherlockActivity {
 
 	@ViewById
 	ListView listView;
-
-	@ViewById
-	TextView electionNameTextView;
 
 	@Bean
 	Analytics analytics;
@@ -68,7 +64,7 @@ public class SelectCandidatesActivity extends SherlockActivity {
 
 			listView.setAdapter(adapter);
 
-			electionNameTextView.setText(election.name);
+			setTitle(election.name);
 		} else {
 			LoadingActivity_ //
 					.intent(this) //

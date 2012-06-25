@@ -21,6 +21,8 @@ import org.voxe.android.model.PhotoSizeInfo;
 import org.voxe.android.model.Tag;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -28,14 +30,25 @@ import com.google.common.base.Optional;
 
 public class ElectionDAO {
 
-	private static final String DATA_FILENAME = "elections-2.json";
-
 	private final ObjectMapper mapper = new ObjectMapper();
 
 	private final Context context;
 
+	private String dataFilename;
+
 	public ElectionDAO(Context context) {
 		this.context = context;
+
+		try {
+			PackageManager manager = context.getPackageManager();
+			PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+			String version = info.versionName;
+			dataFilename = "electionsFull-" + version + ".json";
+		} catch (Exception e) {
+			LogHelper.logException("Could not get application version", e);
+			dataFilename = "electionsFull.json";
+		}
+
 		mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		mapper.configure(DeserializationConfig.Feature.AUTO_DETECT_SETTERS, false);
 		mapper.configure(DeserializationConfig.Feature.USE_GETTERS_AS_SETTERS, false);
@@ -231,7 +244,7 @@ public class ElectionDAO {
 	}
 
 	private File getStorageFile() {
-		return getFile(DATA_FILENAME);
+		return getFile(dataFilename);
 	}
 
 	private File getFile(String filename) {
