@@ -1,0 +1,3 @@
+# Set the passwords here
+key.store.password=some password
+key.alias.password=some password

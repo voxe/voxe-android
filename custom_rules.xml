@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+	<target name="override-out">
+		<xpath input="AndroidManifest.xml" expression="/manifest/@android:versionName"
+			output="manifest.versionName" default="unknown" />
+
+		<property name="out.final.file"
+			location="Voxe-${manifest.versionName}.apk" />
+	</target>
+	
+	<target name="voxe" depends="override-out, clean, release" />
+
+	<property file="voxe_keys.properties" />
+
+	<!-- Compiles this project's .java files into .class files. -->
+
+	<target name="-compile" depends="-build-setup, -pre-build, -code-gen, -pre-compile">
+
+		<do-only-if-manifest-hasCode elseText="hasCode = false. Skipping...">
+
+			<!-- If android rules are used for a test project, its classpath should 
+				include tested project's location -->
+
+			<condition else="." property="extensible.classpath"
+				value="${tested.project.absolute.dir}/bin/classes">
+
+				<isset property="tested.project.absolute.dir" />
+			</condition>
+
+			<condition else="${jar.libs.dir}" property="extensible.libs.classpath"
+				value="${tested.project.absolute.dir}/${jar.libs.dir}">
+
+				<isset property="tested.project.absolute.dir" />
+			</condition>
+
+			<javac bootclasspathref="android.target.classpath" classpath="${extensible.classpath}"
+				classpathref="project.libraries.jars" debug="true"
+				destdir="${out.classes.absolute.dir}" encoding="${java.encoding}"
+				extdirs="" fork="${need.javac.fork}" includeantruntime="false"
+				source="${java.source}" target="${java.target}" verbose="${verbose}">
+
+				<src path="${source.absolute.dir}" />
+
+				<src path="${gen.absolute.dir}" />
+
+				<classpath>
+					<fileset dir="compile-libs" includes="*.jar" />
+					<fileset dir="${extensible.libs.classpath}" includes="*.jar" />
+				</classpath>
+
+				<compilerarg line="${java.compilerargs}" />
+			</javac>
+			<!-- if the project is a library then we generate a jar file -->
+
+			<if condition="${project.is.library}">
+
+				<then>
+
+					<echo>
+						Creating library output jar file...
+					</echo>
+
+					<property name="out.library.jar.file" location="${out.absolute.dir}/classes.jar" />
+
+					<if>
+
+						<condition>
+
+							<length length="0" string="${android.package.excludes}"
+								trim="true" when="greater" />
+						</condition>
+
+						<then>
+
+							<echo>
+								Custom jar packaging exclusion: ${android.package.excludes}
+							</echo>
+						</then>
+					</if>
+
+					<propertybyreplace name="manifest.package.path"
+						input="${manifest.package}" replace="." with="/" />
+
+					<jar destfile="${out.library.jar.file}">
+
+						<fileset dir="${out.classes.absolute.dir}"
+							excludes="${manifest.package.path}/R.class ${manifest.package.path}/R$*.class ${manifest.package.path}/Manifest.class ${manifest.package.path}/Manifest$*.class ${manifest.package.path}/BuildConfig.class"
+							includes="**/*.class" />
+
+						<fileset dir="${source.absolute.dir}" excludes="**/*.java ${android.package.excludes}" />
+					</jar>
+				</then>
+			</if>
+
+			<!-- if the project is instrumented, intrument the classes -->
+
+			<if condition="${build.is.instrumented}">
+
+				<then>
+
+					<echo>
+						Instrumenting classes from ${out.absolute.dir}/classes...
+					</echo>
+					<!-- It only instruments class files, not any external libs -->
+
+					<emma enabled="true">
+
+						<instr instrpath="${out.absolute.dir}/classes" mode="overwrite"
+							outdir="${out.absolute.dir}/classes" verbosity="${verbosity}">
+
+							<filter
+								excludes="${manifest.package}.R,${manifest.package}.R$$*,${manifest.package}.BuildConfig" />
+
+							<filter value="${emma.filter}" />
+						</instr>
+					</emma>
+				</then>
+			</if>
+		</do-only-if-manifest-hasCode>
+	</target>
+
+</project>

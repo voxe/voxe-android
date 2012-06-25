@@ -3,3 +3,5 @@ gen
 .apt_generated
 joinplato.keystore
 Voxe*.apk
+voxe_keys.properties
+local.properties
