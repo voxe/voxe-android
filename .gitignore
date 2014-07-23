@@ -1,7 +1,5 @@
-bin
-gen
-.apt_generated
+.gradle
 joinplato.keystore
-Voxe*.apk
 voxe_keys.properties
 local.properties
+build

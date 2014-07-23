@@ -1,0 +1,38 @@
+apply plugin: 'android'
+
+android {
+    compileSdkVersion 14
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "org.voxe.android"
+        minSdkVersion 8
+        targetSdkVersion 14
+    }
+
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+}
+
+dependencies {
+    compile project(':actionBarSherlockVoxe')
+    compile files('libs/androidannotations-2.7-SNAPSHOT-api.jar')
+    compile files('libs/capptain-agent.jar')
+    compile files('libs/capptain-common.jar')
+    compile files('libs/capptain-service.jar')
+    compile files('libs/guava-10.0.1.jar')
+    compile files('libs/jackson-core-asl-1.9.2.jar')
+    compile files('libs/jackson-mapper-asl-1.9.2.jar')
+    compile files('libs/spring-android-auth-1.0.0.M4.jar')
+    compile files('libs/spring-android-core-1.0.0.M4.jar')
+    compile files('libs/spring-android-rest-template-1.0.0.M4.jar')
+}
